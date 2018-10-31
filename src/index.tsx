@@ -1,12 +1,17 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-// import App from './App';
-import Map from './components/map';
+import { Provider } from 'react-redux';
+import createStore from './create-store';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
+import Router from './routes';
+
+const store = createStore();
 
 ReactDOM.render(
-  <Map />,
+  <Provider store={store}>
+    <Router />
+  </Provider>,
   document.getElementById('root') as HTMLElement
 );
 registerServiceWorker();

@@ -5,10 +5,23 @@
   "dependencies": {
     "@turf/helpers": "^6.1.4",
     "@types/mapbox-gl": "^0.49.0",
+    "@types/react-redux": "^6.0.9",
+    "@types/react-router-dom": "^4.3.1",
+    "@types/redux": "^3.6.0",
+    "@types/redux-actions": "^2.3.1",
+    "@types/redux-thunk": "^2.1.0",
+    "add": "^2.0.6",
     "mapbox-gl": "^0.50.0",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
-    "react-scripts-ts": "3.1.0"
+    "react-redux": "^5.1.0",
+    "react-router-dom": "^4.3.1",
+    "react-scripts-ts": "3.1.0",
+    "redux": "^4.0.1",
+    "redux-actions": "^2.6.3",
+    "redux-thunk": "^2.3.0",
+    "typesafe-actions": "^2.0.4",
+    "yarn": "^1.10.1"
   },
   "scripts": {
     "start": "react-scripts-ts start",

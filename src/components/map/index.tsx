@@ -8,7 +8,7 @@ import './map.css';
 
 interface IMapState {
   selectedPoints: any,
-  viewport: any
+  viewport: object
 }
 
 class Map extends React.Component<any, IMapState> {
@@ -88,8 +88,8 @@ class Map extends React.Component<any, IMapState> {
         "id": "shst-line",
         "paint": {
           "line-color": "orange",
-          // "line-dasharray" : [2,1],
-          // "line-opacity": 0.35,
+          "line-dasharray" : [2,1],
+          "line-opacity": 0.35,
           "line-width": 8,
         },
         "source": "shst-line",
