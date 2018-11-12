@@ -7,6 +7,7 @@ import {
 } from './road-closure';
 
 export type RootAction = RoadClosureAction;
+
 const rootReducer = combineReducers({
     roadClosure: roadClosureReducer,
 });

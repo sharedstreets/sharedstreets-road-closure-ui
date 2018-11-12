@@ -1,3 +1,6 @@
+import { Dispatch } from 'redux';
+import api from 'src/services/api';
+
 export const fetchAction = ({
     requesting = '',
     requested = '',
@@ -6,21 +9,20 @@ export const fetchAction = ({
     body = {},
     params = {},
     afterRequest = (e: any) => e
-}) => (dispatch: any) => {
-    const q: any = null;
+}) => (dispatch: Dispatch<any>) => {
     if (requesting) {
         dispatch({
-            type: requesting,
+            type: requesting
         });
     }
 
-    return q.then((result: any) => dispatch({
+    return api(endpoint, method, params, body)
+    .then((response: any) => {
+        return response.json()
+    })
+    .then((data: any) => dispatch({
         error: false,
-        payload: afterRequest(result),
-        type: requested,
-    }), (error: any) => dispatch({
-        error: true,
-        payload: error.message,
+        payload: afterRequest(data),
         type: requested,
     }));
-};
+}; 
