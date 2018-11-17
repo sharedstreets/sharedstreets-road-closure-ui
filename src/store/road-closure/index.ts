@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux';
-import { RoadClosureStateItem } from 'src/models/road-closure';
+import { RoadClosureStateItem } from "src/models/RoadClosureStateItem";
 import { linestringSelector } from 'src/selectors/road-closure';
  import {
      ActionType,
@@ -18,14 +18,26 @@ export interface IFetchSharedstreetGeomsSuccessResponse {
     unmatched: object
 }
 
+export interface IRoadClosureFormInputChangedPayload {
+    key: string,
+    street?: string,
+    startTime?: string,
+    endTime?: string,
+    description?: string,
+    reference?: string,
+    subtype?: string,
+}
+
 export const ACTIONS = {
     FETCH_SHAREDSTREET_GEOMS: createAsyncAction(
-        'ROAD_CLOSURE_MAP/FETCH_SHAREDSTREET_GEOMS_REQUEST',
-        'ROAD_CLOSURE_MAP/FETCH_SHAREDSTREET_GEOMS_SUCCESS',
-        'ROAD_CLOSURE_MAP/FETCH_SHAREDSTREET_GEOMS_FAILURE'
+        'ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_REQUEST',
+        'ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS',
+        'ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_FAILURE'
     )<void, IFetchSharedstreetGeomsSuccessResponse, Error>(),
-    POINT_SELECTED: createStandardAction('ROAD_CLOSURE_MAP/POINT_SELECTED')<number[]>(),
-    VIEWPORT_CHANGED: createStandardAction('ROAD_CLOSURE_MAP/VIEWPORT_CHANGED'),
+    INPUT_CHANGED: createStandardAction('ROAD_CLOSURE/INPUT_CHANGED')<IRoadClosureFormInputChangedPayload>(),
+    POINT_SELECTED: createStandardAction('ROAD_CLOSURE/POINT_SELECTED')<number[]>(),
+    VIEWPORT_CHANGED: createStandardAction('ROAD_CLOSURE/VIEWPORT_CHANGED'),
+
 };
 // side effects
 export const findMatchedStreet = () => (dispatch: Dispatch<any>, getState: any) => {
@@ -44,8 +56,8 @@ export const findMatchedStreet = () => (dispatch: Dispatch<any>, getState: any) 
             searchRadius: 25,
             snapTopology: true,
         },
-        requested: 'ROAD_CLOSURE_MAP/FETCH_SHAREDSTREET_GEOMS_SUCCESS',
-        requesting: 'ROAD_CLOSURE_MAP/FETCH_SHAREDSTREET_GEOMS_REQUEST',
+        requested: 'ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS',
+        requesting: 'ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_REQUEST',
     }));
 };
 
@@ -65,7 +77,7 @@ const defaultState: IRoadClosureState = {
 export const roadClosureReducer = (state: IRoadClosureState = defaultState, action: RoadClosureAction) => {
     let updatedItems;
     switch (action.type) {
-        case "ROAD_CLOSURE_MAP/POINT_SELECTED":
+        case "ROAD_CLOSURE/POINT_SELECTED":
             updatedItems = [
                 ...state.items
             ];
@@ -78,12 +90,12 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 ...state,
                 items: updatedItems
             };
-        case "ROAD_CLOSURE_MAP/FETCH_SHAREDSTREET_GEOMS_REQUEST":
+        case "ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_REQUEST":
             return {
                 ...state,
                 isFetchingMatchedStreets: true,
             };
-        case "ROAD_CLOSURE_MAP/FETCH_SHAREDSTREET_GEOMS_SUCCESS":
+        case "ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS":
             updatedItems = [
                 ...state.items
             ];
@@ -93,6 +105,17 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             return {
                 ...state,
                 isFetchingMatchedStreets: false,
+                items: updatedItems,
+            };
+        case "ROAD_CLOSURE/INPUT_CHANGED":
+            const key = action.payload.key;
+            updatedItems = [
+                ...state.items,
+            ];
+            updatedItems[state.currentIndex].form[key] = action.payload[key];
+            
+            return {
+                ...state,
                 items: updatedItems,
             }
         default:

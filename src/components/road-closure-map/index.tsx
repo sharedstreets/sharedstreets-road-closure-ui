@@ -42,7 +42,7 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
 
     this.mapContainer = new mapboxgl.Map({
       center: [longitude, latitude],
-      container: 'SHST-RoadClosureMap-Container',
+      container: 'SHST-RoadClosure-Map',
       style: 'mapbox://styles/mapbox/streets-v9',
       zoom
     });
@@ -135,10 +135,11 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
 
   public render() {
     return (
-      <div>
-        <div id={'SHST-RoadClosureMap-Container'} style={{
-          height: '50vh',
-          width: '100%',
+      <div className={'SHST-RoadClosure-Map-Container'}>
+        <div id={'SHST-RoadClosure-Map'} style={{
+          height: '100%',
+          margin: '0 auto',
+          width: '600px',
         }} />
       </div>
     );

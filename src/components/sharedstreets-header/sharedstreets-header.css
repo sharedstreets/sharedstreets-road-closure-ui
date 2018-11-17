@@ -1,6 +1,13 @@
 .SHST-Header {
     color: #4a4a4a;
     padding: 5px;
+    position: fixed;
+    top: 0px;
+    height: 44px;
+    background: white;
+    border-bottom: 1px solid black;
+    z-index: 100;
+    width: 100%;
 }
 .SHST-Header-Logo {
     height: 30px;

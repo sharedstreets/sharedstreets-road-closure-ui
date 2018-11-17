@@ -1,3 +1,9 @@
+.SHST-RoadClosure-Map-Container {
+    margin: 0 auto;
+    height: 100%;
+    flex: 1;
+}
+
 .SHST-Map-Point-Marker {
     width: 10px;
     height: 10px;

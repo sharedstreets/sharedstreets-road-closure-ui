@@ -6,7 +6,9 @@ class SharedStreetsHeader extends React.Component {
     return (
         <div className="SHST-Header">
             <img src="/ss_logo.png" className="SHST-Header-Logo"/>
-            SharedStreets
+            <span>
+              SharedStreets
+            </span>
         </div>
     );
   }
