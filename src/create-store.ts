@@ -11,7 +11,7 @@ export default () => {
         rootReducer,
         compose (
             applyMiddleware(thunk),
-            (window as any).devToolsExtension ? (window as any).devToolsExtension() : (f: any) => f
+            (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__()
         )
     );
 

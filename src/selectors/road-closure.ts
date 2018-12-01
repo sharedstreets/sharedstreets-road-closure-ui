@@ -1,19 +1,34 @@
 import { lineString } from '@turf/helpers';
-import { createSelector } from 'reselect';
+import { forEach } from 'lodash';
 import { RootState } from 'src/store/configureStore';
 
 export const currentRoadClosureItemSelector = (state: RootState) => {
     return state.roadClosure.items[state.roadClosure.currentIndex];
 };
 
-export const linestringSelector = createSelector(
-    currentRoadClosureItemSelector,
-    (item) => {
-        const coords: any = [];
-        item.selectedPoints.forEach((v: any) => {
-          coords.push([v.lng, v.lat])
+export const lineStringFromSelectedPoints = (state: RootState) => {
+    const currentItem = currentRoadClosureItemSelector(state);
+    const coords: any = [];
+    currentItem.selectedPoints[state.roadClosure.currentStreetIndex].forEach((v: any) => {
+        coords.push([v.lng, v.lat])
+    });
+    const linestring = lineString(coords);
+    return linestring;
+};
+
+export const streetnameMatchedStreetIndexMap = (state: RootState) => {
+    const currentItem = currentRoadClosureItemSelector(state);
+    const currentMatchedStreets = currentItem.matchedStreets[state.roadClosure.currentStreetIndex];
+    const output = {};
+    if (currentMatchedStreets) {
+        forEach(currentMatchedStreets, (featureCollection: any) => {
+            forEach(featureCollection.features, (segment, index) => {
+                if (!output[segment.properties.streetname]) {
+                    output[segment.properties.streetname] = [];
+                }
+                output[segment.properties.streetname].push(index);
+            })
         });
-        const linestring = lineString(coords);
-        return linestring;
     }
-);
+    return output;
+}

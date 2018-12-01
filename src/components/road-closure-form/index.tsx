@@ -12,6 +12,10 @@ import {
   DateRangePicker,
   TimePrecision,
 } from '@blueprintjs/datetime';
+import {
+  forEach,
+  isEmpty,
+} from 'lodash';
 import * as React from 'react';
 import { RoadClosureStateItem } from 'src/models/RoadClosureStateItem';
 import { IRoadClosureState } from 'src/store/road-closure';
@@ -24,9 +28,11 @@ import './road-closure-form.css';
 
 
 export interface IRoadClosureFormProps {
+  addNewStreet: () => void,
   inputChanged: (payload: any) => void,
   roadClosure: IRoadClosureState,
   currentRoadClosureItem: RoadClosureStateItem,
+  streetnameMatchedStreetIndexMap: any,
 };
 class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
   constructor(props: IRoadClosureFormProps) {
@@ -42,7 +48,8 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
   public handleChangeStreetName(e: any) {
     this.props.inputChanged({
       key: 'street',
-      street: e.target.value
+      street: e.target.value,
+      streetnameIndex: Number.parseInt(e.target.id, 2)
     });
   }
 
@@ -97,19 +104,52 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
     return output;
   }
 
+  public renderMatchedStreetsTable() {
+    let output: any = [];
+    if ( isEmpty(this.props.currentRoadClosureItem.form.street[0]) ) {
+      output = [];
+    } else {
+      forEach(this.props.currentRoadClosureItem.form.street[0], (street: any, index) => {
+        output.push(<tr key={index}>
+          <td>
+            <InputGroup
+              id={`${index}`}
+              value={street}
+              onChange={this.handleChangeStreetName}
+            />
+          </td>
+          <td>
+            {null}
+          </td>
+          <td>
+            {null}
+          </td>
+        </tr>)
+      });
+    }
+
+    return <table className={"SHST-Matched-Streets-Table bp3-html-table bp3-condensed"}>
+      <thead>
+        <tr>
+          <th>Street name</th>
+          <th>From</th>
+          <th>To</th>
+        </tr>
+      </thead>
+      <tbody>
+        {output}
+      </tbody>
+    </table>
+  }
+
   public render() {
     return (
         <div className="SHST-Road-Closure-Form">
-            <FormGroup
-              // helperText="Helper text with details..."
-              label="Street name"
-              labelFor="text-area"
-              labelInfo="(required)"
-            >
-              <InputGroup
-                onChange={this.handleChangeStreetName}
-              />
-            </FormGroup>
+            {this.renderMatchedStreetsTable()}
+            <Button
+              disabled={isEmpty(this.props.currentRoadClosureItem.form.street[0])}
+              onClick={this.props.addNewStreet}
+              text={"Add new street"} />
             <FormGroup
               label="Start and end time"
               labelInfo="(required)"
@@ -160,7 +200,6 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                 <Radio label="ROAD_CLOSED_EVENT" value="ROAD_CLOSED_EVENT" />
             </RadioGroup>
             <button>Confirm road closure</button>
-            <div className="SHST-Matched-Streets" />
         </div>
     );
   }
