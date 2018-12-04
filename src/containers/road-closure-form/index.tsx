@@ -15,7 +15,9 @@ const mapStateToProps = (state: RootState) => ({
 export default connect<{}, {}, IRoadClosureFormProps>(
     mapStateToProps,
     {
-        addNewStreet: ACTIONS.ADD_NEW_STREET,
+        addNewSelection: ACTIONS.ADD_NEW_SELECTION,
         inputChanged: ACTIONS.INPUT_CHANGED,
+        nextSelection: ACTIONS.NEXT_SELECTION,
+        previousSelection: ACTIONS.PREVIOUS_SELECTION,
     },
 )(RoadClosureForm) as React.ComponentClass<{}>;

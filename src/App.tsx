@@ -10,8 +10,8 @@ class App extends React.Component {
       <div className="SHST-App">
         <SharedStreetsHeader />
         <div className="SHST-Container">
-          <RoadClosureMap />
           <RoadClosureForm />
+          <RoadClosureMap />
         </div>
       </div>
     );

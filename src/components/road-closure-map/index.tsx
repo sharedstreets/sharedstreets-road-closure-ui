@@ -15,7 +15,6 @@ import './road-closure-map.css';
 (mapboxgl as any).accessToken = "pk.eyJ1IjoidHJhbnNwb3J0cGFydG5lcnNoaXAiLCJhIjoiY2ptOTN5N3Q3MHN5aDNxbGs2MzhsN3dneiJ9.K4j9mXsvfGCYtM8YouwCKg";
 
 export interface IRoadClosureMapProps {
-  addNewStreet: () => void,
   findMatchedStreet: () => void,
   pointSelected: (payload: any) => void,
   roadClosure: IRoadClosureState
@@ -55,27 +54,24 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
 
     this.mapContainer.on('move', this.handleMapMove);
     this.mapContainer.on('click', this.handleMapClick);
-    // this.mapContainer.addControl(
-    //   new BaseControl("base-control", "Add New Street", this.props.addNewStreet)
-    // );
   }
 
   public componentDidUpdate(prevProps: IRoadClosureMapProps) {
     const {
       currentIndex,
-      currentStreetIndex,
+      currentSelectionIndex,
       items
     } = this.props.roadClosure;
 
-    const selectedPointsCurrentStreet = items[currentIndex].selectedPoints[currentStreetIndex];
+    const selectedPointsCurrentStreet = items[currentIndex].selectedPoints[currentSelectionIndex];
 
     const prevCurrentIndex = prevProps.roadClosure.currentIndex;
-    const prevCurrentStreetIndex = prevProps.roadClosure.currentStreetIndex;
+    const prevCurrentStreetIndex = prevProps.roadClosure.currentSelectionIndex;
     
     // draw point on click 
     if (!isEmpty(selectedPointsCurrentStreet) &&
       currentIndex === prevCurrentIndex &&
-      currentStreetIndex === prevCurrentStreetIndex) {
+      currentSelectionIndex === prevCurrentStreetIndex) {
         forEach(items[currentIndex].selectedPoints, (selectedPointsForStreet, index) => {
           const lngLat = selectedPointsForStreet[selectedPointsForStreet.length-1] as any;
           const el = document.createElement('div');
@@ -127,13 +123,13 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
     const {
       roadClosure: {
         currentIndex,
-        currentStreetIndex,
+        currentSelectionIndex,
         items,
       }
     } = this.props;
 
     this.props.pointSelected(event.lngLat);
-    if (items[currentIndex].selectedPoints[currentStreetIndex] && items[currentIndex].selectedPoints[currentStreetIndex].length > 1) {
+    if (items[currentIndex].selectedPoints[currentSelectionIndex] && items[currentIndex].selectedPoints[currentSelectionIndex].length > 1) {
       this.props.findMatchedStreet();
     }
   }
@@ -169,7 +165,7 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
         <div id={'SHST-RoadClosure-Map'} style={{
           height: '100%',
           margin: '0 auto',
-          width: '600px',
+          width: '100%',
         }} />
       </div>
     );

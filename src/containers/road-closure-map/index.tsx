@@ -10,7 +10,6 @@ const mapStateToProps = (state: RootState) => ({
 export default connect<{}, {}, IRoadClosureMapProps>(
     mapStateToProps,
     {
-        addNewStreet: ACTIONS.ADD_NEW_STREET,
         findMatchedStreet,
         pointSelected: ACTIONS.POINT_SELECTED,
     },

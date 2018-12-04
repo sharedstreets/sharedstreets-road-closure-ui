@@ -9,7 +9,7 @@ export const currentRoadClosureItemSelector = (state: RootState) => {
 export const lineStringFromSelectedPoints = (state: RootState) => {
     const currentItem = currentRoadClosureItemSelector(state);
     const coords: any = [];
-    currentItem.selectedPoints[state.roadClosure.currentStreetIndex].forEach((v: any) => {
+    currentItem.selectedPoints[state.roadClosure.currentSelectionIndex].forEach((v: any) => {
         coords.push([v.lng, v.lat])
     });
     const linestring = lineString(coords);
@@ -18,7 +18,7 @@ export const lineStringFromSelectedPoints = (state: RootState) => {
 
 export const streetnameMatchedStreetIndexMap = (state: RootState) => {
     const currentItem = currentRoadClosureItemSelector(state);
-    const currentMatchedStreets = currentItem.matchedStreets[state.roadClosure.currentStreetIndex];
+    const currentMatchedStreets = currentItem.matchedStreets[state.roadClosure.currentSelectionIndex];
     const output = {};
     if (currentMatchedStreets) {
         forEach(currentMatchedStreets, (featureCollection: any) => {

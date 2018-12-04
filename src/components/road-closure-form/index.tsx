@@ -1,5 +1,7 @@
 import {
   Button,
+  ButtonGroup,
+  Card,
   // Classes,
   FormGroup,
   InputGroup,
@@ -28,7 +30,9 @@ import './road-closure-form.css';
 
 
 export interface IRoadClosureFormProps {
-  addNewStreet: () => void,
+  addNewSelection: () => void,
+  nextSelection: () => void,
+  previousSelection: () => void,
   inputChanged: (payload: any) => void,
   roadClosure: IRoadClosureState,
   currentRoadClosureItem: RoadClosureStateItem,
@@ -104,12 +108,22 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
     return output;
   }
 
+  public renderEmptyMatchedStreetsTable() {
+    return <table>
+      <div className="SHST-Matched-Streets-Table-Empty bp3-non-ideal-state">
+      <div className="bp3-non-ideal-state-visual">
+        <span className="bp3-icon bp3-icon-arrow-right" />
+      </div>
+      <h4 className="bp3-heading">No streets selected</h4>
+      <div>To start entering a road closure, click two (or more) points along the length of the affected street(s).</div>
+    </div>
+    </table>;
+  }
+
   public renderMatchedStreetsTable() {
-    let output: any = [];
-    if ( isEmpty(this.props.currentRoadClosureItem.form.street[0]) ) {
-      output = [];
-    } else {
-      forEach(this.props.currentRoadClosureItem.form.street[0], (street: any, index) => {
+    const output: any = [];
+    if ( !isEmpty(this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex]) ) {
+      forEach(this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex], (street: any, index) => {
         output.push(<tr key={index}>
           <td>
             <InputGroup
@@ -145,18 +159,41 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
   public render() {
     return (
         <div className="SHST-Road-Closure-Form">
-            {this.renderMatchedStreetsTable()}
-            <Button
-              disabled={isEmpty(this.props.currentRoadClosureItem.form.street[0])}
-              onClick={this.props.addNewStreet}
-              text={"Add new street"} />
+            <Card>
+              {!isEmpty(this.props.currentRoadClosureItem.form.street[0]) && 
+                <label className={"bp3-label"}>
+                Selection
+                <span className={"bp3-text-muted"}> ({this.props.roadClosure.currentSelectionIndex+1} of {this.props.currentRoadClosureItem.selectedPoints.length})</span>
+                </label>
+              }
+              {!isEmpty(this.props.currentRoadClosureItem.form.street[0]) && this.renderMatchedStreetsTable()}
+              {isEmpty(this.props.currentRoadClosureItem.form.street[0]) && this.renderEmptyMatchedStreetsTable()}
+              <ButtonGroup
+                fill={true}
+              >
+                <Button
+                  disabled={isEmpty(this.props.currentRoadClosureItem.form.street[0]) || this.props.roadClosure.currentSelectionIndex === 0}
+                  onClick={this.props.previousSelection}
+                  text={"Previous selection"} />
+                <Button
+                  disabled={isEmpty(this.props.currentRoadClosureItem.form.street[0]) || this.props.roadClosure.currentSelectionIndex === this.props.currentRoadClosureItem.form.street.length-1}
+                  onClick={this.props.nextSelection}
+                  text={"Next selection"} />
+                <Button
+                  disabled={isEmpty(this.props.currentRoadClosureItem.form.street[0])}
+                  intent={"success"}
+                  onClick={this.props.addNewSelection}
+                  text={"Add new selection"} />
+              </ButtonGroup>
+            </Card>
             <FormGroup
               label="Start and end time"
-              labelInfo="(required)"
+              labelInfo="(required)"  
             >
               <Popover
                 content={              
                   <DateRangePicker
+
                     shortcuts={false}
                     timePrecision={TimePrecision.MINUTE}
                     onChange={this.handleChangeTime}
