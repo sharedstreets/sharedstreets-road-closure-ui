@@ -1,16 +1,19 @@
 import * as mapboxgl from 'mapbox-gl';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 
 class BaseControl implements mapboxgl.IControl {
     public map: any;
     public container: any;
     public classname: string;
     public controlText: string;
-    public onclick: any;
+    public component: any;
+    public onClick: () => void;
 
-    public constructor(className: string, controlText: string, onclick: any) {
+    public constructor(className: string, component: any, onClick: () => void) {
         this.classname = className;
-        this.onclick = onclick;
-        this.controlText = controlText;
+        this.component = component;
+        this.onClick = onClick;
     }
 
     public onAdd(map: any) {
@@ -18,10 +21,9 @@ class BaseControl implements mapboxgl.IControl {
         this.container = document.createElement('div');
         this.container.className = this.classname;
 
-        const button = document.createElement('button');
-        button.textContent = this.controlText;
-        button.onclick = this.onclick;
-        this.container.appendChild(button);
+        ReactDOM.render(React.createElement(this.component, {
+            onClick: this.onClick
+        }), this.container)
 
         return this.container;
     }

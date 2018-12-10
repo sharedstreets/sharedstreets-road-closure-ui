@@ -1,4 +1,5 @@
-import { forEach } from 'lodash';
+import { getType } from '@turf/invariant';
+import { dropRight, forEach } from 'lodash';
 import { Dispatch } from 'redux';
 import { RoadClosureStateItem } from "src/models/RoadClosureStateItem";
 import { lineStringFromSelectedPoints } from 'src/selectors/road-closure';
@@ -39,8 +40,12 @@ export const ACTIONS = {
     )<void, IFetchSharedstreetGeomsSuccessResponse, Error>(),
     INPUT_CHANGED: createStandardAction('ROAD_CLOSURE/INPUT_CHANGED')<IRoadClosureFormInputChangedPayload>(),
     NEXT_SELECTION: createStandardAction('ROAD_CLOSURE/NEXT_SELECTION')<void>(),
+    POINT_REMOVED: createStandardAction('ROAD_CLOSURE/POINT_REMOVED')<void>(),
     POINT_SELECTED: createStandardAction('ROAD_CLOSURE/POINT_SELECTED')<number[]>(),
     PREVIOUS_SELECTION: createStandardAction('ROAD_CLOSURE/PREVIOUS_SELECTION')<void>(),
+    ROAD_CLOSURE_CREATED: createStandardAction('ROAD_CLOSURE/ROAD_CLOSURE_CREATED')<void>(),
+    ROAD_CLOSURE_DESELECTED: createStandardAction('ROAD_CLOSURE/ROAD_CLOSURE_DESELECTED')<void>(),
+    ROAD_CLOSURE_SELECTED: createStandardAction('ROAD_CLOSURE/ROAD_CLOSURE_SELECTED')<number>(),
     VIEWPORT_CHANGED: createStandardAction('ROAD_CLOSURE/VIEWPORT_CHANGED'),
 };
 // side effects
@@ -58,6 +63,7 @@ export const findMatchedStreet = () => (dispatch: Dispatch<any>, getState: any) 
             authKey: "bdd23fa1-7ac5-4158-b354-22ec946bb575",
             bearingTolerance: 35,
             ignoreDirection: true,
+            includeIntersections: true,
             includeStreetnames: true,
             lengthTolerance: 0.25,
             searchRadius: 25,
@@ -73,6 +79,7 @@ export interface IRoadClosureState {
     currentIndex: number,
     currentSelectionIndex: number,
     isFetchingMatchedStreets: boolean,
+    isShowingRoadClosureList: boolean,
     items: RoadClosureStateItem[],
 };
 
@@ -80,12 +87,35 @@ const defaultState: IRoadClosureState = {
     currentIndex: 0,
     currentSelectionIndex: 0,
     isFetchingMatchedStreets: false,
+    isShowingRoadClosureList: false,
     items: [ new RoadClosureStateItem() ],
 };
 
 export const roadClosureReducer = (state: IRoadClosureState = defaultState, action: RoadClosureAction) => {
     let updatedItems;
     switch (action.type) {
+        case "ROAD_CLOSURE/ROAD_CLOSURE_CREATED":
+            updatedItems = [
+                ...state.items
+            ];
+            const newItemIndex = state.items.length + 1;
+            updatedItems[newItemIndex] = new RoadClosureStateItem();
+            
+            return {
+                ...state,
+                currentIndex: newItemIndex,
+                items: updatedItems
+            };
+        case "ROAD_CLOSURE/ROAD_CLOSURE_SELECTED":
+            return {
+                ...state,
+                isShowingRoadClosureList: false,
+            };
+        case "ROAD_CLOSURE/ROAD_CLOSURE_DESELECTED":
+            return {
+                ...state,
+                isShowingRoadClosureList: true
+            };
         case "ROAD_CLOSURE/PREVIOUS_SELECTION":
             return {
                 ...state,
@@ -106,11 +136,26 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             const newSelectionIndex = updatedItems[state.currentIndex].selectedPoints.length;
             updatedItems[state.currentIndex].selectedPoints[newSelectionIndex] = [];
 
+            updatedItems[state.currentIndex].form.street[newSelectionIndex] = [];
+
             return {
                 ...state,
                 currentSelectionIndex: newSelectionIndex,
                 items: updatedItems,
             }
+        case "ROAD_CLOSURE/POINT_REMOVED": 
+            updatedItems = [
+                ...state.items
+            ];
+            updatedItems[state.currentIndex].selectedPoints[state.currentSelectionIndex] = dropRight(updatedItems[state.currentIndex].selectedPoints[state.currentSelectionIndex]);
+            updatedItems[state.currentIndex].invalidStreets[state.currentSelectionIndex] = [];
+            updatedItems[state.currentIndex].matchedStreets[state.currentSelectionIndex] = [];
+            updatedItems[state.currentIndex].unmatchedStreets[state.currentSelectionIndex] = [];
+            
+            return {
+                ...state,
+                items: updatedItems
+            };
         case "ROAD_CLOSURE/POINT_SELECTED":
             updatedItems = [
                 ...state.items
@@ -140,10 +185,12 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             const output = {};
             forEach(updatedItems[state.currentIndex].matchedStreets[state.currentSelectionIndex], (featureCollection: any) => {
                 forEach(featureCollection.features, (segment: any, index) => {
-                    if (!output[segment.properties.streetname]) {
-                        output[segment.properties.streetname] = [];
+                    if (getType(segment) === "LineString") {
+                        if (!output[segment.properties.streetname]) {
+                            output[segment.properties.streetname] = [];
+                        }
+                        output[segment.properties.streetname].push(index);
                     }
-                    output[segment.properties.streetname].push(index);
                 });
             })
 

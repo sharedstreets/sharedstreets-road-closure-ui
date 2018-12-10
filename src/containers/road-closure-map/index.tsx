@@ -11,6 +11,7 @@ export default connect<{}, {}, IRoadClosureMapProps>(
     mapStateToProps,
     {
         findMatchedStreet,
+        pointRemoved: ACTIONS.POINT_REMOVED,
         pointSelected: ACTIONS.POINT_SELECTED,
     },
 )(RoadClosureMap) as React.ComponentClass<{}>;

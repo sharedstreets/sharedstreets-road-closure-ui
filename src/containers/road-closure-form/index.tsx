@@ -16,6 +16,7 @@ export default connect<{}, {}, IRoadClosureFormProps>(
     mapStateToProps,
     {
         addNewSelection: ACTIONS.ADD_NEW_SELECTION,
+        deselectRoadClosure: ACTIONS.ROAD_CLOSURE_DESELECTED,
         inputChanged: ACTIONS.INPUT_CHANGED,
         nextSelection: ACTIONS.NEXT_SELECTION,
         previousSelection: ACTIONS.PREVIOUS_SELECTION,

@@ -7,8 +7,8 @@ import {
   InputGroup,
   Popover,
   Position,
-  Radio,
-  RadioGroup,
+  // Radio,
+  // RadioGroup,
 } from '@blueprintjs/core';
 import {
   DateRangePicker,
@@ -31,6 +31,7 @@ import './road-closure-form.css';
 
 export interface IRoadClosureFormProps {
   addNewSelection: () => void,
+  deselectRoadClosure: () => void,
   nextSelection: () => void,
   previousSelection: () => void,
   inputChanged: (payload: any) => void,
@@ -46,6 +47,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
     this.handleChangeReference = this.handleChangeReference.bind(this);
     this.handleChangeSubtype = this.handleChangeSubtype.bind(this);
     this.handleChangeTime = this.handleChangeTime.bind(this);
+    this.handleSave = this.handleSave.bind(this);
     this.renderDateButtonText = this.renderDateButtonText.bind(this);
   }
 
@@ -96,6 +98,10 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
     })
   }
 
+  public handleSave() {
+    this.props.deselectRoadClosure();
+  }
+
   public renderDateButtonText() {
     let output = "Click to pick start and end time";
     if (this.props.currentRoadClosureItem && this.props.currentRoadClosureItem.form.startTime && this.props.currentRoadClosureItem.form.endTime) {
@@ -109,15 +115,13 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
   }
 
   public renderEmptyMatchedStreetsTable() {
-    return <table>
-      <div className="SHST-Matched-Streets-Table-Empty bp3-non-ideal-state">
+    return <div className="SHST-Matched-Streets-Table-Empty bp3-non-ideal-state">
       <div className="bp3-non-ideal-state-visual">
         <span className="bp3-icon bp3-icon-arrow-right" />
       </div>
       <h4 className="bp3-heading">No streets selected</h4>
       <div>To start entering a road closure, click two (or more) points along the length of the affected street(s).</div>
-    </div>
-    </table>;
+    </div>;
   }
 
   public renderMatchedStreetsTable() {
@@ -158,30 +162,33 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
 
   public render() {
     return (
-        <div className="SHST-Road-Closure-Form">
+        <div
+          className="SHST-Road-Closure-Form"
+          style={{
+            display: this.props.roadClosure.isShowingRoadClosureList ? "none" : ""
+          }}
+        >
             <Card>
-              {!isEmpty(this.props.currentRoadClosureItem.form.street[0]) && 
-                <label className={"bp3-label"}>
+              <label className={"bp3-label"}>
                 Selection
                 <span className={"bp3-text-muted"}> ({this.props.roadClosure.currentSelectionIndex+1} of {this.props.currentRoadClosureItem.selectedPoints.length})</span>
-                </label>
-              }
-              {!isEmpty(this.props.currentRoadClosureItem.form.street[0]) && this.renderMatchedStreetsTable()}
-              {isEmpty(this.props.currentRoadClosureItem.form.street[0]) && this.renderEmptyMatchedStreetsTable()}
+              </label>
+              {!isEmpty(this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex]) && this.renderMatchedStreetsTable()}
+              {isEmpty(this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex]) && this.renderEmptyMatchedStreetsTable()}
               <ButtonGroup
                 fill={true}
               >
                 <Button
-                  disabled={isEmpty(this.props.currentRoadClosureItem.form.street[0]) || this.props.roadClosure.currentSelectionIndex === 0}
+                  disabled={this.props.roadClosure.currentSelectionIndex === 0}
                   onClick={this.props.previousSelection}
                   text={"Previous selection"} />
                 <Button
-                  disabled={isEmpty(this.props.currentRoadClosureItem.form.street[0]) || this.props.roadClosure.currentSelectionIndex === this.props.currentRoadClosureItem.form.street.length-1}
+                  disabled={this.props.roadClosure.currentSelectionIndex + 1 === this.props.currentRoadClosureItem.form.street.length}
                   onClick={this.props.nextSelection}
                   text={"Next selection"} />
                 <Button
-                  disabled={isEmpty(this.props.currentRoadClosureItem.form.street[0])}
-                  intent={"success"}
+                  disabled={isEmpty(this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex])}
+                  intent={"primary"}
                   onClick={this.props.addNewSelection}
                   text={"Add new selection"} />
               </ButtonGroup>
@@ -193,7 +200,6 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
               <Popover
                 content={              
                   <DateRangePicker
-
                     shortcuts={false}
                     timePrecision={TimePrecision.MINUTE}
                     onChange={this.handleChangeTime}
@@ -227,16 +233,33 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                   // value={this.state.value}
               />
             </FormGroup>
-            <RadioGroup
-                label="Sub Type"
-                onChange={this.handleChangeSubtype}
-                selectedValue={this.props.currentRoadClosureItem.form.subtype}
+            <FormGroup
+              label="Sub Type"
+              labelInfo={"(optional)"}>
+              <div className="bp3-select">
+                <select onChange={this.handleChangeSubtype}>
+                  <option defaultChecked={true} value={''}>Choose a subtype...</option>
+                  <option value="ROAD_CLOSED_HAZARD">ROAD_CLOSED_HAZARD</option>
+                  <option value="ROAD_CLOSED_CONSTRUCTION">ROAD_CLOSED_CONSTRUCTION</option>
+                  <option value="ROAD_CLOSED_EVENT">ROAD_CLOSED_EVENT</option>
+                </select>
+              </div>
+            </FormGroup>
+            <ButtonGroup
+              fill={true}
             >
-                <Radio label="ROAD_CLOSED_HAZARD" value="ROAD_CLOSED_HAZARD" />
-                <Radio label="ROAD_CLOSED_CONSTRUCTION" value="ROAD_CLOSED_CONSTRUCTION" />
-                <Radio label="ROAD_CLOSED_EVENT" value="ROAD_CLOSED_EVENT" />
-            </RadioGroup>
-            <button>Confirm road closure</button>
+              <Button
+                large={true}
+                text={"Cancel"}
+                onClick={this.handleSave}
+              />
+              <Button
+                intent="success"
+                large={true}
+                text={"Save this road closure"}
+                onClick={this.handleSave}
+              />
+            </ButtonGroup>
         </div>
     );
   }
