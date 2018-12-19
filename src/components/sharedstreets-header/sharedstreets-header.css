@@ -8,7 +8,17 @@
     border-bottom: 1px solid black;
     z-index: 100;
     width: 100%;
+    display: flex;
+    align-items: center;
 }
 .SHST-Header-Logo {
     height: 30px;
+}
+
+.SHST-Header > span {
+    margin-left: 10px;
+}
+
+.SHST-Header-Title {
+    font-weight: bold;
 }

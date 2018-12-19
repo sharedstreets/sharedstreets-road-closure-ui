@@ -17,6 +17,17 @@
     width: 100%;
 } */
 
+.SHST-Road-Closure-Form-Bottom-Actions {
+    position: absolute;
+    bottom: 0;
+    width: 50%;
+    height: 40px;
+    max-width: 750px;
+    margin: 0 auto;
+    z-index: 100;
+    padding-right: 50px;
+}
+
 .SHST-Matched-Streets-Table {
     width: 100%;
     min-height: 200px;

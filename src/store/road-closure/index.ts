@@ -1,8 +1,9 @@
 import { getType } from '@turf/invariant';
 import { dropRight, forEach } from 'lodash';
 import { Dispatch } from 'redux';
+import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
 import { RoadClosureStateItem } from "src/models/RoadClosureStateItem";
-import { lineStringFromSelectedPoints } from 'src/selectors/road-closure';
+import { currentRoadClosureItemToGeojson, lineStringFromSelectedPoints } from 'src/selectors/road-closure';
  import {
      ActionType,
      createAsyncAction,
@@ -10,6 +11,7 @@ import { lineStringFromSelectedPoints } from 'src/selectors/road-closure';
     //  StateType
 } from 'typesafe-actions';
 import { fetchAction } from '../api';
+import { RootState } from '../configureStore';
 
 
 // actions
@@ -23,7 +25,7 @@ export interface IFetchSharedstreetGeomsSuccessResponse {
 export interface IRoadClosureFormInputChangedPayload {
     key: string,
     street?: string,
-    streetnameIndex: number,
+    referenceId: string,
     startTime?: string,
     endTime?: string,
     description?: string,
@@ -45,18 +47,22 @@ export const ACTIONS = {
     PREVIOUS_SELECTION: createStandardAction('ROAD_CLOSURE/PREVIOUS_SELECTION')<void>(),
     ROAD_CLOSURE_CREATED: createStandardAction('ROAD_CLOSURE/ROAD_CLOSURE_CREATED')<void>(),
     ROAD_CLOSURE_DESELECTED: createStandardAction('ROAD_CLOSURE/ROAD_CLOSURE_DESELECTED')<void>(),
+    ROAD_CLOSURE_HIDE_OUTPUT: createStandardAction('ROAD_CLOSURE/ROAD_CLOSURE_HIDE_OUTPUT')<void>(),
     ROAD_CLOSURE_SELECTED: createStandardAction('ROAD_CLOSURE/ROAD_CLOSURE_SELECTED')<number>(),
+    ROAD_CLOSURE_VIEW_OUTPUT: createStandardAction('ROAD_CLOSURE/ROAD_CLOSURE_VIEW_OUTPUT')<void>(),
     VIEWPORT_CHANGED: createStandardAction('ROAD_CLOSURE/VIEWPORT_CHANGED'),
 };
 // side effects
 export const findMatchedStreet = () => (dispatch: Dispatch<any>, getState: any) => {
-    // const state = getState();
+    const {
+        roadClosure,
+    } = getState() as RootState;
 
     return dispatch(fetchAction({
         afterRequest: (data) => {
             return data;
         },
-        body: lineStringFromSelectedPoints(getState()),
+        body: lineStringFromSelectedPoints(roadClosure),
         endpoint: 'match/geoms',
         method: 'post',
         params: {
@@ -80,7 +86,9 @@ export interface IRoadClosureState {
     currentSelectionIndex: number,
     isFetchingMatchedStreets: boolean,
     isShowingRoadClosureList: boolean,
+    isShowingRoadClosureOutputViewer: boolean,
     items: RoadClosureStateItem[],
+    output: any,
 };
 
 const defaultState: IRoadClosureState = {
@@ -88,7 +96,11 @@ const defaultState: IRoadClosureState = {
     currentSelectionIndex: 0,
     isFetchingMatchedStreets: false,
     isShowingRoadClosureList: false,
+    isShowingRoadClosureOutputViewer: false,
     items: [ new RoadClosureStateItem() ],
+    output: {
+        incidents: []
+    },
 };
 
 export const roadClosureReducer = (state: IRoadClosureState = defaultState, action: RoadClosureAction) => {
@@ -114,7 +126,20 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
         case "ROAD_CLOSURE/ROAD_CLOSURE_DESELECTED":
             return {
                 ...state,
-                isShowingRoadClosureList: true
+                isShowingRoadClosureList: true,
+                isShowingRoadClosureOutputViewer: false,
+            };
+        case "ROAD_CLOSURE/ROAD_CLOSURE_HIDE_OUTPUT":
+            return {
+                ...state,
+                isShowingRoadClosureOutputViewer: false,
+                output: null,
+            };
+        case "ROAD_CLOSURE/ROAD_CLOSURE_VIEW_OUTPUT":
+            return {
+                ...state,
+                isShowingRoadClosureOutputViewer: true,
+                output: currentRoadClosureItemToGeojson(state),
             };
         case "ROAD_CLOSURE/PREVIOUS_SELECTION":
             return {
@@ -136,7 +161,7 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             const newSelectionIndex = updatedItems[state.currentIndex].selectedPoints.length;
             updatedItems[state.currentIndex].selectedPoints[newSelectionIndex] = [];
 
-            updatedItems[state.currentIndex].form.street[newSelectionIndex] = [];
+            updatedItems[state.currentIndex].form.street[newSelectionIndex] = {};
 
             return {
                 ...state,
@@ -184,17 +209,16 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
 
             const output = {};
             forEach(updatedItems[state.currentIndex].matchedStreets[state.currentSelectionIndex], (featureCollection: any) => {
-                forEach(featureCollection.features, (segment: any, index) => {
+                forEach(featureCollection.features, (segment: any, index: number) => {
                     if (getType(segment) === "LineString") {
-                        if (!output[segment.properties.streetname]) {
-                            output[segment.properties.streetname] = [];
-                        }
-                        output[segment.properties.streetname].push(index);
+                        output[segment.properties.referenceId] = new RoadClosureFormStateStreet(index, segment.properties.streetname, segment.properties.referenceId);
                     }
                 });
-            })
+            });
+            updatedItems[state.currentIndex].form.street[state.currentSelectionIndex] = output;
 
-            updatedItems[state.currentIndex].form.street[state.currentSelectionIndex] = Object.keys(output);
+            // const newStreetIndexMap = streetnameReferenceIdMap(state);
+            // updatedItems[state.currentIndex].streetnameReferenceId[state.currentSelectionIndex] = newStreetIndexMap;
 
             return {
                 ...state,
@@ -207,7 +231,7 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 ...state.items,
             ];
             if (key === "street") {
-                updatedItems[state.currentIndex].form[key][state.currentSelectionIndex][action.payload.streetnameIndex] = action.payload[key] as string;
+                updatedItems[state.currentIndex].form[key][state.currentSelectionIndex][action.payload.referenceId].streetname = action.payload[key];
             } else {
                 updatedItems[state.currentIndex].form[key] = action.payload[key];
             }

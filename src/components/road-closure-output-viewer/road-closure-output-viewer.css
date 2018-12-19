@@ -1,4 +1,4 @@
-.SHST-Road-Closure-List {
+.SHST-Road-Closure-Output-Viewer {
     flex: 1;
     margin: 0 auto;
     max-width: 800px;
@@ -8,11 +8,11 @@
     padding: 50px;
 }
 
-.SHST-Road-Closure-List-hidden {
+.SHST-Road-Closure-Output-Viewer-hidden {
     display: none;
 }
 
-.SHST-Road-Closure-List-Bottom-Actions {
+.SHST-Road-Closure-Output-Viewer-Bottom-Actions {
     position: absolute;
     bottom: 0;
     width: 50%;
@@ -21,6 +21,6 @@
     padding-right: 50px;
 }
 
-.SHST-Road-Closure-List > div {
+.SHST-Road-Closure-Output-Viewer > div {
     display: block;
 }

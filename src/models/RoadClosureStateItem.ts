@@ -5,4 +5,5 @@ export class RoadClosureStateItem {
     public unmatchedStreets: GeoJSON.FeatureCollection[][] = [[]];
     public invalidStreets: GeoJSON.FeatureCollection[][] = [[]];
     public form: RoadClosureFormStateItem = new RoadClosureFormStateItem();
+    public streetnameReferenceId: any[] = [];
 }

@@ -10,8 +10,8 @@ import * as mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import * as React from 'react';
 import { IRoadClosureState } from 'src/store/road-closure';
-import BaseControl from '../base-map-control';
-import UndoButtonMapControl from '../undo-button-map-control';
+// import BaseControl from '../base-map-control';
+// import UndoButtonMapControl from '../undo-button-map-control';
 import './road-closure-map.css';
 
 (mapboxgl as any).accessToken = "pk.eyJ1IjoidHJhbnNwb3J0cGFydG5lcnNoaXAiLCJhIjoiY2ptOTN5N3Q3MHN5aDNxbGs2MzhsN3dneiJ9.K4j9mXsvfGCYtM8YouwCKg";
@@ -63,9 +63,9 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
     // this.mapContainer.addControl(
     //   new mapboxgl.FullscreenControl()
     // );
-    this.mapContainer.addControl(
-      new BaseControl("SHST-Undo-Point-Select-Container", UndoButtonMapControl, this.props.pointRemoved)
-    );
+    // this.mapContainer.addControl(
+    //   new BaseControl("SHST-Undo-Point-Select-Container", UndoButtonMapControl, this.props.pointRemoved)
+    // );
   }
 
   public componentDidUpdate(prevProps: IRoadClosureMapProps) {
@@ -121,6 +121,7 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
     if (!this.props.roadClosure.isFetchingMatchedStreets && prevProps.roadClosure.isFetchingMatchedStreets) {
       forEach(items[currentIndex].matchedStreets, (matchedStreetList, outerIndex) => {
         forEach(matchedStreetList, (matchedStreet, index) => {
+          // TODO - draw linestrings separately from points, etc
           this.drawFromGeojson("SHST-match-geom-line-"+outerIndex+index, "line", matchedStreet, {
             "line-color": "blue",
             "line-opacity": 0.35,
@@ -153,8 +154,14 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
         currentIndex,
         currentSelectionIndex,
         items,
+        isShowingRoadClosureList,
+        isShowingRoadClosureOutputViewer,
       }
     } = this.props;
+
+    if (isShowingRoadClosureList || isShowingRoadClosureOutputViewer) {
+      return;
+    }
 
     this.props.pointSelected(event.lngLat);
     if (items[currentIndex].selectedPoints[currentSelectionIndex] && items[currentIndex].selectedPoints[currentSelectionIndex].length > 1) {

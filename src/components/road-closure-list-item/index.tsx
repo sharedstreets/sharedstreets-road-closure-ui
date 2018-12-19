@@ -22,6 +22,7 @@ class RoadClosureListItem extends React.Component<IRoadClosureListItemProps, any
     public render() {
         return (
             <Card
+                className={"SHST-Road-Closure-List-Item"}
                 interactive={true}
                 onClick={this.handleClickCard}
             >

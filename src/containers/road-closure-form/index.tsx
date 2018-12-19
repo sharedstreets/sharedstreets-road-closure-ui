@@ -1,15 +1,13 @@
 import { connect } from 'react-redux';
-import { currentRoadClosureItemSelector, streetnameMatchedStreetIndexMap } from 'src/selectors/road-closure';
+import { currentRoadClosureItemSelector, streetnameReferenceIdMap } from 'src/selectors/road-closure';
 import { RootState } from 'src/store/configureStore';
 import RoadClosureForm, { IRoadClosureFormProps } from '../../components/road-closure-form';
 import { ACTIONS } from '../../store/road-closure';
 
 const mapStateToProps = (state: RootState) => ({
-    currentRoadClosureItem: currentRoadClosureItemSelector({
-        roadClosure: state.roadClosure
-    }),
+    currentRoadClosureItem: currentRoadClosureItemSelector(state.roadClosure),
     roadClosure: state.roadClosure,
-    streetnameMatchedStreetIndexMap: streetnameMatchedStreetIndexMap(state),
+    streetnameToReferenceId: streetnameReferenceIdMap(state.roadClosure),
 });
 
 export default connect<{}, {}, IRoadClosureFormProps>(
@@ -17,8 +15,10 @@ export default connect<{}, {}, IRoadClosureFormProps>(
     {
         addNewSelection: ACTIONS.ADD_NEW_SELECTION,
         deselectRoadClosure: ACTIONS.ROAD_CLOSURE_DESELECTED,
+        hideRoadClosureOutput: ACTIONS.ROAD_CLOSURE_HIDE_OUTPUT,
         inputChanged: ACTIONS.INPUT_CHANGED,
         nextSelection: ACTIONS.NEXT_SELECTION,
         previousSelection: ACTIONS.PREVIOUS_SELECTION,
+        viewRoadClosureOutput: ACTIONS.ROAD_CLOSURE_VIEW_OUTPUT,
     },
 )(RoadClosureForm) as React.ComponentClass<{}>;

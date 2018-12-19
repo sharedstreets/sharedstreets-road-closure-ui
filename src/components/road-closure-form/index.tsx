@@ -16,11 +16,14 @@ import {
 } from '@blueprintjs/datetime';
 import {
   forEach,
+  forOwn,
   isEmpty,
 } from 'lodash';
 import * as React from 'react';
+// import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
 import { RoadClosureStateItem } from 'src/models/RoadClosureStateItem';
 import { IRoadClosureState } from 'src/store/road-closure';
+import RoadClosureBottomActionBar from '../road-closure-bottom-action-bar';
 
 import '../../../node_modules/@blueprintjs/core/lib/css/blueprint.css';
 import '../../../node_modules/@blueprintjs/datetime/lib/css/blueprint-datetime.css';
@@ -37,7 +40,7 @@ export interface IRoadClosureFormProps {
   inputChanged: (payload: any) => void,
   roadClosure: IRoadClosureState,
   currentRoadClosureItem: RoadClosureStateItem,
-  streetnameMatchedStreetIndexMap: any,
+  streetnameToReferenceId: any,
 };
 class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
   constructor(props: IRoadClosureFormProps) {
@@ -48,14 +51,17 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
     this.handleChangeSubtype = this.handleChangeSubtype.bind(this);
     this.handleChangeTime = this.handleChangeTime.bind(this);
     this.handleSave = this.handleSave.bind(this);
+    this.handleStreetMouseover = this.handleStreetMouseover.bind(this);
     this.renderDateButtonText = this.renderDateButtonText.bind(this);
   }
 
   public handleChangeStreetName(e: any) {
-    this.props.inputChanged({
-      key: 'street',
-      street: e.target.value,
-      streetnameIndex: Number.parseInt(e.target.id, 2)
+    forEach(this.props.streetnameToReferenceId[e.target.id], (referenceId) => {
+      this.props.inputChanged({
+        key: 'street',
+        referenceId,
+        street: e.target.value,
+      });
     });
   }
 
@@ -98,6 +104,10 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
     })
   }
 
+  public handleStreetMouseover(e: any) {
+    return;
+  }
+
   public handleSave() {
     this.props.deselectRoadClosure();
   }
@@ -126,29 +136,66 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
 
   public renderMatchedStreetsTable() {
     const output: any = [];
-    if ( !isEmpty(this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex]) ) {
-      forEach(this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex], (street: any, index) => {
-        output.push(<tr key={index}>
-          <td>
-            <InputGroup
-              id={`${index}`}
-              value={street}
-              onChange={this.handleChangeStreetName}
-            />
-          </td>
-          <td>
-            {null}
-          </td>
-          <td>
-            {null}
-          </td>
-        </tr>)
+    // if ( !isEmpty(this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex]) ) {
+    //   forEach(this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex], (street: RoadClosureFormStateStreet, index) => {
+    //     output.push(
+    //     <tr
+    //       id={street.referenceId}
+    //       onMouseOver={this.handleStreetMouseover}
+    //       key={street.referenceId}>
+    //       <td>
+    //         <Button
+    //           icon={"delete"} />
+    //       </td>
+    //       <td>
+    //         <InputGroup
+    //           id={street.referenceId}
+    //           value={street.streetname}
+    //           onChange={this.handleChangeStreetName}
+    //         />
+    //       </td>
+    //       <td>
+    //         {null}
+    //       </td>
+    //       <td>
+    //         {null}
+    //       </td>
+    //     </tr>)
+    //   });
+    // }
+
+    if ( !isEmpty(this.props.streetnameToReferenceId) ) {
+      forOwn(this.props.streetnameToReferenceId, (refIds, streetName, streetnameToReferenceIdIndex) => {
+        output.push(
+          <tr
+            id={streetName}
+            onMouseOver={this.handleStreetMouseover}
+            key={streetName}>
+            <td>
+              <Button
+                icon={"delete"} />
+            </td>
+            <td>
+              <InputGroup
+                id={streetName}
+                value={streetName}
+                onChange={this.handleChangeStreetName}
+              />
+            </td>
+            <td>
+              {null}
+            </td>
+            <td>
+              {null}
+            </td>
+          </tr>)
       });
     }
 
     return <table className={"SHST-Matched-Streets-Table bp3-html-table bp3-condensed"}>
       <thead>
         <tr>
+          <th>Actions</th>
           <th>Street name</th>
           <th>From</th>
           <th>To</th>
@@ -164,9 +211,9 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
     return (
         <div
           className="SHST-Road-Closure-Form"
-          style={{
-            display: this.props.roadClosure.isShowingRoadClosureList ? "none" : ""
-          }}
+          // style={{
+          //   display: this.props.roadClosure.isShowingRoadClosureList ? "none" : ""
+          // }}
         >
             <Card>
               <label className={"bp3-label"}>
@@ -245,21 +292,28 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                 </select>
               </div>
             </FormGroup>
-            <ButtonGroup
-              fill={true}
-            >
-              <Button
-                large={true}
-                text={"Cancel"}
-                onClick={this.handleSave}
-              />
-              <Button
-                intent="success"
-                large={true}
-                text={"Save this road closure"}
-                onClick={this.handleSave}
-              />
-            </ButtonGroup>
+            <RoadClosureBottomActionBar>
+                <ButtonGroup
+                  fill={true}
+                >
+                  <Button
+                    large={true}
+                    text={"Cancel"}
+                    onClick={this.handleSave}
+                  />
+                  <Button
+                    large={true}
+                    text={"Output closure"}
+                    onClick={this.handleSave}
+                  />
+                  <Button
+                    intent="success"
+                    large={true}
+                    text={"Save this road closure"}
+                    onClick={this.handleSave}
+                  />
+                </ButtonGroup>
+              </RoadClosureBottomActionBar>
         </div>
     );
   }

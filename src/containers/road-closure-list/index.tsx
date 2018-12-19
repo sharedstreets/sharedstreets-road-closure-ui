@@ -11,6 +11,8 @@ export default connect<{}, {}, IRoadClosureListProps>(
     mapStateToProps,
     {
         createRoadClosure: ACTIONS.ROAD_CLOSURE_CREATED,
-        selectRoadClosure: ACTIONS.ROAD_CLOSURE_SELECTED
+        hideRoadClosureOutput: ACTIONS.ROAD_CLOSURE_HIDE_OUTPUT,
+        selectRoadClosure: ACTIONS.ROAD_CLOSURE_SELECTED,
+        viewRoadClosureOutput: ACTIONS.ROAD_CLOSURE_VIEW_OUTPUT,
     },
 )(RoadClosureList) as React.ComponentClass<{}>;
