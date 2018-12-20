@@ -38,7 +38,7 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
         return (
             <div className={"SHST-Road-Closure-Output-Viewer"}>
                 Waze CIFS Output
-                <Pre>
+                <Pre className={"SHST-Road-Closure-Output-Viewer-Code"}>
                     {JSON.stringify(this.props.output, null, 2)}
                 </Pre>
                 <RoadClosureBottomActionBar>

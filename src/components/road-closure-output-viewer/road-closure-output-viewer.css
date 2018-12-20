@@ -24,3 +24,7 @@
 .SHST-Road-Closure-Output-Viewer > div {
     display: block;
 }
+
+.SHST-Road-Closure-Output-Viewer-Code {
+    overflow: scroll;
+}

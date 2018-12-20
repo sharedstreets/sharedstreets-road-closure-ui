@@ -44,7 +44,7 @@ class RoadClosureList extends React.Component<IRoadClosureListProps, any> {
                         fill={true}>
                         <Button
                             large={true}
-                            text={"Output all closures"}
+                            text={"View output"}
                             onClick={this.handleClickViewOutput}/>
                         <Button
                             intent="success"

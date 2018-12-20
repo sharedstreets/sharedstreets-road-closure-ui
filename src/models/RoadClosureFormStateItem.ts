@@ -1,6 +1,6 @@
 export class RoadClosureFormStateItem {
     public incidentId: string;
-    public street: Array<{}> = [{}];
+    public street: Array<{}> = [];
     public type: string = "ROAD_CLOSED";
     public startTime: string;
     public endTime: string;

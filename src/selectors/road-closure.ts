@@ -56,10 +56,32 @@ export const streetnameReferenceIdMap = (state: IRoadClosureState) => {
     return output;
 };
 
+export function allRoadClosureItemsToGeojson(state: IRoadClosureState) {
+    const output = {
+        incidents: Array<RoadClosureWazeIncidentsItem>()
+    };
+    forEach((state.items), (currentItem) => {
+        forEach((currentItem.matchedStreets), (currentMatchedStreets) => {
+            if (currentMatchedStreets) {
+                forEach(currentMatchedStreets, (featureCollection: GeoJSON.FeatureCollection, selectionIndex) => {
+                    forEach(featureCollection.features, (segment: GeoJSON.Feature, index) => {
+                        if (getType(segment) === "LineString") {
+                            const outputItem = new RoadClosureWazeIncidentsItem(segment, currentItem.form);
+                            output.incidents.push(outputItem);
+                        }
+                    })
+                });
+            }
+        });
+    });
+    return output;
+}
+
 export function currentRoadClosureItemToGeojson(state: IRoadClosureState){
     // const streetnameMatchedStreetMap = streetnameMatchedStreetIndexMap(state);
     const currentItem = currentRoadClosureItemSelector(state);
     const currentMatchedStreets = currentItem.matchedStreets[state.currentSelectionIndex];
+    // const currentFormStreets = currentItem.form.street[state.currentSelectionIndex];
     const output = {
         incidents: Array<RoadClosureWazeIncidentsItem>()
     };

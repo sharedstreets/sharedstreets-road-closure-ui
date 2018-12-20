@@ -1,4 +1,8 @@
+import {
+    forEach,
+} from 'lodash';
 import { RoadClosureFormStateItem } from './RoadClosureFormStateItem';
+import { RoadClosureFormStateStreet } from './RoadClosureFormStateStreet';
 
 export class RoadClosureWazeIncidentsItem {
     public id: string;
@@ -32,12 +36,28 @@ export class RoadClosureWazeIncidentsItem {
         this.type = form.type;
         this.subtype = form.subtype;
 
-        // this.location.street = formx
-        this.location.polyline = this.setPolyline();
-
+        this.location.street = this.setStreetname(matchedStreetSegment.properties, form.street);
+        this.location.polyline = this.setPolyline(matchedStreetSegment.geometry);
     }
 
-    private setPolyline() : string {
-        return '';
+    private setStreetname(matchedStreetSegmentProperties: any, streetArray: RoadClosureFormStateStreet[] | Array<{}>) : string {
+        let output = '';
+        forEach(streetArray, (streetRefIdMap: RoadClosureFormStateStreet) => {
+            if (streetRefIdMap[matchedStreetSegmentProperties.referenceId]) {
+                output = streetRefIdMap[matchedStreetSegmentProperties.referenceId].streetname;
+            }
+        });
+
+        return output ? output : '';
+    }
+
+    private setPolyline(matchedStreetSegmentGeometry: GeoJSON.Geometry) : string {
+        let output = '';
+        if (matchedStreetSegmentGeometry.type === "LineString") {
+            forEach(matchedStreetSegmentGeometry.coordinates, (coords) => {
+                output += " " + coords.join(" ");
+            });
+        }
+        return output;
     }
 }

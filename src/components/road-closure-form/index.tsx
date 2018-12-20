@@ -15,7 +15,8 @@ import {
   TimePrecision,
 } from '@blueprintjs/datetime';
 import {
-  forEach,
+  // forEach,
+  // difference,
   forOwn,
   isEmpty,
 } from 'lodash';
@@ -30,7 +31,6 @@ import '../../../node_modules/@blueprintjs/datetime/lib/css/blueprint-datetime.c
 import '../../../node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css';
 import '../../../node_modules/normalize.css/normalize.css'
 import './road-closure-form.css';
-
 
 export interface IRoadClosureFormProps {
   addNewSelection: () => void,
@@ -55,13 +55,11 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
     this.renderDateButtonText = this.renderDateButtonText.bind(this);
   }
 
-  public handleChangeStreetName(e: any) {
-    forEach(this.props.streetnameToReferenceId[e.target.id], (referenceId) => {
-      this.props.inputChanged({
-        key: 'street',
-        referenceId,
-        street: e.target.value,
-      });
+  public handleChangeStreetName(e: any): any {
+    this.props.inputChanged({
+      key: 'street',
+      referenceIds: this.props.streetnameToReferenceId[e.target.id],
+      street: e.target.value,
     });
   }
 
@@ -136,33 +134,6 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
 
   public renderMatchedStreetsTable() {
     const output: any = [];
-    // if ( !isEmpty(this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex]) ) {
-    //   forEach(this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex], (street: RoadClosureFormStateStreet, index) => {
-    //     output.push(
-    //     <tr
-    //       id={street.referenceId}
-    //       onMouseOver={this.handleStreetMouseover}
-    //       key={street.referenceId}>
-    //       <td>
-    //         <Button
-    //           icon={"delete"} />
-    //       </td>
-    //       <td>
-    //         <InputGroup
-    //           id={street.referenceId}
-    //           value={street.streetname}
-    //           onChange={this.handleChangeStreetName}
-    //         />
-    //       </td>
-    //       <td>
-    //         {null}
-    //       </td>
-    //       <td>
-    //         {null}
-    //       </td>
-    //     </tr>)
-    //   });
-    // }
 
     if ( !isEmpty(this.props.streetnameToReferenceId) ) {
       forOwn(this.props.streetnameToReferenceId, (refIds, streetName, streetnameToReferenceIdIndex) => {
@@ -170,13 +141,14 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
           <tr
             id={streetName}
             onMouseOver={this.handleStreetMouseover}
-            key={streetName}>
+            key={"tr-"+refIds.join("-")}>
             <td>
               <Button
                 icon={"delete"} />
             </td>
             <td>
               <InputGroup
+                key={"input-"+refIds.join("-")}
                 id={streetName}
                 value={streetName}
                 onChange={this.handleChangeStreetName}
@@ -265,7 +237,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
               <InputGroup
                   placeholder={"Enter a description here..."}
                   onChange={this.handleChangeDescription}
-                  // value={this.state.value}
+                  value={this.props.currentRoadClosureItem.form.description}
               />
             </FormGroup>
             <FormGroup
@@ -277,14 +249,16 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
               <InputGroup
                   placeholder={"Enter a organization reference name here..."}
                   onChange={this.handleChangeReference}
-                  // value={this.state.value}
+                  value={this.props.currentRoadClosureItem.form.reference}
               />
             </FormGroup>
             <FormGroup
               label="Sub Type"
               labelInfo={"(optional)"}>
               <div className="bp3-select">
-                <select onChange={this.handleChangeSubtype}>
+                <select
+                  value={this.props.currentRoadClosureItem.form.subtype}
+                  onChange={this.handleChangeSubtype}>
                   <option defaultChecked={true} value={''}>Choose a subtype...</option>
                   <option value="ROAD_CLOSED_HAZARD">ROAD_CLOSED_HAZARD</option>
                   <option value="ROAD_CLOSED_CONSTRUCTION">ROAD_CLOSED_CONSTRUCTION</option>
@@ -299,11 +273,6 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                   <Button
                     large={true}
                     text={"Cancel"}
-                    onClick={this.handleSave}
-                  />
-                  <Button
-                    large={true}
-                    text={"Output closure"}
                     onClick={this.handleSave}
                   />
                   <Button

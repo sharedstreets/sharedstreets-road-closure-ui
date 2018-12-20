@@ -3,7 +3,10 @@ import { dropRight, forEach } from 'lodash';
 import { Dispatch } from 'redux';
 import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
 import { RoadClosureStateItem } from "src/models/RoadClosureStateItem";
-import { currentRoadClosureItemToGeojson, lineStringFromSelectedPoints } from 'src/selectors/road-closure';
+import {
+    allRoadClosureItemsToGeojson, 
+    lineStringFromSelectedPoints
+} from 'src/selectors/road-closure';
  import {
      ActionType,
      createAsyncAction,
@@ -25,7 +28,7 @@ export interface IFetchSharedstreetGeomsSuccessResponse {
 export interface IRoadClosureFormInputChangedPayload {
     key: string,
     street?: string,
-    referenceId: string,
+    referenceIds: string[],
     startTime?: string,
     endTime?: string,
     description?: string,
@@ -104,13 +107,13 @@ const defaultState: IRoadClosureState = {
 };
 
 export const roadClosureReducer = (state: IRoadClosureState = defaultState, action: RoadClosureAction) => {
-    let updatedItems;
+    let updatedItems: RoadClosureStateItem[];
     switch (action.type) {
         case "ROAD_CLOSURE/ROAD_CLOSURE_CREATED":
             updatedItems = [
                 ...state.items
             ];
-            const newItemIndex = state.items.length + 1;
+            const newItemIndex = state.items.length;
             updatedItems[newItemIndex] = new RoadClosureStateItem();
             
             return {
@@ -139,7 +142,7 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             return {
                 ...state,
                 isShowingRoadClosureOutputViewer: true,
-                output: currentRoadClosureItemToGeojson(state),
+                output: allRoadClosureItemsToGeojson(state),
             };
         case "ROAD_CLOSURE/PREVIOUS_SELECTION":
             return {
@@ -231,7 +234,9 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 ...state.items,
             ];
             if (key === "street") {
-                updatedItems[state.currentIndex].form[key][state.currentSelectionIndex][action.payload.referenceId].streetname = action.payload[key];
+                forEach(action.payload.referenceIds, (referenceId) => {
+                    updatedItems[state.currentIndex].form[key][state.currentSelectionIndex][referenceId].streetname = action.payload[key];
+                });
             } else {
                 updatedItems[state.currentIndex].form[key] = action.payload[key];
             }
