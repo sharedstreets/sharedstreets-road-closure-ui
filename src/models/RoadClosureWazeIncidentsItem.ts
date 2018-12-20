@@ -36,8 +36,11 @@ export class RoadClosureWazeIncidentsItem {
         this.type = form.type;
         this.subtype = form.subtype;
 
+        this.location.referenceId = matchedStreetSegment.properties!.referenceId;
         this.location.street = this.setStreetname(matchedStreetSegment.properties, form.street);
         this.location.polyline = this.setPolyline(matchedStreetSegment.geometry);
+        this.location.fromStreetnames = matchedStreetSegment.properties!.fromStreetnames;
+        this.location.toStreetnames = matchedStreetSegment.properties!.toStreetnames;
     }
 
     private setStreetname(matchedStreetSegmentProperties: any, streetArray: RoadClosureFormStateStreet[] | Array<{}>) : string {

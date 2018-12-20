@@ -28,7 +28,8 @@ export interface IFetchSharedstreetGeomsSuccessResponse {
 export interface IRoadClosureFormInputChangedPayload {
     key: string,
     street?: string,
-    referenceIds: string[],
+    referenceId: string,
+    referenceIds?: string[],
     startTime?: string,
     endTime?: string,
     description?: string,
@@ -234,9 +235,10 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 ...state.items,
             ];
             if (key === "street") {
-                forEach(action.payload.referenceIds, (referenceId) => {
-                    updatedItems[state.currentIndex].form[key][state.currentSelectionIndex][referenceId].streetname = action.payload[key];
-                });
+                updatedItems[state.currentIndex].form[key][state.currentSelectionIndex][action.payload.referenceId].streetname = action.payload[key];
+                // forEach(action.payload.referenceIds, (referenceId) => {
+                //     updatedItems[state.currentIndex].form[key][state.currentSelectionIndex][referenceId].streetname = action.payload[key];
+                // });
             } else {
                 updatedItems[state.currentIndex].form[key] = action.payload[key];
             }

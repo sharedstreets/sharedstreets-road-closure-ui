@@ -7,6 +7,7 @@ import {
   InputGroup,
   Popover,
   Position,
+  Spinner,
   // Radio,
   // RadioGroup,
 } from '@blueprintjs/core';
@@ -14,14 +15,18 @@ import {
   DateRangePicker,
   TimePrecision,
 } from '@blueprintjs/datetime';
+// import {
+//   getType
+// } from '@turf/invariant';
 import {
-  // forEach,
+  forEach,
   // difference,
-  forOwn,
+  // forOwn,
   isEmpty,
 } from 'lodash';
 import * as React from 'react';
 // import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
+import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
 import { RoadClosureStateItem } from 'src/models/RoadClosureStateItem';
 import { IRoadClosureState } from 'src/store/road-closure';
 import RoadClosureBottomActionBar from '../road-closure-bottom-action-bar';
@@ -41,6 +46,7 @@ export interface IRoadClosureFormProps {
   roadClosure: IRoadClosureState,
   currentRoadClosureItem: RoadClosureStateItem,
   streetnameToReferenceId: any,
+  viewRoadClosureOutput: () => void,
 };
 class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
   constructor(props: IRoadClosureFormProps) {
@@ -58,7 +64,8 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
   public handleChangeStreetName(e: any): any {
     this.props.inputChanged({
       key: 'street',
-      referenceIds: this.props.streetnameToReferenceId[e.target.id],
+      // referenceId: this.props.streetnameToReferenceId[e.target.id],
+      referenceId: e.target.id,
       street: e.target.value,
     });
   }
@@ -135,33 +142,41 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
   public renderMatchedStreetsTable() {
     const output: any = [];
 
-    if ( !isEmpty(this.props.streetnameToReferenceId) ) {
-      forOwn(this.props.streetnameToReferenceId, (refIds, streetName, streetnameToReferenceIdIndex) => {
-        output.push(
-          <tr
-            id={streetName}
-            onMouseOver={this.handleStreetMouseover}
-            key={"tr-"+refIds.join("-")}>
-            <td>
-              <Button
-                icon={"delete"} />
-            </td>
-            <td>
-              <InputGroup
-                key={"input-"+refIds.join("-")}
-                id={streetName}
-                value={streetName}
-                onChange={this.handleChangeStreetName}
-              />
-            </td>
-            <td>
-              {null}
-            </td>
-            <td>
-              {null}
-            </td>
-          </tr>)
+    const currentSelectionIndex = this.props.roadClosure.currentSelectionIndex;
+    const currentMatchedStreets = this.props.currentRoadClosureItem.matchedStreets[this.props.roadClosure.currentIndex][currentSelectionIndex] as any;
+
+    if ( !isEmpty(currentMatchedStreets) ) {
+      forEach(this.props.currentRoadClosureItem.form.street[currentSelectionIndex],
+        (street: RoadClosureFormStateStreet) => {
+          output.push(
+            <tr
+              id={"tr-"+street.referenceId}
+              onMouseOver={this.handleStreetMouseover}
+              key={"tr-"+street.referenceId}>
+              <td>
+                <Button
+                  icon={"delete"} />
+              </td>
+              <td>
+                <InputGroup
+                  key={"input-"+street.referenceId}
+                  id={street.referenceId}
+                  value={street.streetname}
+                  onChange={this.handleChangeStreetName}
+                />
+              </td>
+              <td>
+                {currentMatchedStreets.features[street.matchedStreetIndex]!.properties.fromStreetnames}
+              </td>
+              <td>
+                {currentMatchedStreets.features[street.matchedStreetIndex]!.properties.toStreetnames}
+              </td>
+            </tr>);
       });
+    } else {
+      output.push(
+        <Spinner />
+      )
     }
 
     return <table className={"SHST-Matched-Streets-Table bp3-html-table bp3-condensed"}>
@@ -188,13 +203,13 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
           // }}
         >
             <Card>
-              <label className={"bp3-label"}>
+              {/* <label className={"bp3-label"}>
                 Selection
                 <span className={"bp3-text-muted"}> ({this.props.roadClosure.currentSelectionIndex+1} of {this.props.currentRoadClosureItem.selectedPoints.length})</span>
-              </label>
+              </label> */}
               {!isEmpty(this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex]) && this.renderMatchedStreetsTable()}
               {isEmpty(this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex]) && this.renderEmptyMatchedStreetsTable()}
-              <ButtonGroup
+              {/* <ButtonGroup
                 fill={true}
               >
                 <Button
@@ -210,7 +225,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                   intent={"primary"}
                   onClick={this.props.addNewSelection}
                   text={"Add new selection"} />
-              </ButtonGroup>
+              </ButtonGroup> */}
             </Card>
             <FormGroup
               label="Start and end time"
@@ -272,15 +287,16 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                 >
                   <Button
                     large={true}
-                    text={"Cancel"}
-                    onClick={this.handleSave}
+                    text={"View Output"}
+                    intent={"success"}
+                    onClick={this.props.viewRoadClosureOutput}
                   />
-                  <Button
+                  {/* <Button
                     intent="success"
                     large={true}
                     text={"Save this road closure"}
                     onClick={this.handleSave}
-                  />
+                  /> */}
                 </ButtonGroup>
               </RoadClosureBottomActionBar>
         </div>
