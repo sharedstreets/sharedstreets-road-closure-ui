@@ -1,5 +1,9 @@
 import { getType } from '@turf/invariant';
-import { dropRight, forEach } from 'lodash';
+import {
+    concat,
+    dropRight,
+    forEach
+} from 'lodash';
 import { Dispatch } from 'redux';
 import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
 import { RoadClosureStateItem } from "src/models/RoadClosureStateItem";
@@ -263,9 +267,9 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             updatedItems = [
                 ...state.items
             ];
-            updatedItems[state.currentIndex].invalidStreets[state.currentSelectionIndex] = [action.payload.invalid];
-            updatedItems[state.currentIndex].matchedStreets[state.currentSelectionIndex] = [action.payload.matched];
-            updatedItems[state.currentIndex].unmatchedStreets[state.currentSelectionIndex] = [action.payload.unmatched];
+            updatedItems[state.currentIndex].invalidStreets[state.currentSelectionIndex][0].features = concat(updatedItems[state.currentIndex].invalidStreets[state.currentSelectionIndex][0].features, action.payload.invalid.features);
+            updatedItems[state.currentIndex].matchedStreets[state.currentSelectionIndex][0].features = concat(updatedItems[state.currentIndex].matchedStreets[state.currentSelectionIndex][0].features, action.payload.matched.features);
+            updatedItems[state.currentIndex].unmatchedStreets[state.currentSelectionIndex][0].features = concat(updatedItems[state.currentIndex].unmatchedStreets[state.currentSelectionIndex][0].features, action.payload.unmatched.features);
 
             const output = {};
             forEach(updatedItems[state.currentIndex].matchedStreets[state.currentSelectionIndex], (featureCollection: any) => {

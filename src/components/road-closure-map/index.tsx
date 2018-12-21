@@ -45,7 +45,7 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
   }
 
   public mapContainer: any;
-  public draw: any;
+  public mapDraw: any;
 
   public componentDidMount() {
     const {
@@ -63,10 +63,10 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
       zoom
     });
 
-    this.draw = new MapboxDraw({
+    this.mapDraw = new MapboxDraw({
       controls: {
         line_string: true,
-        trash: true
+        // trash: false
       },
       displayControlsDefault: false,
     });
@@ -74,15 +74,15 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
     this.mapContainer.on('move', this.handleMapMove);
     // this.mapContainer.on('click', this.handleMapClick);
     this.mapContainer.addControl(
-      this.draw,
+      this.mapDraw,
       'top-left'
     );
     this.mapContainer.on('draw.create', this.handleLineCreated);
     this.mapContainer.on('draw.delete', this.handleLineDeleted);
     this.mapContainer.on('draw.update', this.handleLineEdited);
-    // this.mapContainer.addControl(
-    //   new mapboxgl.FullscreenControl()
-    // );
+    this.mapContainer.addControl(
+      new mapboxgl.NavigationControl()
+    );
     // this.mapContainer.addControl(
     //   new BaseControl("SHST-Undo-Point-Select-Container", UndoButtonMapControl, this.props.pointRemoved)
     // );
@@ -142,11 +142,12 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
       forEach(items[currentIndex].matchedStreets, (matchedStreetList, outerIndex) => {
         forEach(matchedStreetList, (matchedStreet, index) => {
           // TODO - draw linestrings separately from points, etc
-          this.drawFromGeojson("SHST-match-geom-line-"+outerIndex+index, "line", matchedStreet, {
-            "line-color": "blue",
-            "line-opacity": 0.35,
-            "line-width": 6,
-          });
+          this.mapDraw.add(matchedStreet);
+          // this.drawFromGeojson("SHST-match-geom-line-"+outerIndex+index, "line", matchedStreet, {
+          //   "line-color": "blue",
+          //   "line-opacity": 0.35,
+          //   "line-width": 6,
+          // });
         })
       });
     }
@@ -169,8 +170,11 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
   }
 
   public handleLineCreated = (e: { type: string, target: any, features: GeoJSON.Feature[]}) => {
-    this.props.lineCreated(e.features[0]);
-    this.props.findMatchedStreet(e.features[0]);
+    // this.props.lineCreated(e.features[0]);
+    Promise.resolve(this.props.findMatchedStreet(e.features[0]))
+    .then(() => {
+      this.mapDraw.delete(e.features[0].id);
+    });
   }
 
   public handleLineDeleted = (e: { type: string, target: any, features: GeoJSON.Feature[]}) => {
@@ -179,7 +183,7 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
   }
 
   public handleLineEdited = (e: { type: string, target: any, features: GeoJSON.Feature[]}) => {
-    this.props.lineCreated(e.features[0]);
+    // this.props.lineCreated(e.features[0]);
     this.props.findMatchedStreet(e.features[0]);
   }
 
