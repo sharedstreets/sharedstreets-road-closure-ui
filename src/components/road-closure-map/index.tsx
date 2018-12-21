@@ -1,10 +1,11 @@
-import { 
-  lineString,
-  // point
-} from '@turf/helpers';
+import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
+// import { 
+//   lineString,
+//   // point
+// } from '@turf/helpers';
 import {
   forEach,
-  isEmpty,
+  // isEmpty,
 } from 'lodash';
 import * as mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -14,10 +15,16 @@ import { IRoadClosureState } from 'src/store/road-closure';
 // import UndoButtonMapControl from '../undo-button-map-control';
 import './road-closure-map.css';
 
+// tslint:disable-next-line
+const MapboxDraw = require('@mapbox/mapbox-gl-draw');
+
 (mapboxgl as any).accessToken = "pk.eyJ1IjoidHJhbnNwb3J0cGFydG5lcnNoaXAiLCJhIjoiY2ptOTN5N3Q3MHN5aDNxbGs2MzhsN3dneiJ9.K4j9mXsvfGCYtM8YouwCKg";
 
 export interface IRoadClosureMapProps {
-  findMatchedStreet: () => void,
+  findMatchedStreet: (payload: any) => void,
+  lineCreated: (payload: any) => void,
+  lineDeleted: (payload: any) => void,
+  lineEdited: (payload: any) => void,
   pointRemoved: () => void,
   pointSelected: (payload: any) => void,
   roadClosure: IRoadClosureState
@@ -38,6 +45,7 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
   }
 
   public mapContainer: any;
+  public draw: any;
 
   public componentDidMount() {
     const {
@@ -55,11 +63,23 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
       zoom
     });
 
+    this.draw = new MapboxDraw({
+      controls: {
+        line_string: true,
+        trash: true
+      },
+      displayControlsDefault: false,
+    });
+
     this.mapContainer.on('move', this.handleMapMove);
-    this.mapContainer.on('click', this.handleMapClick);
-    // this.mapContainer.addControl(
-    //   new mapboxgl.GeolocateControl()
-    // );
+    // this.mapContainer.on('click', this.handleMapClick);
+    this.mapContainer.addControl(
+      this.draw,
+      'top-left'
+    );
+    this.mapContainer.on('draw.create', this.handleLineCreated);
+    this.mapContainer.on('draw.delete', this.handleLineDeleted);
+    this.mapContainer.on('draw.update', this.handleLineEdited);
     // this.mapContainer.addControl(
     //   new mapboxgl.FullscreenControl()
     // );
@@ -71,51 +91,51 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
   public componentDidUpdate(prevProps: IRoadClosureMapProps) {
     const {
       currentIndex,
-      currentSelectionIndex,
+      // currentSelectionIndex,
       items
     } = this.props.roadClosure;
 
-    const selectedPointsCurrentSelection = items[currentIndex].selectedPoints[currentSelectionIndex];
+    // const selectedPointsCurrentSelection = items[currentIndex].selectedPoints[currentSelectionIndex];
 
-    const prevCurrentIndex = prevProps.roadClosure.currentIndex;
-    const prevCurrentSelectionIndex = prevProps.roadClosure.currentSelectionIndex;
+    // const prevCurrentIndex = prevProps.roadClosure.currentIndex;
+    // const prevCurrentSelectionIndex = prevProps.roadClosure.currentSelectionIndex;
     // const prevSelectedPointsCurrentSelection = prevProps.roadClosure.items[prevCurrentIndex].selectedPoints[prevCurrentSelectionIndex];
 
     // draw point on click 
-    if (!isEmpty(selectedPointsCurrentSelection) &&
-      // selectedPointsCurrentSelection.length !== prevSelectedPointsCurrentSelection.length && 
-      currentIndex === prevCurrentIndex &&
-      currentSelectionIndex === prevCurrentSelectionIndex) {
-        forEach(items[currentIndex].selectedPoints, (selectedPointsForStreet, index) => {
-          const lngLat = selectedPointsForStreet[selectedPointsForStreet.length-1] as any;
-          const el = document.createElement('div');
-          el.className = 'SHST-Map-Point-Marker';
-          new mapboxgl.Marker(el)
-            .setLngLat(lngLat)
-            .addTo(this.mapContainer);
-          // const drawPoint = point(lngLat);
-          // this.drawFromGeojson("SHST-user-point-"+lngLat.lat.toString()+lngLat.lng.toString(), "circle", drawPoint, {
-          //   "circle-color": "#3887be",
-          //   "circle-radius": 10,
-          // });
+    // if (!isEmpty(selectedPointsCurrentSelection) &&
+    //   // selectedPointsCurrentSelection.length !== prevSelectedPointsCurrentSelection.length && 
+    //   currentIndex === prevCurrentIndex &&
+    //   currentSelectionIndex === prevCurrentSelectionIndex) {
+    //     forEach(items[currentIndex].selectedPoints, (selectedPointsForStreet, index) => {
+    //       const lngLat = selectedPointsForStreet[selectedPointsForStreet.length-1] as any;
+    //       const el = document.createElement('div');
+    //       el.className = 'SHST-Map-Point-Marker';
+    //       new mapboxgl.Marker(el)
+    //         .setLngLat(lngLat)
+    //         .addTo(this.mapContainer);
+    //       // const drawPoint = point(lngLat);
+    //       // this.drawFromGeojson("SHST-user-point-"+lngLat.lat.toString()+lngLat.lng.toString(), "circle", drawPoint, {
+    //       //   "circle-color": "#3887be",
+    //       //   "circle-radius": 10,
+    //       // });
 
-          if (selectedPointsForStreet.length >= 2) {
-            const coords: any = [];
-            selectedPointsForStreet.forEach((v: any) => {
-              coords.push([v.lng, v.lat])
-            });
-            // coords.push([lngLat.lng, lngLat.lat]);
-            const linestring = lineString(coords);
+    //       if (selectedPointsForStreet.length >= 2) {
+    //         const coords: any = [];
+    //         selectedPointsForStreet.forEach((v: any) => {
+    //           coords.push([v.lng, v.lat])
+    //         });
+    //         // coords.push([lngLat.lng, lngLat.lat]);
+    //         const linestring = lineString(coords);
       
-            this.drawFromGeojson("SHST-user-line-"+linestring.id, "line", linestring, {
-              "line-color": "orange",
-              "line-dasharray": [2,1],
-              "line-opacity": 0.35,
-              "line-width": 6,
-            });
-          }
-        });
-    }
+    //         this.drawFromGeojson("SHST-user-line-"+linestring.id, "line", linestring, {
+    //           "line-color": "orange",
+    //           "line-dasharray": [2,1],
+    //           "line-opacity": 0.35,
+    //           "line-width": 6,
+    //         });
+    //       }
+    //     });
+    // }
 
     // draw SharedStreets matched lines after API response
     if (!this.props.roadClosure.isFetchingMatchedStreets && prevProps.roadClosure.isFetchingMatchedStreets) {
@@ -148,26 +168,41 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
     });
   }
 
-  public handleMapClick = (event: any) => {
-    const {
-      roadClosure: {
-        currentIndex,
-        currentSelectionIndex,
-        items,
-        isShowingRoadClosureList,
-        isShowingRoadClosureOutputViewer,
-      }
-    } = this.props;
-
-    if (isShowingRoadClosureList || isShowingRoadClosureOutputViewer) {
-      return;
-    }
-
-    this.props.pointSelected(event.lngLat);
-    if (items[currentIndex].selectedPoints[currentSelectionIndex] && items[currentIndex].selectedPoints[currentSelectionIndex].length > 1) {
-      this.props.findMatchedStreet();
-    }
+  public handleLineCreated = (e: { type: string, target: any, features: GeoJSON.Feature[]}) => {
+    this.props.lineCreated(e.features[0]);
+    this.props.findMatchedStreet(e.features[0]);
   }
+
+  public handleLineDeleted = (e: { type: string, target: any, features: GeoJSON.Feature[]}) => {
+    this.props.lineDeleted(e.features[0]);
+    // this.props.findMatchedStreet();
+  }
+
+  public handleLineEdited = (e: { type: string, target: any, features: GeoJSON.Feature[]}) => {
+    this.props.lineCreated(e.features[0]);
+    this.props.findMatchedStreet(e.features[0]);
+  }
+
+  // public handleMapClick = (event: any) => {
+  //   const {
+  //     roadClosure: {
+  //       currentIndex,
+  //       currentSelectionIndex,
+  //       items,
+  //       isShowingRoadClosureList,
+  //       isShowingRoadClosureOutputViewer,
+  //     }
+  //   } = this.props;
+
+  //   if (isShowingRoadClosureList || isShowingRoadClosureOutputViewer) {
+  //     return;
+  //   }
+
+  //   this.props.pointSelected(event.lngLat);
+  //   if (items[currentIndex].selectedPoints[currentSelectionIndex] && items[currentIndex].selectedPoints[currentSelectionIndex].length > 1) {
+  //     this.props.findMatchedStreet();
+  //   }
+  // }
 
   public drawFromGeojson(id: string, type: string, geojsonData: object, paintObj: any = {}) {
     if (typeof this.mapContainer.getLayer(id) !== 'undefined') {

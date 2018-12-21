@@ -5,7 +5,7 @@ import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStree
 import { RoadClosureStateItem } from "src/models/RoadClosureStateItem";
 import {
     allRoadClosureItemsToGeojson, 
-    lineStringFromSelectedPoints
+    // lineStringFromSelectedPoints
 } from 'src/selectors/road-closure';
  import {
      ActionType,
@@ -14,7 +14,7 @@ import {
     //  StateType
 } from 'typesafe-actions';
 import { fetchAction } from '../api';
-import { RootState } from '../configureStore';
+// import { RootState } from '../configureStore';
 
 
 // actions
@@ -25,6 +25,9 @@ export interface IFetchSharedstreetGeomsSuccessResponse {
     unmatched: GeoJSON.FeatureCollection
 }
 
+export interface IRoadClosureMapboxDrawLineString extends GeoJSON.Feature {
+    id: number;
+}
 export interface IRoadClosureFormInputChangedPayload {
     key: string,
     street?: string,
@@ -45,6 +48,9 @@ export const ACTIONS = {
         'ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_FAILURE'
     )<void, IFetchSharedstreetGeomsSuccessResponse, Error>(),
     INPUT_CHANGED: createStandardAction('ROAD_CLOSURE/INPUT_CHANGED')<IRoadClosureFormInputChangedPayload>(),
+    LINE_CREATED: createStandardAction('ROAD_CLOSURE/LINE_CREATED')<IRoadClosureMapboxDrawLineString>(),
+    LINE_DELETED: createStandardAction('ROAD_CLOSURE/LINE_DELETED')<IRoadClosureMapboxDrawLineString>(),
+    LINE_EDITED: createStandardAction('ROAD_CLOSURE/LINE_EDITED')<IRoadClosureMapboxDrawLineString>(),
     NEXT_SELECTION: createStandardAction('ROAD_CLOSURE/NEXT_SELECTION')<void>(),
     POINT_REMOVED: createStandardAction('ROAD_CLOSURE/POINT_REMOVED')<void>(),
     POINT_SELECTED: createStandardAction('ROAD_CLOSURE/POINT_SELECTED')<number[]>(),
@@ -57,16 +63,34 @@ export const ACTIONS = {
     VIEWPORT_CHANGED: createStandardAction('ROAD_CLOSURE/VIEWPORT_CHANGED'),
 };
 // side effects
-export const findMatchedStreet = () => (dispatch: Dispatch<any>, getState: any) => {
-    const {
-        roadClosure,
-    } = getState() as RootState;
+// export const lineCreated = (features: IRoadClosureMapboxDrawLineString[]) => (dispatch: Dispatch<any>, getState: any) => {
+//     // const state = getState();
+//     // // const updatedItems = [
+//     // //     ...state.items
+//     // // ];
+//     const output: any = [];
+//     forEach(features, (feature: IRoadClosureMapboxDrawLineString) => {
+//         // if (!updatedItems[state.currentIndex].linesDrawn[state.currentIndex][feature.id]) {
+//         //     updatedItems[state.currentIndex].linesDrawn[state.currentIndex][feature.id] = {};    
+//         // }
+//         // updatedItems[state.currentIndex].linesDrawn[state.currentIndex][feature.id] = feature;
+//         // output[feature.id] = feature;
+//         output.push(findMatchedStreet(feature));
+//     });
+//     return dispatch(Promise.all(output));
+// };
+
+export const findMatchedStreet = (linestring: IRoadClosureMapboxDrawLineString) => (dispatch: Dispatch<any>, getState: any) => {
+    // const {
+    //     roadClosure,
+    // } = getState() as RootState;
 
     return dispatch(fetchAction({
         afterRequest: (data) => {
             return data;
         },
-        body: lineStringFromSelectedPoints(roadClosure),
+        // body: lineStringFromSelectedPoints(roadClosure),
+        body: linestring,
         endpoint: 'match/geoms',
         method: 'post',
         params: {
@@ -198,6 +222,38 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 ...state,
                 items: updatedItems
             };
+        case "ROAD_CLOSURE/LINE_CREATED":
+        case "ROAD_CLOSURE/LINE_EDITED":
+            updatedItems = [
+                ...state.items
+            ];
+            // forEach(action.payload, (feature: IRoadClosureMapboxDrawLineString) => {
+            //     if (!updatedItems[state.currentIndex].linesDrawn[state.currentIndex][feature.id]) {
+            //         updatedItems[state.currentIndex].linesDrawn[state.currentIndex][feature.id] = {};    
+            //     }
+            //     updatedItems[state.currentIndex].linesDrawn[state.currentIndex][feature.id] = feature;
+            // });
+            updatedItems[state.currentIndex].linesDrawn[state.currentIndex][action.payload.id] = action.payload;
+            return {
+                ...state,
+                items: updatedItems,
+            };
+        case "ROAD_CLOSURE/LINE_DELETED":
+            updatedItems = [
+                ...state.items
+            ];
+            // forEach(action.payload, (feature: IRoadClosureMapboxDrawLineString) => {
+            //     if (updatedItems[state.currentIndex].linesDrawn[state.currentIndex][feature.id]) {
+            //         delete updatedItems[state.currentIndex].linesDrawn[state.currentIndex][feature.id];
+            //     }
+            // });
+            delete updatedItems[state.currentIndex].linesDrawn[state.currentIndex][action.payload.id];
+            return {
+                ...state,
+                items: updatedItems,
+            };
+
+        
         case "ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_REQUEST":
             return {
                 ...state,
