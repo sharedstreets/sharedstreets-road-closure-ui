@@ -47,19 +47,37 @@ export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
 
         const refIdStack = Object.keys(this.referenceIdFeatureMap).map((refId, index) => {
             return {
+                inGroup: false,
                 refId,
                 visited: false,
             }
         });
 
+
+        /*
+            B => <= A => <= D => <= C
+
+            referenceIdFeatureMap = { A => PathObject(.properties.referenceId), B => PathObject }
+            refIdStack = [{A, false}, {B, false}, {C, false}, {D, false}]
+
+            {D, true}  output = [[D]]
+                => find adjacent paths (paths with the same either to or from intersection ID)
+                => {C, false}, {A, false}
+
+            refIdStack = [{A, false}, {B, false}, {C, false}]
+            
+            {C, true}
+                => 
+        */
         while (!isEmpty(refIdStack)) {
             const curr = refIdStack.pop();
             const currFeature = this.referenceIdFeatureMap[curr!.refId];
-            // tslint:disable
-            console.log("top of loop => curr", curr);
-            console.log("top of loop => currFeature", currFeature);
-            // tslint:enable
             if (!curr!.visited) {
+                // tslint:disable
+                // console.log("top of loop => curr", curr);
+                // console.log("top of loop => currFeature", currFeature);
+                console.log("top of loop => not visited = ", currFeature.properties.streetname, "\t to: ", currFeature.properties.toStreetnames, "\t from: ", currFeature.properties.fromStreetnames);
+                // tslint:enable
                 curr!.visited = true;
                 innerOutput.push(currFeature);
                 
@@ -87,6 +105,11 @@ export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
 
                 // if no adjacent paths, add to main output
                 if (isEmpty(adjacentPaths)) {
+                    // tslint:disable
+                    console.log("if=>if stack", refIdStack);
+                    console.log("if=>if inner output", innerOutput);
+                    console.log('\n \n \n');
+                    // tslint:enable
                     output.push(innerOutput);
                     innerOutput = [];
                 } else {
@@ -95,7 +118,7 @@ export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
                     // tslint:disable
                     console.log("before push stack", refIdStack);
                     refIdStack.push(...adjacentPaths);
-                    console.log("pushed to stack", adjacentPaths);
+                    console.log("pushed to stack", ...adjacentPaths);
                     // tslint:enable
                 }
             } else {
@@ -103,9 +126,9 @@ export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
                 // and we're at the end of this connected component
                 if (!isEmpty(innerOutput)) {
                     // tslint:disable
-                    console.log("else=>if curr", curr);
                     console.log("else=>if stack", refIdStack);
                     console.log("else=>if inner output", innerOutput);
+                    console.log('\n \n \n');
                     // tslint:enable
                     output.push(innerOutput);
                     innerOutput = [];
