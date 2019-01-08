@@ -7,7 +7,7 @@ import {
   InputGroup,
   Popover,
   Position,
-  Spinner,
+  // Spinner,
   // Radio,
   // RadioGroup,
 } from '@blueprintjs/core';
@@ -19,17 +19,19 @@ import {
 //   getType
 // } from '@turf/invariant';
 import {
-  forEach,
+  // forEach,
   // difference,
   // forOwn,
   isEmpty,
 } from 'lodash';
 import * as React from 'react';
 // import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
-import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
+// import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
 import { RoadClosureStateItem } from 'src/models/RoadClosureStateItem';
 import { IRoadClosureState } from 'src/store/road-closure';
 import RoadClosureBottomActionBar from '../road-closure-bottom-action-bar';
+// import RoadClosureFormStreetsTable from '../road-closure-form-streets-table';
+import RoadClosureFormStreetsGroups from '../road-closure-form-streets-groups';
 
 import '../../../node_modules/@blueprintjs/core/lib/css/blueprint.css';
 import '../../../node_modules/@blueprintjs/datetime/lib/css/blueprint-datetime.css';
@@ -37,8 +39,10 @@ import '../../../node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css';
 import '../../../node_modules/normalize.css/normalize.css'
 import './road-closure-form.css';
 
+
 export interface IRoadClosureFormProps {
   addNewSelection: () => void,
+  deleteStreetSegment: (payload: any) => void,
   deselectRoadClosure: () => void,
   nextSelection: () => void,
   previousSelection: () => void,
@@ -59,6 +63,12 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
     this.handleSave = this.handleSave.bind(this);
     this.handleStreetMouseover = this.handleStreetMouseover.bind(this);
     this.renderDateButtonText = this.renderDateButtonText.bind(this);
+    this.handleDeleteStreetSegment = this.handleDeleteStreetSegment.bind(this);
+  }
+
+  public handleDeleteStreetSegment(e: any) {
+    this.props.deleteStreetSegment(e.target.parentElement.parentElement.id);
+    return;
   }
 
   public handleChangeStreetName(e: any): any {
@@ -139,62 +149,67 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
     </div>;
   }
 
-  public renderMatchedStreetsTable() {
-    const output: any = [];
+  // public renderMatchedStreetsTable() {
+  //   const output: any = [];
 
-    const currentSelectionIndex = this.props.roadClosure.currentSelectionIndex;
-    const currentMatchedStreets = this.props.currentRoadClosureItem.matchedStreets[this.props.roadClosure.currentIndex][currentSelectionIndex] as any;
+  //   const currentSelectionIndex = this.props.roadClosure.currentSelectionIndex;
+  //   const currentMatchedStreets = this.props.currentRoadClosureItem.matchedStreets[this.props.roadClosure.currentIndex][currentSelectionIndex] as any;
 
-    if ( !isEmpty(currentMatchedStreets) ) {
-      forEach(this.props.currentRoadClosureItem.form.street[currentSelectionIndex],
-        (street: RoadClosureFormStateStreet) => {
-          output.push(
-            <tr
-              id={"tr-"+street.referenceId}
-              onMouseOver={this.handleStreetMouseover}
-              key={"tr-"+street.referenceId}>
-              <td>
-                <Button
-                  icon={"delete"} />
-              </td>
-              <td>
-                <InputGroup
-                  key={"input-"+street.referenceId}
-                  id={street.referenceId}
-                  value={street.streetname}
-                  onChange={this.handleChangeStreetName}
-                />
-              </td>
-              <td>
-                {currentMatchedStreets.features[street.matchedStreetIndex]!.properties.fromStreetnames}
-              </td>
-              <td>
-                {currentMatchedStreets.features[street.matchedStreetIndex]!.properties.toStreetnames}
-              </td>
-            </tr>);
-      });
-    } else {
-      output.push(
-        <Spinner />
-      )
-    }
+  //   if ( !isEmpty(currentMatchedStreets) ) {
+  //     forEach(this.props.currentRoadClosureItem.form.street[currentSelectionIndex],
+  //       (street: RoadClosureFormStateStreet) => {
+  //         output.push(
+  //           <tr
+  //             id={street.referenceId}
+  //             onMouseOver={this.handleStreetMouseover}
+  //             key={"tr-"+street.referenceId}>
+  //             <td>
+  //               <Button
+  //                 id={street.referenceId}
+  //                 onClick={this.handleDeleteStreetSegment}
+  //                 icon={"delete"} />
+  //             </td>
+  //             <td>
+  //               <InputGroup
+  //                 key={"input-"+street.referenceId}
+  //                 id={street.referenceId}
+  //                 value={street.streetname}
+  //                 onChange={this.handleChangeStreetName}
+  //               />
+  //             </td>
+  //             <td>
+  //               {currentMatchedStreets.features[street.matchedStreetIndex]!.properties.fromStreetnames}
+  //             </td>
+  //             <td>
+  //               {currentMatchedStreets.features[street.matchedStreetIndex]!.properties.toStreetnames}
+  //             </td>
+  //           </tr>);
+  //     });
+  //   } else {
+  //     output.push(
+  //       <Spinner />
+  //     )
+  //   }
 
-    return <table className={"SHST-Matched-Streets-Table bp3-html-table bp3-condensed"}>
-      <thead>
-        <tr>
-          <th>Actions</th>
-          <th>Street name</th>
-          <th>From</th>
-          <th>To</th>
-        </tr>
-      </thead>
-      <tbody>
-        {output}
-      </tbody>
-    </table>
-  }
+  //   return <table className={"SHST-Matched-Streets-Table bp3-html-table bp3-condensed"}>
+  //     <thead>
+  //       <tr>
+  //         <th>Actions</th>
+  //         <th>Street name</th>
+  //         <th>From</th>
+  //         <th>To</th>
+  //       </tr>
+  //     </thead>
+  //     <tbody>
+  //       {output}
+  //     </tbody>
+  //   </table>
+  // }
 
   public render() {
+    const currentSelectionIndex = this.props.roadClosure.currentSelectionIndex;
+    const currentMatchedStreets = this.props.currentRoadClosureItem.matchedStreets[this.props.roadClosure.currentIndex][currentSelectionIndex];
+
     return (
         <div
           className="SHST-Road-Closure-Form"
@@ -207,8 +222,21 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                 Selection
                 <span className={"bp3-text-muted"}> ({this.props.roadClosure.currentSelectionIndex+1} of {this.props.currentRoadClosureItem.selectedPoints.length})</span>
               </label> */}
-              {!isEmpty(this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex]) && this.renderMatchedStreetsTable()}
-              {isEmpty(this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex]) && this.renderEmptyMatchedStreetsTable()}
+              {/* {!isEmpty(this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex]) && this.renderMatchedStreetsTable()} */}
+              {
+                isEmpty(this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex]) ?
+                this.renderEmptyMatchedStreetsTable() :
+                <RoadClosureFormStreetsGroups
+                  currentMatchedStreetsGroups={currentMatchedStreets.getContiguousPaths()}
+                />
+                // <RoadClosureFormStreetsTable
+                //   inputChanged={this.props.inputChanged}
+                //   deleteStreetSegment={this.props.deleteStreetSegment}
+                //   currentMatchedStreets={currentMatchedStreets}
+                //   currentMatchedStreetsFeatures={currentMatchedStreets.features}
+                //   isLoading={ isEmpty(currentMatchedStreets) }
+                //   streets={this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex]} />
+              }
               {/* <ButtonGroup
                 fill={true}
               >

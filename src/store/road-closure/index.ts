@@ -7,6 +7,7 @@ import {
 import { Dispatch } from 'redux';
 import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
 import { RoadClosureStateItem } from "src/models/RoadClosureStateItem";
+import { SharedStreetsMatchFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchFeatureCollection';
 import {
     allRoadClosureItemsToGeojson, 
     // lineStringFromSelectedPoints
@@ -24,7 +25,7 @@ import { fetchAction } from '../api';
 // actions
 export type RoadClosureAction = ActionType<typeof ACTIONS>;
 export interface IFetchSharedstreetGeomsSuccessResponse {
-    matched: GeoJSON.FeatureCollection,
+    matched: SharedStreetsMatchFeatureCollection,
     invalid: GeoJSON.FeatureCollection,
     unmatched: GeoJSON.FeatureCollection
 }
@@ -46,6 +47,7 @@ export interface IRoadClosureFormInputChangedPayload {
 
 export const ACTIONS = {
     ADD_NEW_SELECTION: createStandardAction('ROAD_CLOSURE/ADD_NEW_SELECTION')<void>(),
+    DELETE_STREET_SEGMENT: createStandardAction('ROAD_CLOSURE/DELETE_STREET_SEGMENT')<string>(),
     FETCH_SHAREDSTREET_GEOMS: createAsyncAction(
         'ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_REQUEST',
         'ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS',
@@ -267,9 +269,10 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             updatedItems = [
                 ...state.items
             ];
-            updatedItems[state.currentIndex].invalidStreets[state.currentSelectionIndex][0].features = concat(updatedItems[state.currentIndex].invalidStreets[state.currentSelectionIndex][0].features, action.payload.invalid.features);
-            updatedItems[state.currentIndex].matchedStreets[state.currentSelectionIndex][0].features = concat(updatedItems[state.currentIndex].matchedStreets[state.currentSelectionIndex][0].features, action.payload.matched.features);
-            updatedItems[state.currentIndex].unmatchedStreets[state.currentSelectionIndex][0].features = concat(updatedItems[state.currentIndex].unmatchedStreets[state.currentSelectionIndex][0].features, action.payload.unmatched.features);
+            updatedItems[state.currentIndex].invalidStreets[state.currentIndex][state.currentSelectionIndex].features = concat(updatedItems[state.currentIndex].invalidStreets[state.currentIndex][state.currentSelectionIndex].features, action.payload.invalid.features);
+            // updatedItems[state.currentIndex].matchedStreets[state.currentIndex][state.currentSelectionIndex].features = concat(updatedItems[state.currentIndex].matchedStreets[state.currentIndex][state.currentSelectionIndex].features, action.payload.matched.features);
+            updatedItems[state.currentIndex].matchedStreets[state.currentIndex][state.currentSelectionIndex].addFeaturesFromGeojson(action.payload.matched.features);
+            updatedItems[state.currentIndex].unmatchedStreets[state.currentIndex][state.currentSelectionIndex].features = concat(updatedItems[state.currentIndex].unmatchedStreets[state.currentIndex][state.currentSelectionIndex].features, action.payload.unmatched.features);
 
             const output = {};
             forEach(updatedItems[state.currentIndex].matchedStreets[state.currentSelectionIndex], (featureCollection: any) => {
@@ -281,13 +284,33 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             });
             updatedItems[state.currentIndex].form.street[state.currentSelectionIndex] = output;
 
-            // const newStreetIndexMap = streetnameReferenceIdMap(state);
-            // updatedItems[state.currentIndex].streetnameReferenceId[state.currentSelectionIndex] = newStreetIndexMap;
-
             return {
                 ...state,
                 isFetchingMatchedStreets: false,
                 items: updatedItems,
+            };
+
+        case "ROAD_CLOSURE/DELETE_STREET_SEGMENT":
+            updatedItems = [ ...state.items ];
+
+            updatedItems[state.currentIndex].matchedStreets[state.currentSelectionIndex][0].features = 
+                updatedItems[state.currentIndex].matchedStreets[state.currentSelectionIndex][0].features.filter((feature: any) => {
+                    return feature.properties.referenceId !== action.payload;
+                });
+
+            const deletedStreetOutput = {};
+            forEach(updatedItems[state.currentIndex].matchedStreets[state.currentSelectionIndex], (featureCollection: any) => {
+                forEach(featureCollection.features, (segment: any, index: number) => {
+                    if (getType(segment) === "LineString") {
+                        deletedStreetOutput[segment.properties.referenceId] = new RoadClosureFormStateStreet(index, segment.properties.streetname, segment.properties.referenceId);
+                    }
+                });
+            });
+            updatedItems[state.currentIndex].form.street[state.currentSelectionIndex] = deletedStreetOutput;
+
+            return {
+                ...state,
+                items: updatedItems
             };
         case "ROAD_CLOSURE/INPUT_CHANGED":
             const key = action.payload.key;
