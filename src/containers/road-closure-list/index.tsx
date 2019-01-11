@@ -10,9 +10,9 @@ const mapStateToProps = (state: RootState) => ({
 export default connect<{}, {}, IRoadClosureListProps>(
     mapStateToProps,
     {
-        createRoadClosure: ACTIONS.ROAD_CLOSURE_CREATED,
+        // createRoadClosure: ACTIONS.ROAD_CLOSURE_CREATED,
         hideRoadClosureOutput: ACTIONS.ROAD_CLOSURE_HIDE_OUTPUT,
-        selectRoadClosure: ACTIONS.ROAD_CLOSURE_SELECTED,
+        // selectRoadClosure: ACTIONS.ROAD_CLOSURE_SELECTED,
         viewRoadClosureOutput: ACTIONS.ROAD_CLOSURE_VIEW_OUTPUT,
     },
 )(RoadClosureList) as React.ComponentClass<{}>;

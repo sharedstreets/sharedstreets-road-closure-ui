@@ -10,9 +10,14 @@ import RoadClosureFormStreetsGroupItem from '../road-closure-form-streets-groups
 // import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
 
 export interface IRoadClosureFormStreetsGroupsProps {
-    currentMatchedStreetsGroups: Array<Array<SharedStreetsMatchPath | SharedStreetsMatchPoint>>,
-    // deleteStreetSegment: (e: any) => void,
-    // inputChanged: (e: any) => void,
+    currentMatchedStreetsGroups: SharedStreetsMatchPath[][],
+    currentMatchedStreetsGroupsDirections: Array<{ forward: boolean, backward: boolean }>,
+    currentMatchedStreetsGroupsGeometryIdPathMap: { [geomId: string]: { [direction: string] : SharedStreetsMatchPath} },
+    currentMatchedStreetsFeatures: Array<SharedStreetsMatchPath | SharedStreetsMatchPoint>,
+    geometryIdDirectionFilter: { [ geometryId: string] : { forward: boolean, backward: boolean } },
+    deleteStreetSegment: (payload: any) => void,
+    inputChanged: (e: any) => void,
+    streets: any,
 };
 
 class RoadClosureFormStreetsGroups extends React.Component<IRoadClosureFormStreetsGroupsProps, any> {
@@ -47,12 +52,23 @@ class RoadClosureFormStreetsGroups extends React.Component<IRoadClosureFormStree
         // } = this.props.street;
 
         return <div>
+            <label className={"bp3-label"}>
+                Selections
+                <div className={"bp3-text-muted"}>Click a group to see individual street segments</div>
+            </label>
             {
-                this.props.currentMatchedStreetsGroups.map((group: Array<SharedStreetsMatchPath|SharedStreetsMatchPoint>, index) => {
+                this.props.currentMatchedStreetsGroups.map((group: SharedStreetsMatchPath[], index) => {
                     return <RoadClosureFormStreetsGroupItem
+                        streets={this.props.streets}
+                        deleteStreetSegment={this.props.deleteStreetSegment}
+                        inputChanged={this.props.inputChanged}
                         matchedStreetsGroup={group}
+                        matchedStreetsGroupsGeometryIdPathMap={this.props.currentMatchedStreetsGroupsGeometryIdPathMap}
+                        currentMatchedStreetsFeatures={this.props.currentMatchedStreetsFeatures}
+                        matchedStreetsGroupDirections={this.props.currentMatchedStreetsGroupsDirections[index]}
                         index={index}
                         key={index}
+                        geometryIdDirectionFilter={this.props.geometryIdDirectionFilter}
                     />
                 })
             }

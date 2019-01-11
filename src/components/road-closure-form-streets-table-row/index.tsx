@@ -4,12 +4,16 @@ import {
 } from '@blueprintjs/core';
 import * as React from 'react';
 import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
+import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
+// import { SharedStreetsMatchPoint } from 'src/models/SharedStreets/SharedStreetsMatchPoint';
+
 
 export interface IRoadClosureFormStreetsTableRowProps {
-    currentMatchedStreetsFeatures: any,
+    // matchedStreetsGroup: Array<SharedStreetsMatchPath|SharedStreetsMatchPoint>,
+    currentMatchedStreetsFeatures: SharedStreetsMatchPath[],
     key: string,
     street: RoadClosureFormStateStreet
-    deleteStreetSegment: (e: any) => void,
+    deleteStreetSegment: (payload: any) => void,
     inputChanged: (e: any) => void,
 };
 
@@ -21,36 +25,43 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
     }
 
     public handleDeleteStreetSegment(e: any) {
-        this.props.deleteStreetSegment(this.props.street.referenceId);
+        this.props.deleteStreetSegment(this.props.street);
     }
 
     public handleChangeStreetName(e: any): any {
         this.props.inputChanged({
-          key: 'street',
-          referenceId: this.props.street.referenceId,
-          street: e.target.value,
+            geometryId: this.props.street.geometryId,
+            key: 'street',
+            referenceId: this.props.street.referenceId,
+            street: e.target.value,
         });
       }
 
     public render() {
         const {
-            referenceId,
+            geometryId,
             streetname,
             matchedStreetIndex,
         } = this.props.street;
+        // const refIds = Object.keys(this.props.street);
+        // const {
+        //     streetname,
+        //     geometryId,
+        //     matchedStreetIndex,
+        // }  = this.props.street[refIds[0]];
 
-        return <tr key={referenceId}>
+        return <tr key={geometryId}>
                 <td>
                     <Button
-                        id={referenceId}
+                        id={geometryId}
                         onClick={this.handleDeleteStreetSegment}
                         icon={"delete"}
                     />
                 </td>
                 <td>
                     <InputGroup
-                        key={"input-"+referenceId}
-                        id={referenceId}
+                        key={"input-"+geometryId}
+                        id={geometryId}
                         value={streetname}
                         onChange={this.handleChangeStreetName}
                     />

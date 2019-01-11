@@ -3,6 +3,10 @@ import {
 } from 'lodash';
 import { RoadClosureFormStateItem } from './RoadClosureFormStateItem';
 import { RoadClosureFormStateStreet } from './RoadClosureFormStateStreet';
+import {
+    ISharedStreetsMatchPathProperties,
+    SharedStreetsMatchPath,
+} from './SharedStreets/SharedStreetsMatchPath';
 
 export class RoadClosureWazeIncidentsItem {
     public id: string;
@@ -29,7 +33,7 @@ export class RoadClosureWazeIncidentsItem {
     public starttime: string;
     public endtime: string;
 
-    public constructor(matchedStreetSegment: GeoJSON.Feature, form: RoadClosureFormStateItem) {
+    public constructor(matchedStreetSegment: SharedStreetsMatchPath, form: RoadClosureFormStateItem) {
         this.creationtime = new Date().toISOString();
         this.starttime = form.startTime;
         this.endtime = form.endTime;
@@ -43,7 +47,7 @@ export class RoadClosureWazeIncidentsItem {
         this.location.toStreetnames = matchedStreetSegment.properties!.toStreetnames;
     }
 
-    private setStreetname(matchedStreetSegmentProperties: any, streetArray: RoadClosureFormStateStreet[] | Array<{}>) : string {
+    private setStreetname(matchedStreetSegmentProperties: ISharedStreetsMatchPathProperties, streetArray: RoadClosureFormStateStreet[] | Array<{}>) : string {
         let output = '';
         forEach(streetArray, (streetRefIdMap: RoadClosureFormStateStreet) => {
             if (streetRefIdMap[matchedStreetSegmentProperties.referenceId]) {

@@ -5,6 +5,7 @@ import {
 import {
     // forEach,
     isEmpty,
+    uniq,
 } from 'lodash';
 import { SharedStreetsMatchPath } from './SharedStreetsMatchPath';
 import { SharedStreetsMatchPoint } from './SharedStreetsMatchPoint';
@@ -12,7 +13,12 @@ import { SharedStreetsMatchPoint } from './SharedStreetsMatchPoint';
 export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
     public type: "FeatureCollection" = "FeatureCollection";
     public features: Array<SharedStreetsMatchPath | SharedStreetsMatchPoint> = [];
+
+    public contiguousFeatureGroups: SharedStreetsMatchPath[][] = [];
+    public contiguousFeatureGroupsDirections: Array<{ forward: boolean, backward: boolean }> = [];
+    public geometryIdPathMap: { [geomId: string]: { [direction: string] : SharedStreetsMatchPath} } = {};
     protected referenceIdFeatureMap: { [refId: string]: SharedStreetsMatchPath } = {};
+
     /**
      * addFeatures
      */
@@ -29,11 +35,17 @@ export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
             }
             else {
                 const path = new SharedStreetsMatchPath(feature);
-                this.referenceIdFeatureMap[path.properties.referenceId] = path;
+                this.referenceIdFeatureMap[path.properties.referenceId] = path; 
+                if (!this.geometryIdPathMap[path.properties.geometryId]) {
+                    this.geometryIdPathMap[path.properties.geometryId] = {};
+                }
+                this.geometryIdPathMap[path.properties.geometryId][path.properties.direction] = path;
                 return path;
             }
         });
         this.features = this.features.concat(newFeaturesArray);
+        
+        this.getContiguousPaths();
     }
 
     /**
@@ -41,45 +53,41 @@ export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
      * this does depth-first search on the `features` array on this class to find
      * paths connected by their intersection IDs, grouped by street name. 
      */
-    public getContiguousPaths(): Array<Array<SharedStreetsMatchPath | SharedStreetsMatchPoint>> {
-        const output: Array<Array<SharedStreetsMatchPath | SharedStreetsMatchPoint>> = [];
-        let innerOutput: Array<SharedStreetsMatchPath | SharedStreetsMatchPoint> = [];
+    public getContiguousPaths(): void {
+        const output: SharedStreetsMatchPath[][] = [];
+        let forwardOutput: SharedStreetsMatchPath[] = [];
+        let backwardOutput: SharedStreetsMatchPath[] = [];
 
         const refIdStack = Object.keys(this.referenceIdFeatureMap).map((refId, index) => {
             return {
-                inGroup: false,
                 refId,
                 visited: false,
             }
         });
 
-
-        /*
-            B => <= A => <= D => <= C
-
-            referenceIdFeatureMap = { A => PathObject(.properties.referenceId), B => PathObject }
-            refIdStack = [{A, false}, {B, false}, {C, false}, {D, false}]
-
-            {D, true}  output = [[D]]
-                => find adjacent paths (paths with the same either to or from intersection ID)
-                => {C, false}, {A, false}
-
-            refIdStack = [{A, false}, {B, false}, {C, false}]
-            
-            {C, true}
-                => 
-        */
         while (!isEmpty(refIdStack)) {
             const curr = refIdStack.pop();
             const currFeature = this.referenceIdFeatureMap[curr!.refId];
             if (!curr!.visited) {
-                // tslint:disable
-                // console.log("top of loop => curr", curr);
-                // console.log("top of loop => currFeature", currFeature);
-                console.log("top of loop => not visited = ", currFeature.properties.streetname, "\t to: ", currFeature.properties.toStreetnames, "\t from: ", currFeature.properties.fromStreetnames);
-                // tslint:enable
                 curr!.visited = true;
-                innerOutput.push(currFeature);
+                // place this feature in the correct linear order
+                if (currFeature.properties.direction === "forward") {
+                    if (!isEmpty(forwardOutput) &&
+                        forwardOutput[0].properties.direction === currFeature.properties.direction &&
+                        forwardOutput[0].properties.fromIntersectionId === currFeature.properties.toIntersectionId) {
+                            forwardOutput.unshift(currFeature);
+                    } else {
+                        forwardOutput.push(currFeature);
+                    }
+                } else {
+                    if (!isEmpty(backwardOutput) &&
+                        backwardOutput[0].properties.direction === currFeature.properties.direction &&
+                        backwardOutput[0].properties.fromIntersectionId === currFeature.properties.toIntersectionId) {
+                            backwardOutput.unshift(currFeature);
+                    } else {
+                        backwardOutput.push(currFeature);
+                    }
+                }
                 
                 const adjacentPaths = refIdStack.filter((item) => {
                     const refIdStackItemFeature = this.referenceIdFeatureMap[item.refId];
@@ -88,7 +96,7 @@ export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
                     }
                     if ( !item.visited &&
                         refIdStackItemFeature.properties.streetname === currFeature.properties.streetname &&
-                        refIdStackItemFeature.properties.direction === currFeature.properties.direction &&
+                        // refIdStackItemFeature.properties.direction === currFeature.properties.direction &&
                         (
                             refIdStackItemFeature.properties.toIntersectionId === currFeature.properties.fromIntersectionId ||
                             refIdStackItemFeature.properties.fromIntersectionId === currFeature.properties.toIntersectionId ||
@@ -102,41 +110,30 @@ export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
                         return false;
                     }
                 });
-
-                // if no adjacent paths, add to main output
-                if (isEmpty(adjacentPaths)) {
-                    // tslint:disable
-                    console.log("if=>if stack", refIdStack);
-                    console.log("if=>if inner output", innerOutput);
-                    console.log('\n \n \n');
-                    // tslint:enable
-                    output.push(innerOutput);
-                    innerOutput = [];
-                } else {
-                    // append them to refIdStack to look at next
-                    
-                    // tslint:disable
-                    console.log("before push stack", refIdStack);
-                    refIdStack.push(...adjacentPaths);
-                    console.log("pushed to stack", ...adjacentPaths);
-                    // tslint:enable
-                }
-            } else {
+                // append them to refIdStack to look at next
+                refIdStack.push(...adjacentPaths);
+            } 
+            else {
                 // if visited it's already been accounted for
                 // and we're at the end of this connected component
-                if (!isEmpty(innerOutput)) {
-                    // tslint:disable
-                    console.log("else=>if stack", refIdStack);
-                    console.log("else=>if inner output", innerOutput);
-                    console.log('\n \n \n');
-                    // tslint:enable
-                    output.push(innerOutput);
-                    innerOutput = [];
+                const combinedOutput = forwardOutput.concat(backwardOutput);
+                if (!isEmpty(combinedOutput)) {
+                    // first, keep track of directionality
+                    const directions = uniq(combinedOutput.filter((feature) => feature instanceof SharedStreetsMatchPath)
+                        .map((feature: SharedStreetsMatchPath) => feature.properties.direction));
+                    this.contiguousFeatureGroupsDirections.push({
+                        backward: directions.indexOf("backward") >= 0 ? true : false,
+                        forward: directions.indexOf("forward") >= 0 ? true : false,
+                    });
+                    
+                    output.unshift(combinedOutput);
+                    forwardOutput = [];
+                    backwardOutput = [];
                 }
             }
         }
 
-        return output;
+        this.contiguousFeatureGroups = output;
     }
 
     /**

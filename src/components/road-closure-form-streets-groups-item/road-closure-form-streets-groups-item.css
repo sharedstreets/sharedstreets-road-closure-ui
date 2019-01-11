@@ -1,0 +1,12 @@
+.SHST-Road-Closure-Form-Streets-Groups-Item-Content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+.SHST-Road-Closure-Form-Streets-Groups-Item-Content > span {
+    flex: 1;
+}
+
+.SHST-Road-Closure-Form-Streets-Groups-Item-Content > span:last-child {
+    text-align: right;
+}

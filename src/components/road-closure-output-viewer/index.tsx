@@ -37,7 +37,12 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
     public render() {
         return (
             <div className={"SHST-Road-Closure-Output-Viewer"}>
-                Waze CIFS Output
+                <div className="bp3-select">
+                    <select>
+                        <option defaultChecked={true} value="geojson">GeoJSON</option>
+                        <option value={'sdot'}>SDOT [Draft]</option>
+                    </select>
+                </div>
                 <Pre className={"SHST-Road-Closure-Output-Viewer-Code"}>
                     {JSON.stringify(this.props.output, null, 2)}
                 </Pre>

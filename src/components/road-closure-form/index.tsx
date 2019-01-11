@@ -227,15 +227,19 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                 isEmpty(this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex]) ?
                 this.renderEmptyMatchedStreetsTable() :
                 <RoadClosureFormStreetsGroups
-                  currentMatchedStreetsGroups={currentMatchedStreets.getContiguousPaths()}
+                  currentMatchedStreetsFeatures={currentMatchedStreets.features}
+                  currentMatchedStreetsGroups={currentMatchedStreets.contiguousFeatureGroups}
+                  currentMatchedStreetsGroupsGeometryIdPathMap={currentMatchedStreets.geometryIdPathMap}
+                  currentMatchedStreetsGroupsDirections={currentMatchedStreets.contiguousFeatureGroupsDirections}
+                  geometryIdDirectionFilter={this.props.currentRoadClosureItem.geometryIdDirectionFilter}
+                  deleteStreetSegment={this.props.deleteStreetSegment}
+                  inputChanged={this.props.inputChanged}
+                  streets={this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex]}
                 />
                 // <RoadClosureFormStreetsTable
-                //   inputChanged={this.props.inputChanged}
-                //   deleteStreetSegment={this.props.deleteStreetSegment}
                 //   currentMatchedStreets={currentMatchedStreets}
                 //   currentMatchedStreetsFeatures={currentMatchedStreets.features}
                 //   isLoading={ isEmpty(currentMatchedStreets) }
-                //   streets={this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex]} />
               }
               {/* <ButtonGroup
                 fill={true}
