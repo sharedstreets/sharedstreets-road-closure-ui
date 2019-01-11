@@ -21,6 +21,7 @@ export default connect<{}, {}, IRoadClosureFormProps>(
         // deselectRoadClosure: ACTIONS.ROAD_CLOSURE_DESELECTED,
         hideRoadClosureOutput: ACTIONS.ROAD_CLOSURE_HIDE_OUTPUT,
         inputChanged: ACTIONS.INPUT_CHANGED,
+        toggleStreetSegmentDirection: ACTIONS.TOGGLE_DIRECTION_STREET_SEGMENT,
         // nextSelection: ACTIONS.NEXT_SELECTION,
         // previousSelection: ACTIONS.PREVIOUS_SELECTION,
         viewRoadClosureOutput: ACTIONS.ROAD_CLOSURE_VIEW_OUTPUT,

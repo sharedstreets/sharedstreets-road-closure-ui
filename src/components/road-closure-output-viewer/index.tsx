@@ -53,7 +53,7 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
                             large={true}
                             text={"Cancel"}
                             onClick={this.handleClickCancel}/>
-                        <Button
+                        {/* <Button
                             large={true}
                             text={"Copy"}
                             onClick={this.handleClickCopy}/>
@@ -62,7 +62,7 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
                             large={true}
                             text={"Download"}
                             onClick={this.handleClickDownload}
-                        />
+                        /> */}
                     </ButtonGroup>
                 </RoadClosureBottomActionBar>
             </div>

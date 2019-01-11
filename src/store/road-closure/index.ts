@@ -48,8 +48,9 @@ export interface IRoadClosureFormInputChangedPayload {
 }
 
 export interface IRoadClosureStateItemToggleDirectionPayload {
-    geometryId: string,
-    direction: { forward?: boolean, backward?: boolean }
+    geometryId?: string,
+    geometryIds?: string[],
+    direction: { forward: boolean, backward: boolean }
 }
 
 export const ACTIONS = {
@@ -73,7 +74,7 @@ export const ACTIONS = {
     ROAD_CLOSURE_HIDE_OUTPUT: createStandardAction('ROAD_CLOSURE/ROAD_CLOSURE_HIDE_OUTPUT')<void>(),
     // ROAD_CLOSURE_SELECTED: createStandardAction('ROAD_CLOSURE/ROAD_CLOSURE_SELECTED')<number>(),
     ROAD_CLOSURE_VIEW_OUTPUT: createStandardAction('ROAD_CLOSURE/ROAD_CLOSURE_VIEW_OUTPUT')<void>(),
-    TOGGLE_DIRECTION_STREET_SEGMENT: createStandardAction('ROAD_CLOSURE/TOGGLE_DIRECTION_STREET_SEGMENT')<IRoadClosureStateItemToggleDirectionPayload[]>(),
+    TOGGLE_DIRECTION_STREET_SEGMENT: createStandardAction('ROAD_CLOSURE/TOGGLE_DIRECTION_STREET_SEGMENT')<IRoadClosureStateItemToggleDirectionPayload>(),
     VIEWPORT_CHANGED: createStandardAction('ROAD_CLOSURE/VIEWPORT_CHANGED'),
 };
 // side effects
@@ -290,7 +291,10 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 forEach(featureCollection.features, (segment: SharedStreetsMatchPath|SharedStreetsMatchPoint, index: number) => {
                     if (segment instanceof SharedStreetsMatchPath) {
                         if (!output[segment.properties.geometryId]) {
-                            output[segment.properties.geometryId] = {};
+                            output[segment.properties.geometryId] = {
+                                backward: {},
+                                forward: {}
+                            };
                         }
                         if (!newGeometryIdDirectionFilter[segment.properties.geometryId]) {
                             newGeometryIdDirectionFilter[segment.properties.geometryId] = {
@@ -329,18 +333,41 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
 
             updatedItems[state.currentIndex].matchedStreets[state.currentSelectionIndex][0].features = 
                 updatedItems[state.currentIndex].matchedStreets[state.currentSelectionIndex][0].features.filter((feature: any) => {
-                    return feature.properties.geometryId !== action.payload;
+                    return feature.properties.geometryId !== action.payload.geometryId;
                 });
 
             const deletedStreetOutput = {};
+            const deletedGeometryIdDirectionFilter = {};
             forEach(updatedItems[state.currentIndex].matchedStreets[state.currentSelectionIndex], (featureCollection: SharedStreetsMatchFeatureCollection) => {
-                forEach(featureCollection.features, (segment: SharedStreetsMatchPath|SharedStreetsMatchPoint, index: number) => {
-                    if (segment instanceof SharedStreetsMatchPath) {
-                        deletedStreetOutput[segment.properties.referenceId] = new RoadClosureFormStateStreet(index, segment.properties.streetname, segment.properties.referenceId, segment.properties.geometryId);
+                forEach(featureCollection.features, (segment: SharedStreetsMatchPath, index: number) => {
+                    if (!deletedStreetOutput[segment.properties.geometryId]) {
+                        deletedStreetOutput[segment.properties.geometryId] = {
+                            backward: {},
+                            forward: {}
+                        };
+                    }
+                    if (!deletedGeometryIdDirectionFilter[segment.properties.geometryId]) {
+                        deletedGeometryIdDirectionFilter[segment.properties.geometryId] = {
+                            backward: false,
+                            forward: false,
+                        };
+                    }
+                    if (segment.properties.direction === "forward") {
+                        deletedStreetOutput[segment.properties.geometryId].forward = new RoadClosureFormStateStreet(index, segment.properties.streetname, segment.properties.referenceId, segment.properties.geometryId);
+                    }
+                    if (segment.properties.direction === "backward") {
+                        deletedStreetOutput[segment.properties.geometryId].backward = new RoadClosureFormStateStreet(index, segment.properties.streetname, segment.properties.referenceId, segment.properties.geometryId);
+                    }
+                    if (!deletedGeometryIdDirectionFilter[segment.properties.geometryId].forward && segment.properties.direction === "forward") {
+                        deletedGeometryIdDirectionFilter[segment.properties.geometryId].forward = true;
+                    }
+                    if (!deletedGeometryIdDirectionFilter[segment.properties.geometryId].backward && segment.properties.direction === "backward") {
+                        deletedGeometryIdDirectionFilter[segment.properties.geometryId].backward = true;
                     }
                 });
             });
             updatedItems[state.currentIndex].form.street[state.currentSelectionIndex] = deletedStreetOutput;
+            updatedItems[state.currentIndex].geometryIdDirectionFilter = deletedGeometryIdDirectionFilter;
 
             return {
                 ...state,
@@ -349,10 +376,10 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
         case "ROAD_CLOSURE/TOGGLE_DIRECTION_STREET_SEGMENT":
             updatedItems = [ ...state.items ];
 
-            forEach((action.payload), (payload: IRoadClosureStateItemToggleDirectionPayload) => {
-                updatedItems[state.currentIndex].geometryIdDirectionFilter[payload.geometryId] =  Object.assign({}, 
-                    updatedItems[state.currentIndex].geometryIdDirectionFilter[payload.geometryId],
-                    payload.direction
+            forEach((action.payload.geometryIds), (geometryId: string) => {
+                updatedItems[state.currentIndex].geometryIdDirectionFilter[geometryId] =  Object.assign({}, 
+                    updatedItems[state.currentIndex].geometryIdDirectionFilter[geometryId],
+                    action.payload.direction
                 );
             });
 

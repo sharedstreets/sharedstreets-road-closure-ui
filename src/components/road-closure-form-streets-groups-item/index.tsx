@@ -22,25 +22,34 @@ export interface IRoadClosureFormStreetsGroupItemProps {
     currentMatchedStreetsFeatures: Array<SharedStreetsMatchPath | SharedStreetsMatchPoint>,
     key: number,
     index: number,
-    deleteStreetSegment: (payload: any) => void,
-    inputChanged: (e: any) => void,
     streets: any,
     geometryIdDirectionFilter: { [ geometryId: string] : { forward: boolean, backward: boolean } },
+    deleteStreetSegment: (payload: any) => void,
+    inputChanged: (e: any) => void,
+    toggleStreetSegmentDirection: (e: any) => void
 };
 
 export interface IRoadClosureFormStreetsGroupItemState {
     isCollapsed: boolean;
+    canToggleDirection: boolean;
+    directionOptions: Array<{ forward: boolean, backward: boolean}>
 }
 
 class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormStreetsGroupItemProps, IRoadClosureFormStreetsGroupItemState> {
     public constructor(props: IRoadClosureFormStreetsGroupItemProps) {
         super(props);
         this.state = {
+            canToggleDirection: this.props.matchedStreetsGroupDirections.forward &&
+                this.props.matchedStreetsGroupDirections.backward,
+            directionOptions: [
+                { forward: true, backward: true },
+                { forward: true, backward: false },
+                { forward: false, backward: true }
+            ],
             isCollapsed: true,
         };
         this.handleToggleCollapsed = this.handleToggleCollapsed.bind(this);
-        // this.handleChangeStreetName = this.handleChangeStreetName.bind(this);
-        // this.handleDeleteStreetSegment = this.handleDeleteStreetSegment.bind(this);
+        this.handleToggleDirection = this.handleToggleDirection.bind(this);
     }
 
     public handleToggleCollapsed() {
@@ -49,25 +58,31 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
         });
     }
 
-    // public handleDeleteStreetSegment(e: any) {
-    //     this.props.deleteStreetSegment(this.props.street.referenceId);
-    // }
+    public handleToggleDirection() {
+        const filters = this.props.matchedStreetsGroup.map((path: SharedStreetsMatchPath) =>
+                this.props.geometryIdDirectionFilter[path.properties.geometryId]);
+            
+        const directionFilter = uniq(filters)[0];
+       
+        let nextIndex = this.state.directionOptions.findIndex((option) => {
+            if (directionFilter) {
+                return option.backward === directionFilter.backward && option.forward === directionFilter.forward
+            } else {
+                return false;
+            }
+        })+1;
 
-    // public handleChangeStreetName(e: any): any {
-    //     this.props.inputChanged({
-    //       key: 'street',
-    //       referenceId: this.props.street.referenceId,
-    //       street: e.target.value,
-    //     });
-    //   }
+        nextIndex = nextIndex === this.state.directionOptions.length ?
+            0 : nextIndex;
+
+        this.props.toggleStreetSegmentDirection({
+            direction: this.state.directionOptions[nextIndex],
+            geometryIds: this.props.matchedStreetsGroup.map((path: SharedStreetsMatchPath) => path.properties.geometryId),
+        });
+        return;
+    }
 
     public render() {
-        // const {
-        //     referenceId,
-        //     streetname,
-        //     matchedStreetIndex,
-        // } = this.props.street;
-        
         let keyDirection = "forward";
         if (!this.props.matchedStreetsGroupDirections.forward) {
             keyDirection = "backward";
@@ -86,7 +101,7 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
         const toStreet =  last(this.props.matchedStreetsGroup.filter((
             (feature: SharedStreetsMatchPath) => feature.properties.direction === fromStreet.properties.direction))) as SharedStreetsMatchPath;
 
-        const directionIcon = this.props.matchedStreetsGroupDirections.backward && this.props.matchedStreetsGroupDirections.forward ?
+        let directionIcon: 'arrows-horizontal'|'arrow-left'|'arrow-right' = this.props.matchedStreetsGroupDirections.backward && this.props.matchedStreetsGroupDirections.forward ?
             'arrows-horizontal'
             : this.props.matchedStreetsGroupDirections.backward ?
                 'arrow-left'
@@ -94,16 +109,34 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
 
         const matchedStreetsGroupFilteredByDirection = this.props.matchedStreetsGroup.filter((path: SharedStreetsMatchPath) => {
             const directionFilter = this.props.geometryIdDirectionFilter[path.properties.geometryId];
-            if (directionFilter.forward) {
+            if (directionFilter && directionFilter.forward) {
                 if (path.properties.direction === "forward") {
-                    return path;
-                } else { return false; }
-            } else {
-                if (path.properties.direction === "backward") {
-                    return path;
+                    return true;
                 } else { return false; }
             }
+            else if (directionFilter && directionFilter.backward) {
+                if (path.properties.direction === "backward") {
+                    return true;
+                } else { return false; }
+            } 
+            else {
+                return false
+            }
         });
+
+        if (this.state.canToggleDirection && this.props.matchedStreetsGroup) {
+            const filters = this.props.matchedStreetsGroup.map((path: SharedStreetsMatchPath) =>
+                this.props.geometryIdDirectionFilter[path.properties.geometryId]);
+            
+            const directionFilter = uniq(filters)[0];
+            if (directionFilter) {
+                directionIcon = directionFilter.backward && directionFilter.forward ?
+                    'arrows-horizontal'
+                    : directionFilter.backward ?
+                        'arrow-left'
+                        : 'arrow-right';
+            }
+        }
 
         return <Card
                 elevation={1}>
@@ -111,7 +144,11 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
                         <span>{streetNames.join(", ")}</span>
                         <span>
                             {fromStreet.properties.fromStreetnames.join(",") + " "}
-                            <Button icon={directionIcon}/>
+                            <Button
+                                onClick={this.handleToggleDirection}
+                                disabled={!this.state.canToggleDirection}
+                                icon={directionIcon}
+                                />
                             {" " + toStreet.properties.toStreetnames.join(",")}
                         </span>
                     </div>

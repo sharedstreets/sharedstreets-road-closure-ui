@@ -15,42 +15,18 @@ export interface IRoadClosureFormStreetsGroupsProps {
     currentMatchedStreetsGroupsGeometryIdPathMap: { [geomId: string]: { [direction: string] : SharedStreetsMatchPath} },
     currentMatchedStreetsFeatures: Array<SharedStreetsMatchPath | SharedStreetsMatchPoint>,
     geometryIdDirectionFilter: { [ geometryId: string] : { forward: boolean, backward: boolean } },
+    streets: any,
     deleteStreetSegment: (payload: any) => void,
     inputChanged: (e: any) => void,
-    streets: any,
+    toggleStreetSegmentDirection: (e: any) => void,
 };
 
 class RoadClosureFormStreetsGroups extends React.Component<IRoadClosureFormStreetsGroupsProps, any> {
     public constructor(props: IRoadClosureFormStreetsGroupsProps) {
         super(props);
-        // this.handleChangeStreetName = this.handleChangeStreetName.bind(this);
-        // this.handleDeleteStreetSegment = this.handleDeleteStreetSegment.bind(this);
     }
-
-    public componentDidUpdate() {
-        // tslint:disable-next-line
-        console.log(this.props.currentMatchedStreetsGroups);
-    }
-
-    // public handleDeleteStreetSegment(e: any) {
-    //     this.props.deleteStreetSegment(this.props.street.referenceId);
-    // }
-
-    // public handleChangeStreetName(e: any): any {
-    //     this.props.inputChanged({
-    //       key: 'street',
-    //       referenceId: this.props.street.referenceId,
-    //       street: e.target.value,
-    //     });
-    //   }
 
     public render() {
-        // const {
-        //     referenceId,
-        //     streetname,
-        //     matchedStreetIndex,
-        // } = this.props.street;
-
         return <div>
             <label className={"bp3-label"}>
                 Selections
@@ -69,6 +45,7 @@ class RoadClosureFormStreetsGroups extends React.Component<IRoadClosureFormStree
                         index={index}
                         key={index}
                         geometryIdDirectionFilter={this.props.geometryIdDirectionFilter}
+                        toggleStreetSegmentDirection={this.props.toggleStreetSegmentDirection}
                     />
                 })
             }

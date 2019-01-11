@@ -5,6 +5,7 @@ import {
 import {
     // forEach,
     isEmpty,
+    isEqual,
     uniq,
 } from 'lodash';
 import { SharedStreetsMatchPath } from './SharedStreetsMatchPath';
@@ -38,7 +39,7 @@ export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
                 this.referenceIdFeatureMap[path.properties.referenceId] = path; 
                 if (!this.geometryIdPathMap[path.properties.geometryId]) {
                     this.geometryIdPathMap[path.properties.geometryId] = {};
-                }
+                }   
                 this.geometryIdPathMap[path.properties.geometryId][path.properties.direction] = path;
                 return path;
             }
@@ -55,6 +56,7 @@ export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
      */
     public getContiguousPaths(): void {
         const output: SharedStreetsMatchPath[][] = [];
+        const newContiguousFeatureGroupsDirections: Array<{ forward: boolean, backward: boolean }> = []
         let forwardOutput: SharedStreetsMatchPath[] = [];
         let backwardOutput: SharedStreetsMatchPath[] = [];
 
@@ -91,12 +93,11 @@ export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
                 
                 const adjacentPaths = refIdStack.filter((item) => {
                     const refIdStackItemFeature = this.referenceIdFeatureMap[item.refId];
-                    if (refIdStackItemFeature === currFeature) {
+                    if (isEqual(refIdStackItemFeature, currFeature)) {
                         return false;
                     }
                     if ( !item.visited &&
                         refIdStackItemFeature.properties.streetname === currFeature.properties.streetname &&
-                        // refIdStackItemFeature.properties.direction === currFeature.properties.direction &&
                         (
                             refIdStackItemFeature.properties.toIntersectionId === currFeature.properties.fromIntersectionId ||
                             refIdStackItemFeature.properties.fromIntersectionId === currFeature.properties.toIntersectionId ||
@@ -121,11 +122,12 @@ export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
                     // first, keep track of directionality
                     const directions = uniq(combinedOutput.filter((feature) => feature instanceof SharedStreetsMatchPath)
                         .map((feature: SharedStreetsMatchPath) => feature.properties.direction));
-                    this.contiguousFeatureGroupsDirections.push({
+                    
+                    // note use of unshift here — we want to add groups to the visual bottom of the list 
+                    newContiguousFeatureGroupsDirections.unshift({
                         backward: directions.indexOf("backward") >= 0 ? true : false,
                         forward: directions.indexOf("forward") >= 0 ? true : false,
                     });
-                    
                     output.unshift(combinedOutput);
                     forwardOutput = [];
                     backwardOutput = [];
@@ -133,6 +135,7 @@ export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
             }
         }
 
+        this.contiguousFeatureGroupsDirections = newContiguousFeatureGroupsDirections;
         this.contiguousFeatureGroups = output;
     }
 
