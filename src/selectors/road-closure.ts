@@ -1,11 +1,13 @@
 import { lineString } from '@turf/helpers';
 import { getType } from '@turf/invariant';
 import { forEach } from 'lodash';
-import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
+// import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
 import {
     RoadClosureWazeIncidentsItem,
 } from 'src/models/RoadClosureWazeIncidentsItem';
 // import { RootState } from 'src/store/configureStore';
+import { SharedStreetsMatchFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchFeatureCollection';
+import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
 import { IRoadClosureState } from 'src/store/road-closure';
 
 export const currentRoadClosureItemSelector = (state: IRoadClosureState) => {
@@ -41,20 +43,20 @@ export const streetnameMatchedStreetIndexMap = (state: IRoadClosureState) => {
     return output;
 };
 
-export const streetnameReferenceIdMap = (state: IRoadClosureState) => {
-    const currentItem = currentRoadClosureItemSelector(state);
-    const currentFormStreets = currentItem.form.street[state.currentSelectionIndex];
-    const output = {};
-    if (currentFormStreets) {
-        forEach(currentFormStreets, (street: RoadClosureFormStateStreet) => {
-            if (!output[street.streetname]) {
-                output[street.streetname] = [];
-            }
-            output[street.streetname].push(street.referenceId);
-        });
-    }
-    return output;
-};
+// export const streetnameReferenceIdMap = (state: IRoadClosureState) => {
+//     const currentItem = currentRoadClosureItemSelector(state);
+//     const currentFormStreets = currentItem.form.street[state.currentSelectionIndex];
+//     const output = {};
+//     if (currentFormStreets) {
+//         forEach(currentFormStreets, (street: RoadClosureFormStateStreet) => {
+//             if (!output[street.streetname]) {
+//                 output[street.streetname] = [];
+//             }
+//             output[street.streetname].push(street.referenceId);
+//         });
+//     }
+//     return output;
+// };
 
 export function allRoadClosureItemsToGeojson(state: IRoadClosureState) {
     const output = {
@@ -63,9 +65,9 @@ export function allRoadClosureItemsToGeojson(state: IRoadClosureState) {
     forEach((state.items), (currentItem) => {
         forEach((currentItem.matchedStreets), (currentMatchedStreets) => {
             if (currentMatchedStreets) {
-                forEach(currentMatchedStreets, (featureCollection: GeoJSON.FeatureCollection, selectionIndex) => {
-                    forEach(featureCollection.features, (segment: GeoJSON.Feature, index) => {
-                        if (getType(segment) === "LineString") {
+                forEach(currentMatchedStreets, (featureCollection: SharedStreetsMatchFeatureCollection, selectionIndex) => {
+                    forEach(featureCollection.features, (segment: SharedStreetsMatchPath|SharedStreetsMatchPath, index) => {
+                        if (segment instanceof SharedStreetsMatchPath) {
                             const outputItem = new RoadClosureWazeIncidentsItem(segment, currentItem.form);
                             output.incidents.push(outputItem);
                         }
@@ -86,9 +88,9 @@ export function currentRoadClosureItemToGeojson(state: IRoadClosureState){
         incidents: Array<RoadClosureWazeIncidentsItem>()
     };
     if (currentMatchedStreets) {
-        forEach(currentMatchedStreets, (featureCollection: GeoJSON.FeatureCollection, selectionIndex) => {
-            forEach(featureCollection.features, (segment: GeoJSON.Feature, index) => {
-                if (getType(segment) === "LineString") {
+        forEach(currentMatchedStreets, (featureCollection: SharedStreetsMatchFeatureCollection, selectionIndex) => {
+            forEach(featureCollection.features, (segment: SharedStreetsMatchPath|SharedStreetsMatchPath, index) => {
+                if (segment instanceof SharedStreetsMatchPath) {
                     const outputItem = new RoadClosureWazeIncidentsItem(segment, currentItem.form);
                     output.incidents.push(outputItem);
                 }
