@@ -79,15 +79,12 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
 
   public componentDidUpdate(prevProps: IRoadClosureMapProps) {
     const {
-      currentIndex,
-      items
+      currentItem,
     } = this.props.roadClosure;
 
     this.mapDraw.deleteAll();
-    forEach(items[currentIndex].matchedStreets, (matchedStreetList, outerIndex) => {
-      forEach(matchedStreetList, (matchedStreet, index) => {
-        this.mapDraw.add(matchedStreet);
-      })
+    forEach(currentItem.matchedStreets.features, (matchedStreetFeature, index) => {
+      this.mapDraw.add(matchedStreetFeature);
     });
     
   }

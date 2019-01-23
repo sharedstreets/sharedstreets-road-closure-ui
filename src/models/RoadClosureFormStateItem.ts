@@ -1,8 +1,15 @@
 import { RoadClosureFormStateStreet } from './RoadClosureFormStateStreet';
 
+export interface IStreetsByGeometryId {
+    [geometryId: string] : {
+        forward: RoadClosureFormStateStreet,
+        backward: RoadClosureFormStateStreet
+    }
+};
+
 export class RoadClosureFormStateItem {
     public incidentId: string;
-    public street: Array<{ [ geometryId: string] : { forward: RoadClosureFormStateStreet, backward: RoadClosureFormStateStreet } }> = [];
+    public street: IStreetsByGeometryId;
     public type: string = "ROAD_CLOSED";
     public startTime: string;
     public endTime: string;

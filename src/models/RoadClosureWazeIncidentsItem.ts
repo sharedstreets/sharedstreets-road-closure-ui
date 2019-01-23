@@ -1,8 +1,11 @@
 import {
     forEach,
 } from 'lodash';
-import { RoadClosureFormStateItem } from './RoadClosureFormStateItem';
-import { RoadClosureFormStateStreet } from './RoadClosureFormStateStreet';
+import {
+    IStreetsByGeometryId,
+    RoadClosureFormStateItem
+} from './RoadClosureFormStateItem';
+// import { RoadClosureFormStateStreet } from './RoadClosureFormStateStreet';
 import {
     ISharedStreetsMatchPathProperties,
     SharedStreetsMatchPath,
@@ -40,21 +43,23 @@ export class RoadClosureWazeIncidentsItem {
         this.type = form.type;
         this.subtype = form.subtype;
 
-        this.location.referenceId = matchedStreetSegment.properties!.referenceId;
+        this.location.direction = matchedStreetSegment.properties.direction;
+        this.location.referenceId = matchedStreetSegment.properties.referenceId;
+        this.location.fromStreetnames = matchedStreetSegment.properties.fromStreetnames;
+        this.location.toStreetnames = matchedStreetSegment.properties.toStreetnames;
         this.location.street = this.setStreetname(matchedStreetSegment.properties, form.street);
         this.location.polyline = this.setPolyline(matchedStreetSegment.geometry);
-        this.location.fromStreetnames = matchedStreetSegment.properties!.fromStreetnames;
-        this.location.toStreetnames = matchedStreetSegment.properties!.toStreetnames;
     }
+    
 
-    private setStreetname(matchedStreetSegmentProperties: ISharedStreetsMatchPathProperties, streetArray: RoadClosureFormStateStreet[] | Array<{}>) : string {
+    private setStreetname(matchedStreetSegmentProperties: ISharedStreetsMatchPathProperties, streetObj: IStreetsByGeometryId) : string {
         let output = '';
-        forEach(streetArray, (streetRefIdMap: RoadClosureFormStateStreet) => {
-            if (streetRefIdMap[matchedStreetSegmentProperties.referenceId]) {
-                output = streetRefIdMap[matchedStreetSegmentProperties.referenceId].streetname;
-            }
-        });
-
+        if (streetObj[matchedStreetSegmentProperties.geometryId].forward) {
+            output = streetObj[matchedStreetSegmentProperties.geometryId].forward.streetname;
+        } else {
+            output = streetObj[matchedStreetSegmentProperties.geometryId].backward.streetname;
+        }
+        
         return output ? output : '';
     }
 
