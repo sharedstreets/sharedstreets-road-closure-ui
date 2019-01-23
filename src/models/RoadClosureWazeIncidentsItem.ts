@@ -5,7 +5,6 @@ import {
     IStreetsByGeometryId,
     RoadClosureFormStateItem
 } from './RoadClosureFormStateItem';
-// import { RoadClosureFormStateStreet } from './RoadClosureFormStateStreet';
 import {
     ISharedStreetsMatchPathProperties,
     SharedStreetsMatchPath,
