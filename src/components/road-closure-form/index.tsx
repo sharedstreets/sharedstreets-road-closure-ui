@@ -151,8 +151,8 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
   }
 
   public render() {
-    const currentSelectionIndex = this.props.roadClosure.currentSelectionIndex;
-    const currentMatchedStreets = this.props.currentRoadClosureItem.matchedStreets[this.props.roadClosure.currentIndex][currentSelectionIndex];
+    // const currentSelectionIndex = this.props.roadClosure.currentSelectionIndex;
+    const currentMatchedStreets = this.props.currentRoadClosureItem.matchedStreets;
 
     return (
         <div
@@ -160,7 +160,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
         >
             <Card>
               {
-                isEmpty(this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex]) ?
+                isEmpty(this.props.currentRoadClosureItem.form.street) ?
                 this.renderEmptyMatchedStreetsTable() :
                 <RoadClosureFormStreetsGroups
                   currentMatchedStreetsFeatures={currentMatchedStreets.features}
@@ -171,7 +171,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                   deleteStreetSegment={this.props.deleteStreetSegment}
                   inputChanged={this.props.inputChanged}
                   toggleStreetSegmentDirection={this.props.toggleStreetSegmentDirection}
-                  streets={this.props.currentRoadClosureItem.form.street[this.props.roadClosure.currentSelectionIndex]}
+                  streets={this.props.currentRoadClosureItem.form.street}
                 />
               }
             </Card>
