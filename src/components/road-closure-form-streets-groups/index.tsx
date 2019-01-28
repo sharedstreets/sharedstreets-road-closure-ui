@@ -29,8 +29,8 @@ class RoadClosureFormStreetsGroups extends React.Component<IRoadClosureFormStree
     public render() {
         return <div>
             <label className={"bp3-label"}>
-                Selections
-                <div className={"bp3-text-muted"}>Click a group to see individual street segments</div>
+                Selected streets
+                <div className={"bp3-text-muted"}>Grouped by contiguity, then name</div>
             </label>
             {
                 this.props.currentMatchedStreetsGroups.map((group: SharedStreetsMatchPath[], index) => {

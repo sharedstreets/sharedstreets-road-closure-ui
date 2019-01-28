@@ -2,6 +2,8 @@ import {
   Button,
   ButtonGroup,
   Card,
+  Divider,
+  // Classes,
   FormGroup,
   InputGroup,
 } from '@blueprintjs/core';
@@ -16,6 +18,7 @@ import * as moment from 'moment';
 import * as React from 'react';
 import { RoadClosureStateItem } from 'src/models/RoadClosureStateItem';
 import { IRoadClosureState } from 'src/store/road-closure';
+import RoadClosureStreetNameSelector from '../../containers/road-closure-street-name-selector';
 import RoadClosureBottomActionBar from '../road-closure-bottom-action-bar';
 import RoadClosureFormStreetsGroups from '../road-closure-form-streets-groups';
 
@@ -150,10 +153,10 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
   public renderEmptyMatchedStreetsTable() {
     return <div className="SHST-Matched-Streets-Table-Empty bp3-non-ideal-state">
       <div className="bp3-non-ideal-state-visual">
-        <span className="bp3-icon bp3-icon-arrow-right" />
+        <span className="bp3-icon bp3-icon-geosearch" />
       </div>
       <h4 className="bp3-heading">No streets selected</h4>
-      <div>To start entering a road closure, click two (or more) points along the length of the affected street(s).</div>
+      <div>To start entering a road closure, use the draw tool on the top left of the map, or select streets by name below.</div>
     </div>;
   }
 
@@ -189,6 +192,8 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                 />
               }
             </Card>
+            <RoadClosureStreetNameSelector />
+            <Divider />
             <FormGroup
               label="Start and end time"
               labelInfo="(required)"  

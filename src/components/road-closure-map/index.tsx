@@ -20,11 +20,7 @@ const mapboxToken = "pk.eyJ1IjoidHJhbnNwb3J0cGFydG5lcnNoaXAiLCJhIjoiY2ptOTN5N3Q3
 
 export interface IRoadClosureMapProps {
   findMatchedStreet: (payload: any) => void,
-  lineCreated: (payload: any) => void,
-  lineDeleted: (payload: any) => void,
-  lineEdited: (payload: any) => void,
-  pointRemoved: () => void,
-  pointSelected: (payload: any) => void,
+  viewportChanged: (payload: any) => void,
   roadClosure: IRoadClosureState
 };
 
@@ -34,7 +30,6 @@ export interface IRoadClosureMapState {
 
 class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureMapState> {
   public state = {
-    selectedPoints: [],
     viewport: {
       latitude: 38.5,
       longitude: -98,
@@ -44,6 +39,14 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
 
   public mapContainer: any;
   public mapDraw: any;
+
+  public constructor(props: IRoadClosureMapProps) {
+    super(props);
+
+    this.state = {
+      viewport: this.props.roadClosure.viewport
+    }
+  }
 
   public componentDidMount() {
     const {
@@ -68,10 +71,10 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
       displayControlsDefault: false,
     });
 
-    this.mapContainer.on('move', this.handleMapMove);
+    this.mapContainer.on('moveend', this.handleMapMove);
 
     this.mapContainer.on('draw.create', this.handleLineCreated);
-    this.mapContainer.on('draw.delete', this.handleLineDeleted);
+    // this.mapContainer.on('draw.delete', this.handleLineDeleted);
     this.mapContainer.on('draw.update', this.handleLineEdited);
     this.mapContainer.addControl(
       new mapboxgl.NavigationControl()
@@ -105,12 +108,10 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
 
   public handleMapMove = () => {
     const { lng, lat } = this.mapContainer.getCenter();
-    this.setState({
-      viewport: {
-        latitude: lat.toFixed(4),
-        longitude: lng.toFixed(4),
+    this.props.viewportChanged({
+        latitude: lat.toFixed(14),
+        longitude: lng.toFixed(14),
         zoom: this.mapContainer.getZoom().toFixed(2)
-      }
     });
   }
 
@@ -121,9 +122,9 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
     });
   }
 
-  public handleLineDeleted = (e: { type: string, target: any, features: GeoJSON.Feature[]}) => {
-    this.props.lineDeleted(e.features[0]);
-  }
+  // public handleLineDeleted = (e: { type: string, target: any, features: GeoJSON.Feature[]}) => {
+  //   this.props.lineDeleted(e.features[0]);
+  // }
 
   public handleLineEdited = (e: { type: string, target: any, features: GeoJSON.Feature[]}) => {
     this.props.findMatchedStreet(e.features[0]);
