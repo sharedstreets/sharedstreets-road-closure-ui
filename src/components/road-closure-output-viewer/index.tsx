@@ -4,13 +4,19 @@ import {
     Pre,
 } from '@blueprintjs/core';
 import * as React from 'react';
+import {
+    IRoadClosureOutputFormatName,
+    RoadClosureOutputStateItem
+} from 'src/models/RoadClosureOutputStateItem';
 import RoadClosureBottomActionBar from '../road-closure-bottom-action-bar';
 import './road-closure-output-viewer.css';
 
 export interface IRoadClosureOutputViewerProps {
     hideRoadClosureOutput: () => void,
+    selectOutputFormat: (format: string) => void,
     viewRoadClosureOutput: () => void,
-    output: any,
+    incidents: RoadClosureOutputStateItem,
+    outputFormat: IRoadClosureOutputFormatName
   };
 
 
@@ -20,6 +26,7 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
         this.handleClickDownload = this.handleClickDownload.bind(this);
         this.handleClickCopy = this.handleClickCopy.bind(this);
         this.handleClickCancel = this.handleClickCancel.bind(this);
+        this.handleSelectFormat = this.handleSelectFormat.bind(this);
     }
 
     public handleClickCopy() {
@@ -34,17 +41,23 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
         return;
     }
 
+    public handleSelectFormat(e: any) {
+        this.props.selectOutputFormat(e.target.value);
+    }
+
     public render() {
         return (
             <div className={"SHST-Road-Closure-Output-Viewer"}>
                 <div className="bp3-select">
-                    <select>
-                        <option defaultChecked={true} value="geojson">GeoJSON</option>
-                        <option value={'sdot'}>SDOT [Draft]</option>
+                    <select
+                        value={this.props.outputFormat}
+                        onChange={this.handleSelectFormat}>
+                        <option defaultChecked={true} value="waze">Waze</option>
+                        <option value="geojson">GeoJSON</option>
                     </select>
                 </div>
                 <Pre className={"SHST-Road-Closure-Output-Viewer-Code"}>
-                    {JSON.stringify(this.props.output, null, 2)}
+                    {JSON.stringify(this.props.incidents, null, 2)}
                 </Pre>
                 <RoadClosureBottomActionBar>
                     <ButtonGroup

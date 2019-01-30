@@ -20,9 +20,22 @@ export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
     public geometryIdPathMap: { [geomId: string]: { [direction: string] : SharedStreetsMatchPath} } = {};
     protected referenceIdFeatureMap: { [refId: string]: SharedStreetsMatchPath } = {};
 
-    /**
-     * addFeatures
-     */
+    public getFeatureCollection(): FeatureCollection {
+        return {
+            features: this.features,
+            type: this.type,
+        }
+    }
+    
+    public getFeatureCollectionOfPaths(): FeatureCollection {
+        return {
+            type: this.type,
+            // disable tslint so type can appear at the top of the output
+            // tslint:disable-next-line
+            features: this.features.filter((feature) => feature instanceof SharedStreetsMatchPath),
+        }
+    }
+
     public addFeatures(newFeatures: Array<SharedStreetsMatchPath | SharedStreetsMatchPoint>) {
         this.features = this.features.concat(newFeatures);
     }
@@ -146,5 +159,15 @@ export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
         this.features = this.features.filter((feature: SharedStreetsMatchPath) => {
             return feature.properties.referenceId !== referenceId;
         });
+    }
+    /**
+     * removePathByGeometryId
+     */
+    public removePathByGeometryId(geometryId: string) {
+        this.features = this.features.filter((feature: SharedStreetsMatchPath) => {
+            return feature.properties.geometryId !== geometryId;
+        });
+
+        this.getContiguousPaths();
     }
 }

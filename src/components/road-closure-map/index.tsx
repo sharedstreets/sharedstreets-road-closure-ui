@@ -5,6 +5,7 @@ import {
 import * as mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import * as React from 'react';
+import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
 import { IRoadClosureState } from 'src/store/road-closure';
 import './road-closure-map.css';
 
@@ -84,7 +85,10 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
 
     this.mapDraw.deleteAll();
     forEach(currentItem.matchedStreets.features, (matchedStreetFeature, index) => {
-      this.mapDraw.add(matchedStreetFeature);
+      // only render SharedStreetsMatchPaths for now, remove to enable intersections
+      if (matchedStreetFeature instanceof SharedStreetsMatchPath) {
+        this.mapDraw.add(matchedStreetFeature);
+      }
     });
     
   }

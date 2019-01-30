@@ -10,7 +10,7 @@ import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMa
 
 export interface IRoadClosureFormStreetsTableRowProps {
     // matchedStreetsGroup: Array<SharedStreetsMatchPath|SharedStreetsMatchPoint>,
-    currentMatchedStreetsFeatures: SharedStreetsMatchPath[],
+    currentFeature: SharedStreetsMatchPath,
     key: string,
     street: RoadClosureFormStateStreet
     deleteStreetSegment: (payload: any) => void,
@@ -41,7 +41,7 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
         const {
             geometryId,
             streetname,
-            matchedStreetIndex,
+            // matchedStreetIndex,
         } = this.props.street;
         // const refIds = Object.keys(this.props.street);
         // const {
@@ -67,10 +67,10 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
                     />
                 </td>
                 <td>
-                    {this.props.currentMatchedStreetsFeatures[matchedStreetIndex].properties.fromStreetnames.join(", ")}
+                    {this.props.currentFeature.properties.fromStreetnames.join(", ")}
                 </td>
                 <td>
-                    {this.props.currentMatchedStreetsFeatures[matchedStreetIndex].properties.toStreetnames.join(", ")}
+                    {this.props.currentFeature.properties.toStreetnames.join(", ")}
                 </td>
             </tr>
     }

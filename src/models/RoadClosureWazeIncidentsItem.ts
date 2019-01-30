@@ -19,7 +19,7 @@ export class RoadClosureWazeIncidentsItem {
     public subtype: string;
     public location: {
         street: string,
-        direction: string,
+        direction: "BOTH_DIRECTIONS" | "ONE_DIRECTION" | '',
         polyline: string,
         referenceId: string,
         fromStreetnames: string[],
@@ -35,14 +35,14 @@ export class RoadClosureWazeIncidentsItem {
     public starttime: string;
     public endtime: string;
 
-    public constructor(matchedStreetSegment: SharedStreetsMatchPath, form: RoadClosureFormStateItem) {
+    public constructor(matchedStreetSegment: SharedStreetsMatchPath, form: RoadClosureFormStateItem, bothDirections: boolean) {
         this.creationtime = new Date().toISOString();
         this.starttime = form.startTime;
         this.endtime = form.endTime;
         this.type = form.type;
         this.subtype = form.subtype;
 
-        this.location.direction = matchedStreetSegment.properties.direction;
+        this.location.direction = bothDirections ? "BOTH_DIRECTIONS" : "ONE_DIRECTION";
         this.location.referenceId = matchedStreetSegment.properties.referenceId;
         this.location.fromStreetnames = matchedStreetSegment.properties.fromStreetnames;
         this.location.toStreetnames = matchedStreetSegment.properties.toStreetnames;

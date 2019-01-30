@@ -34,6 +34,10 @@ class RoadClosureFormStreetsGroups extends React.Component<IRoadClosureFormStree
             </label>
             {
                 this.props.currentMatchedStreetsGroups.map((group: SharedStreetsMatchPath[], index) => {
+                    if (group.length === 0) {
+                        return;
+                    }
+                    
                     return <RoadClosureFormStreetsGroupItem
                         streets={this.props.streets}
                         deleteStreetSegment={this.props.deleteStreetSegment}
