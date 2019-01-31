@@ -147,7 +147,25 @@ export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
                 }
             }
         }
-
+        if (newContiguousFeatureGroupsDirections.length === 0
+            && Object.keys(this.referenceIdFeatureMap).length === 1) {
+                // handle edge case: if there is one segment that is entirely within one street segment
+                const combinedOutput = forwardOutput.concat(backwardOutput);
+                if (!isEmpty(combinedOutput)) {
+                    // first, keep track of directionality
+                    const directions = uniq(combinedOutput.filter((feature) => feature instanceof SharedStreetsMatchPath)
+                        .map((feature: SharedStreetsMatchPath) => feature.properties.direction));
+                    
+                    // note use of unshift here — we want to add groups to the visual bottom of the list 
+                    newContiguousFeatureGroupsDirections.unshift({
+                        backward: directions.indexOf("backward") >= 0 ? true : false,
+                        forward: directions.indexOf("forward") >= 0 ? true : false,
+                    });
+                    output.unshift(combinedOutput);
+                    forwardOutput = [];
+                    backwardOutput = [];
+                }
+        }
         this.contiguousFeatureGroupsDirections = newContiguousFeatureGroupsDirections;
         this.contiguousFeatureGroups = output;
     }
