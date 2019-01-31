@@ -22,14 +22,14 @@ export class RoadClosureWazeIncidentsItem {
         street: string,
         direction: "BOTH_DIRECTIONS" | "ONE_DIRECTION" | '',
         polyline: string,
-        referenceId: string,
+        incidentId: string,
         fromStreetnames: string[],
         toStreetnames: string[],
     } = {
         direction: '',
         fromStreetnames: [],
+        incidentId: '',
         polyline: '',
-        referenceId: '',
         street: '',
         toStreetnames: [],
     };
@@ -37,14 +37,14 @@ export class RoadClosureWazeIncidentsItem {
     public endtime: string;
 
     public constructor(matchedStreetSegment: SharedStreetsMatchPath, form: RoadClosureFormStateItem, bothDirections: boolean) {
-        this.creationtime = new Date().toISOString();
-        this.starttime = moment(form.startTime).format()
-        this.endtime = moment(form.endTime).format();
+        this.creationtime = moment().format();
+        this.starttime = form.startTime ? moment(form.startTime).format() : '';
+        this.endtime = form.endTime ? moment(form.endTime).format() : '';
         this.type = form.type;
         this.subtype = form.subtype;
 
         this.location.direction = bothDirections ? "BOTH_DIRECTIONS" : "ONE_DIRECTION";
-        this.location.referenceId = matchedStreetSegment.properties.referenceId;
+        this.location.incidentId = matchedStreetSegment.properties.referenceId;
         this.location.fromStreetnames = matchedStreetSegment.properties.fromStreetnames;
         this.location.toStreetnames = matchedStreetSegment.properties.toStreetnames;
         this.location.street = this.setStreetname(matchedStreetSegment.properties, form.street);
