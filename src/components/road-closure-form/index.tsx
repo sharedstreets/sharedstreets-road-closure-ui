@@ -2,35 +2,21 @@ import {
   Button,
   ButtonGroup,
   Card,
-  // Classes,
   FormGroup,
   InputGroup,
-  Popover,
-  Position,
-  // Spinner,
-  // Radio,
-  // RadioGroup,
 } from '@blueprintjs/core';
 import {
-  DateRangePicker,
-  TimePrecision,
+  DateRange,
+  DateRangeInput,
 } from '@blueprintjs/datetime';
-// import {
-//   getType
-// } from '@turf/invariant';
 import {
-  // forEach,
-  // difference,
-  // forOwn,
   isEmpty,
 } from 'lodash';
+import * as moment from 'moment';
 import * as React from 'react';
-// import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
-// import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
 import { RoadClosureStateItem } from 'src/models/RoadClosureStateItem';
 import { IRoadClosureState } from 'src/store/road-closure';
 import RoadClosureBottomActionBar from '../road-closure-bottom-action-bar';
-// import RoadClosureFormStreetsTable from '../road-closure-form-streets-table';
 import RoadClosureFormStreetsGroups from '../road-closure-form-streets-groups';
 
 import '../../../node_modules/@blueprintjs/core/lib/css/blueprint.css';
@@ -65,6 +51,8 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
     this.handleStreetMouseover = this.handleStreetMouseover.bind(this);
     this.renderDateButtonText = this.renderDateButtonText.bind(this);
     this.handleDeleteStreetSegment = this.handleDeleteStreetSegment.bind(this);
+    this.formatDate = this.formatDate.bind(this);
+    this.parseDate = this.parseDate.bind(this);
   }
 
   public handleDeleteStreetSegment(e: any) {
@@ -75,7 +63,6 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
   public handleChangeStreetName(e: any): any {
     this.props.inputChanged({
       key: 'street',
-      // referenceId: this.props.streetnameToReferenceId[e.target.id],
       referenceId: e.target.id,
       street: e.target.value,
     });
@@ -109,7 +96,27 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
     }
   }
 
-  public handleChangeTime(e: [Date | undefined, Date | undefined]) {
+  public formatDate(date: Date, locale?: string) {
+    return moment(date).format("dddd, MMMM Do YYYY, h:mm:ss a");
+  }
+
+  public parseDate(str: string, locale?: string) {
+    return moment(str, [
+      "dddd, MMMM Do YYYY, h:mm:ss a",
+      "YYYY-MM-DD",
+      "DD/MM/YYYY",
+      "YYYY-MM-DD HH:mm:ss",
+      "DD/MM/YYYY HH:mm:ss",
+      "YYYY-MM-DD HH:mm:ss a",
+      "DD/MM/YYYY HH:mm:ss a",
+      moment.ISO_8601,
+      moment.HTML5_FMT.DATE,
+      moment.HTML5_FMT.DATETIME_LOCAL,
+      moment.HTML5_FMT.DATETIME_LOCAL_SECONDS,
+    ]).toDate();
+  }
+
+  public handleChangeTime(e: DateRange) {
     this.props.inputChanged({
       key: 'startTime',
       startTime: e[0],
@@ -151,8 +158,15 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
   }
 
   public render() {
-    // const currentSelectionIndex = this.props.roadClosure.currentSelectionIndex;
     const currentMatchedStreets = this.props.currentRoadClosureItem.matchedStreets;
+    const currentDateRange: DateRange = [
+      this.props.roadClosure.currentItem.form.startTime ? 
+        moment(this.props.roadClosure.currentItem.form.startTime).toDate()
+        : undefined,
+      this.props.roadClosure.currentItem.form.endTime ? 
+        moment(this.props.roadClosure.currentItem.form.endTime).toDate()
+        : undefined,
+    ];
 
     return (
         <div
@@ -179,17 +193,24 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
               label="Start and end time"
               labelInfo="(required)"  
             >
-              <Popover
-                content={              
-                  <DateRangePicker
-                    shortcuts={false}
-                    timePrecision={TimePrecision.MINUTE}
-                    onChange={this.handleChangeTime}
-                  />
-                }
-                position={Position.BOTTOM}>
-                <Button text={this.renderDateButtonText()} />
-              </Popover>
+              <DateRangeInput
+                value={currentDateRange}
+                className={"SHST-Road-Closure-Form-Date-Range-Input-Group"}
+                allowSingleDayRange={true}
+                shortcuts={false}
+                formatDate={this.formatDate}
+                parseDate={this.parseDate}
+                onChange={this.handleChangeTime}
+                timePrecision={"second"}
+                contiguousCalendarMonths={false}
+                selectAllOnFocus={true}
+                startInputProps={{
+                  className: "SHST-Road-Closure-Form-Date-Range-Input"
+                }}
+                endInputProps={{
+                  className: "SHST-Road-Closure-Form-Date-Range-Input"
+                }}
+              />
             </FormGroup>
             <FormGroup
               label="Description"
