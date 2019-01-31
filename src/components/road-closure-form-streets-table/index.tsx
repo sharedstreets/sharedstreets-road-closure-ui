@@ -33,13 +33,19 @@ class RoadClosureFormStreetsTable extends React.Component<IRoadClosureFormStreet
             </thead>
             <tbody>
                 { this.props.matchedStreetsGroup.map((path: SharedStreetsMatchPath) => {
+                        if (!this.props.streets[path.properties.geometryId]) {
+                            return;
+                        }
                         const directionFilter = this.props.geometryIdDirectionFilter[path.properties.geometryId];
                         const street = this.props.streets[path.properties.geometryId] && directionFilter.forward ?
                             this.props.streets[path.properties.geometryId].forward
                             : this.props.streets[path.properties.geometryId].backward;
 
+                        const currentFeature = this.props.currentMatchedStreetsFeatures.filter((feature) => feature instanceof SharedStreetsMatchPath)
+                            .filter((feature: SharedStreetsMatchPath) => feature.properties.geometryId === path.properties.geometryId) as SharedStreetsMatchPath[];
+
                         return <RoadClosureFormStreetsTableRow
-                            currentMatchedStreetsFeatures={this.props.currentMatchedStreetsFeatures as SharedStreetsMatchPath[]}
+                            currentFeature={currentFeature[0]}
                             inputChanged={this.props.inputChanged}
                             deleteStreetSegment={this.props.deleteStreetSegment}
                             key={path.properties.geometryId}

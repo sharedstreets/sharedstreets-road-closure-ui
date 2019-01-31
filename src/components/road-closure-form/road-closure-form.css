@@ -12,6 +12,14 @@
     display: block;
 }
 
+.SHST-Road-Closure-Form-Date-Range-Input-Group > span {
+    width: 100%;
+}
+
+.SHST-Road-Closure-Form-Date-Range-Input {
+    flex: 1 1;
+}
+
 /* .SHST-Matched-Streets-Table-Empty > * {
     margin: 0 auto;
     width: 100%;

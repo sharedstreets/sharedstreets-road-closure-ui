@@ -138,6 +138,9 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
             }
         }
 
+        if (matchedStreetsGroupFilteredByDirection.length === 0) {
+            return null; 
+        }
         return <Card
                 elevation={1}>
                     <div className={"SHST-Road-Closure-Form-Streets-Groups-Item-Content"}>

@@ -1,26 +1,24 @@
 import {
     concat,
-    // dropRight,
-    forEach
+    forEach,
+    omit,
 } from 'lodash';
 import { Dispatch } from 'redux';
 import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
+import {
+    IRoadClosureOutputFormatName,
+    RoadClosureOutputStateItem,
+} from 'src/models/RoadClosureOutputStateItem';
 import { RoadClosureStateItem } from "src/models/RoadClosureStateItem";
 import { SharedStreetsMatchFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchFeatureCollection';
 import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
 import { SharedStreetsMatchPoint } from 'src/models/SharedStreets/SharedStreetsMatchPoint';
 import {
-    currentRoadClosureItemToGeojson, 
-    // lineStringFromSelectedPoints
-} from 'src/selectors/road-closure';
- import {
      ActionType,
      createAsyncAction,
      createStandardAction,
-    //  StateType
 } from 'typesafe-actions';
 import { fetchAction } from '../api';
-// import { RootState } from '../configureStore';
 
 
 // actions
@@ -63,21 +61,17 @@ export const ACTIONS = {
     INPUT_CHANGED: createStandardAction('ROAD_CLOSURE/INPUT_CHANGED')<IRoadClosureFormInputChangedPayload>(),
     ROAD_CLOSURE_HIDE_OUTPUT: createStandardAction('ROAD_CLOSURE/ROAD_CLOSURE_HIDE_OUTPUT')<void>(),
     ROAD_CLOSURE_VIEW_OUTPUT: createStandardAction('ROAD_CLOSURE/ROAD_CLOSURE_VIEW_OUTPUT')<void>(),
+    SELECT_OUTPUT_FORMAT: createStandardAction('ROAD_CLOSURE/SELECT_OUTPUT_FORMAT')<IRoadClosureOutputFormatName>(),
     TOGGLE_DIRECTION_STREET_SEGMENT: createStandardAction('ROAD_CLOSURE/TOGGLE_DIRECTION_STREET_SEGMENT')<IRoadClosureStateItemToggleDirectionPayload>(),
     VIEWPORT_CHANGED: createStandardAction('ROAD_CLOSURE/VIEWPORT_CHANGED'),
 };
 // side effects
 
 export const findMatchedStreet = (linestring: IRoadClosureMapboxDrawLineString) => (dispatch: Dispatch<any>, getState: any) => {
-    // const {
-    //     roadClosure,
-    // } = getState() as RootState;
-
     return dispatch(fetchAction({
         afterRequest: (data) => {
             return data;
         },
-        // body: lineStringFromSelectedPoints(roadClosure),
         body: linestring,
         endpoint: 'match/geoms',
         method: 'post',
@@ -99,42 +93,39 @@ export const findMatchedStreet = (linestring: IRoadClosureMapboxDrawLineString) 
 
 // reducer
 export interface IRoadClosureState {
-    // currentIndex: number,
-    // currentSelectionIndex: number,
     currentItem: RoadClosureStateItem,
     isFetchingMatchedStreets: boolean,
     isShowingRoadClosureOutputViewer: boolean,
-    // items: RoadClosureStateItem[],
-    output: any,
+    output: RoadClosureOutputStateItem,
 };
 
 const defaultState: IRoadClosureState = {
-    // currentIndex: 0,
-    // currentSelectionIndex: 0,
     currentItem: new RoadClosureStateItem(),
     isFetchingMatchedStreets: false,
     isShowingRoadClosureOutputViewer: false,
-    // items: [ new RoadClosureStateItem() ],
-    output: {
-        incidents: []
-    },
+    output: new RoadClosureOutputStateItem(),
 };
 
 export const roadClosureReducer = (state: IRoadClosureState = defaultState, action: RoadClosureAction) => {
     let updatedItem: RoadClosureStateItem;
-    // let updatedItems: RoadClosureStateItem[];
     switch (action.type) {
+        case 'ROAD_CLOSURE/SELECT_OUTPUT_FORMAT':
+            return {
+                ...state,
+                output: {
+                    ...state.output,
+                    outputFormat: action.payload
+                }
+            }
         case "ROAD_CLOSURE/ROAD_CLOSURE_HIDE_OUTPUT":
             return {
                 ...state,
                 isShowingRoadClosureOutputViewer: false,
-                output: null,
             };
         case "ROAD_CLOSURE/ROAD_CLOSURE_VIEW_OUTPUT":
             return {
                 ...state,
                 isShowingRoadClosureOutputViewer: true,
-                output: currentRoadClosureItemToGeojson(state),
             };
         
         case "ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_REQUEST":
@@ -144,16 +135,12 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             };
         case "ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS":
             updatedItem = { ...state.currentItem };
-            // updatedItems[state.currentIndex].invalidStreets[state.currentIndex][state.currentSelectionIndex].features = concat(updatedItems[state.currentIndex].invalidStreets[state.currentIndex][state.currentSelectionIndex].features, action.payload.invalid.features);
-            // updatedItems[state.currentIndex].matchedStreets[state.currentIndex][state.currentSelectionIndex].addFeaturesFromGeojson(action.payload.matched.features);
-            // updatedItems[state.currentIndex].unmatchedStreets[state.currentIndex][state.currentSelectionIndex].features = concat(updatedItems[state.currentIndex].unmatchedStreets[state.currentIndex][state.currentSelectionIndex].features, action.payload.unmatched.features);
+
             updatedItem.invalidStreets.features = concat(updatedItem.invalidStreets.features, action.payload.invalid.features);
             updatedItem.matchedStreets.addFeaturesFromGeojson(action.payload.matched.features);
             updatedItem.unmatchedStreets.features = concat(updatedItem.unmatchedStreets.features, action.payload.unmatched.features);
 
-
             // update geometryIdDirectionMap
-
             // update form.street
             const output = {};
             const newGeometryIdDirectionFilter = {};
@@ -199,39 +186,10 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
         case "ROAD_CLOSURE/DELETE_STREET_SEGMENT":
             updatedItem = { ...state.currentItem };
 
-            updatedItem.matchedStreets.features = 
-                updatedItem.matchedStreets.features.filter((feature: any) => {
-                    return feature.properties.geometryId !== action.payload.geometryId;
-                });
+            updatedItem.matchedStreets.removePathByGeometryId(action.payload.geometryId);
 
-            const deletedStreetOutput = {};
-            const deletedGeometryIdDirectionFilter = {};
-            forEach(updatedItem.matchedStreets.features, (segment: SharedStreetsMatchPath, index: number) => {
-                if (!deletedStreetOutput[segment.properties.geometryId]) {
-                    deletedStreetOutput[segment.properties.geometryId] = {
-                        backward: {},
-                        forward: {}
-                    };
-                }
-                if (!deletedGeometryIdDirectionFilter[segment.properties.geometryId]) {
-                    deletedGeometryIdDirectionFilter[segment.properties.geometryId] = {
-                        backward: false,
-                        forward: false,
-                    };
-                }
-                if (segment.properties.direction === "forward") {
-                    deletedStreetOutput[segment.properties.geometryId].forward = new RoadClosureFormStateStreet(index, segment.properties.streetname, segment.properties.referenceId, segment.properties.geometryId);
-                }
-                if (segment.properties.direction === "backward") {
-                    deletedStreetOutput[segment.properties.geometryId].backward = new RoadClosureFormStateStreet(index, segment.properties.streetname, segment.properties.referenceId, segment.properties.geometryId);
-                }
-                if (!deletedGeometryIdDirectionFilter[segment.properties.geometryId].forward && segment.properties.direction === "forward") {
-                    deletedGeometryIdDirectionFilter[segment.properties.geometryId].forward = true;
-                }
-                if (!deletedGeometryIdDirectionFilter[segment.properties.geometryId].backward && segment.properties.direction === "backward") {
-                    deletedGeometryIdDirectionFilter[segment.properties.geometryId].backward = true;
-                }
-            });
+            const deletedStreetOutput = omit(updatedItem.form.street, action.payload.geometryId);
+            const deletedGeometryIdDirectionFilter = omit(updatedItem.geometryIdDirectionFilter, action.payload.geometryId);
             updatedItem.form.street = deletedStreetOutput;
             updatedItem.geometryIdDirectionFilter = deletedGeometryIdDirectionFilter;
 
