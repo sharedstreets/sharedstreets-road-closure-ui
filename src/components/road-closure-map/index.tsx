@@ -1,4 +1,5 @@
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
 import {
   forEach,
 } from 'lodash';
@@ -9,10 +10,13 @@ import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMa
 import { IRoadClosureState } from 'src/store/road-closure';
 import './road-closure-map.css';
 
-// tslint:disable-next-line
+// tslint:disable
 const MapboxDraw = require('@mapbox/mapbox-gl-draw');
+const MapboxGeocoder = require('@mapbox/mapbox-gl-geocoder');
+// tslint:enable
 
-(mapboxgl as any).accessToken = "pk.eyJ1IjoidHJhbnNwb3J0cGFydG5lcnNoaXAiLCJhIjoiY2ptOTN5N3Q3MHN5aDNxbGs2MzhsN3dneiJ9.K4j9mXsvfGCYtM8YouwCKg";
+const mapboxToken = "pk.eyJ1IjoidHJhbnNwb3J0cGFydG5lcnNoaXAiLCJhIjoiY2ptOTN5N3Q3MHN5aDNxbGs2MzhsN3dneiJ9.K4j9mXsvfGCYtM8YouwCKg";
+(mapboxgl as any).accessToken = mapboxToken;
 
 export interface IRoadClosureMapProps {
   findMatchedStreet: (payload: any) => void,
@@ -32,9 +36,9 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
   public state = {
     selectedPoints: [],
     viewport: {
-      latitude: 47.608791594905625,
-      longitude: -122.3348826226224,
-      zoom: 13
+      latitude: 38.5,
+      longitude: -98,
+      zoom: 3
     },
   }
 
@@ -66,15 +70,21 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
 
     this.mapContainer.on('move', this.handleMapMove);
 
-    this.mapContainer.addControl(
-      this.mapDraw,
-      'top-left'
-    );
     this.mapContainer.on('draw.create', this.handleLineCreated);
     this.mapContainer.on('draw.delete', this.handleLineDeleted);
     this.mapContainer.on('draw.update', this.handleLineEdited);
     this.mapContainer.addControl(
       new mapboxgl.NavigationControl()
+    );
+    this.mapContainer.addControl(
+      new MapboxGeocoder({
+        accessToken: mapboxToken
+      }),
+      'top-left'
+    );
+    this.mapContainer.addControl(
+      this.mapDraw,
+      'top-left'
     );
   }
 

@@ -10,3 +10,7 @@
 .SHST-Road-Closure-Form-Streets-Groups-Item-Content > span:last-child {
     text-align: right;
 }
+
+.SHST-Road-Closure-Form-Streets-Groups-Item-Collapse {
+    overflow: scroll;
+}

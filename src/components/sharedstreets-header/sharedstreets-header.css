@@ -10,15 +10,29 @@
     width: 100%;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 .SHST-Header-Logo {
     height: 30px;
 }
 
-.SHST-Header > span {
-    margin-left: 10px;
-}
-
 .SHST-Header-Title {
     font-weight: bold;
+}
+
+.SHST-Header-Left-Content {
+    flex: 1;
+    margin-left: 10px;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    max-width: 250px;
+    min-width: 250px;
+}
+
+.SHST-Header-Right-Content {
+    flex: 4;
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
 }
