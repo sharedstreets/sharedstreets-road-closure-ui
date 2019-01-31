@@ -1,6 +1,7 @@
 import {
     forEach,
 } from 'lodash';
+import * as moment from 'moment';
 import {
     IStreetsByGeometryId,
     RoadClosureFormStateItem
@@ -37,8 +38,8 @@ export class RoadClosureWazeIncidentsItem {
 
     public constructor(matchedStreetSegment: SharedStreetsMatchPath, form: RoadClosureFormStateItem, bothDirections: boolean) {
         this.creationtime = new Date().toISOString();
-        this.starttime = form.startTime;
-        this.endtime = form.endTime;
+        this.starttime = moment(form.startTime).format()
+        this.endtime = moment(form.endTime).format();
         this.type = form.type;
         this.subtype = form.subtype;
 
