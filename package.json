@@ -7,6 +7,7 @@
     "@blueprintjs/datetime": "^3.3.1",
     "@blueprintjs/select": "^3.2.1",
     "@mapbox/mapbox-gl-draw": "^1.1.1",
+    "@mapbox/mapbox-gl-geocoder": "^3.1.0",
     "@turf/helpers": "^6.1.4",
     "@turf/invariant": "^6.1.2",
     "@types/geojson": "^7946.0.4",
