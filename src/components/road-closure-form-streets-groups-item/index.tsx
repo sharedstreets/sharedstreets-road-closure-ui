@@ -160,7 +160,9 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
                         text={!this.state.isCollapsed && !!this.props.matchedStreetsGroup ? 'Hide segments' : 'Show segments'}
                         onClick={this.handleToggleCollapsed}
                     />
-                    <Collapse isOpen={!this.state.isCollapsed && !!this.props.matchedStreetsGroup}>
+                    <Collapse
+                        className={'SHST-Road-Closure-Form-Streets-Groups-Item-Collapse'}
+                        isOpen={!this.state.isCollapsed && !!this.props.matchedStreetsGroup}>
                         <RoadClosureFormStreetsTable
                             streets={this.props.streets}
                             deleteStreetSegment={this.props.deleteStreetSegment}
