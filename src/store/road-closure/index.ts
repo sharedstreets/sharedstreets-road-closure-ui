@@ -29,6 +29,12 @@ export interface IFetchSharedstreetGeomsSuccessResponse {
     unmatched: GeoJSON.FeatureCollection
 }
 
+export interface IFetchQueryStreetnameSuccessResponse {
+    score: number,
+    streetname: string,
+    geometryIds: string[]
+}
+
 export interface IRoadClosureMapboxDrawLineString extends GeoJSON.Feature {
     id: number;
 }
@@ -51,8 +57,19 @@ export interface IRoadClosureStateItemToggleDirectionPayload {
     direction: { forward: boolean, backward: boolean }
 }
 
+export interface IMapViewport {
+    latitude: number,
+    longitude: number,
+    zoom: number,
+};
+
 export const ACTIONS = {
     DELETE_STREET_SEGMENT: createStandardAction('ROAD_CLOSURE/DELETE_STREET_SEGMENT')<RoadClosureFormStateStreet>(),
+    FETCH_QUERY_STREETNAME: createAsyncAction(
+        'ROAD_CLOSURE/FETCH_QUERY_STREETNAME_REQUEST',
+        'ROAD_CLOSURE/FETCH_QUERY_STREETNAME_SUCCESS',
+        'ROAD_CLOSURE/FETCH_QUERY_STREETNAME_FAILURE'
+    )<void, IFetchQueryStreetnameSuccessResponse[], Error>(),
     FETCH_SHAREDSTREET_GEOMS: createAsyncAction(
         'ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_REQUEST',
         'ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS',
@@ -63,7 +80,7 @@ export const ACTIONS = {
     ROAD_CLOSURE_VIEW_OUTPUT: createStandardAction('ROAD_CLOSURE/ROAD_CLOSURE_VIEW_OUTPUT')<void>(),
     SELECT_OUTPUT_FORMAT: createStandardAction('ROAD_CLOSURE/SELECT_OUTPUT_FORMAT')<IRoadClosureOutputFormatName>(),
     TOGGLE_DIRECTION_STREET_SEGMENT: createStandardAction('ROAD_CLOSURE/TOGGLE_DIRECTION_STREET_SEGMENT')<IRoadClosureStateItemToggleDirectionPayload>(),
-    VIEWPORT_CHANGED: createStandardAction('ROAD_CLOSURE/VIEWPORT_CHANGED'),
+    VIEWPORT_CHANGED: createStandardAction('ROAD_CLOSURE/VIEWPORT_CHANGED')<IMapViewport>(),
 };
 // side effects
 
@@ -91,19 +108,54 @@ export const findMatchedStreet = (linestring: IRoadClosureMapboxDrawLineString) 
     }));
 };
 
+export const findStreetname = (streetname: string) => (dispatch: Dispatch<any>, getState: any) => {
+    const {
+        roadClosure: {
+            viewport: {
+                latitude,
+                longitude,
+            }
+        }
+    } = getState();
+
+    return dispatch(fetchAction({
+        afterRequest: (data) => data,
+        endpoint: 'query/street',
+        method: 'get',
+        params: {
+            authKey: "bdd23fa1-7ac5-4158-b354-22ec946bb575",
+            point: longitude+","+latitude,
+            query: streetname
+        },
+        requested: 'ROAD_CLOSURE/FETCH_QUERY_STREETNAME_SUCCESS',
+        requesting: 'ROAD_CLOSURE/FETCH_QUERY_STREETNAME_REQUEST'
+    }));
+};
+
 // reducer
 export interface IRoadClosureState {
     currentItem: RoadClosureStateItem,
+    isFetchingQueryStreet: boolean,
     isFetchingMatchedStreets: boolean,
     isShowingRoadClosureOutputViewer: boolean,
     output: RoadClosureOutputStateItem,
+    viewport: IMapViewport,
+    streetnames: IFetchQueryStreetnameSuccessResponse[]
 };
 
 const defaultState: IRoadClosureState = {
     currentItem: new RoadClosureStateItem(),
     isFetchingMatchedStreets: false,
+    isFetchingQueryStreet: false,
     isShowingRoadClosureOutputViewer: false,
     output: new RoadClosureOutputStateItem(),
+    streetnames: [],
+    // TODO - make default location config-driven
+    viewport: {
+        latitude: 38.5,
+        longitude: -98,
+        zoom: 3
+    }
 };
 
 export const roadClosureReducer = (state: IRoadClosureState = defaultState, action: RoadClosureAction) => {
@@ -117,6 +169,11 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                     outputFormat: action.payload
                 }
             }
+        case "ROAD_CLOSURE/VIEWPORT_CHANGED":
+            return {
+                ...state,
+                viewport: action.payload
+            }
         case "ROAD_CLOSURE/ROAD_CLOSURE_HIDE_OUTPUT":
             return {
                 ...state,
@@ -127,7 +184,18 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 ...state,
                 isShowingRoadClosureOutputViewer: true,
             };
-        
+        case "ROAD_CLOSURE/FETCH_QUERY_STREETNAME_REQUEST":
+            return {
+                ...state,
+                isFetchingQueryStreet: true,
+                streetnames: []
+            }
+        case "ROAD_CLOSURE/FETCH_QUERY_STREETNAME_SUCCESS":
+            return {
+                ...state,
+                isFetchingQueryStreet: false,
+                streetnames: action.payload
+            }
         case "ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_REQUEST":
             return {
                 ...state,

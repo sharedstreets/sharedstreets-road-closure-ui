@@ -1,3 +1,7 @@
+import {
+    isEmpty,
+    omit
+} from 'lodash';
 const API_URL = "https://api.sharedstreets.io/v0.1.0/";
 
 const paramStringBuilder = (obj: {}) => {
@@ -19,13 +23,17 @@ const getRequestURLBuilder = (endpoint: string, queryParams: {}) => {
 
 const apiService = (endpoint: string, method: string, queryParams: {} = { authKey: '' }, payload: {}) => {
     const requestUrl = getRequestURLBuilder(endpoint, queryParams);
-    return fetch(`${requestUrl}`, {
+    let requestContent = {
         body: JSON.stringify(payload),
         headers: {
             'Content-Type': "application/json; charset=UTF-8"
         },
         method,
-    });
+    };
+    if (isEmpty(payload)) {
+        requestContent = omit(requestContent, 'body');
+    }
+    return fetch(`${requestUrl}`, requestContent);
 };
 
 export default apiService;

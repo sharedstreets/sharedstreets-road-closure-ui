@@ -1,0 +1,45 @@
+.SHST-Road-Closure-Street-Name-Selector {
+    text-align: left;
+    padding: 20px;
+    width: 100%;
+}
+.SHST-Road-Closure-Street-Name-Selector-Content {
+    display: flex;
+    flex-direction: column;    
+}
+
+.SHST-Road-Closure-Street-Name-Selector-Bounds {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.SHST-Road-Closure-Street-Name-Selector-Streetname {
+    width: 100%;
+}
+
+.SHST-Road-Closure-Street-Name-Selector-FromStreet-FormGroup {
+    flex: 1
+}
+.SHST-Road-Closure-Street-Name-Selector-Direction-Button {
+    justify-content: center;
+}
+.SHST-Road-Closure-Street-Name-Selector-ToStreet-FormGroup {
+    flex: 1
+}
+.SHST-Road-Closure-Street-Name-Selector-FromStreet-Suggest {
+    flex: 1
+}
+.SHST-Road-Closure-Street-Name-Selector-ToStreet-Suggest {
+    flex: 1
+}
+
+.SHST-Road-Closure-Street-Name-Selector-Streetname-Suggest > span {
+    width: 100%;
+}
+.SHST-Road-Closure-Street-Name-Selector-FromStreet-Suggest > span {
+    width: 100%
+}
+.SHST-Road-Closure-Street-Name-Selector-ToStreet-Suggest > span {
+    width: 100%
+}
