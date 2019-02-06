@@ -91,15 +91,18 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
   public componentDidUpdate(prevProps: IRoadClosureMapProps) {
     const {
       currentItem,
+      isFetchingMatchedStreets,
     } = this.props.roadClosure;
 
-    this.mapDraw.deleteAll();
-    forEach(currentItem.matchedStreets.features, (matchedStreetFeature, index) => {
-      // only render SharedStreetsMatchPaths for now, remove to enable intersections
-      if (matchedStreetFeature instanceof SharedStreetsMatchPath) {
-        this.mapDraw.add(matchedStreetFeature);
-      }
-    });
+    if (prevProps.roadClosure.isFetchingMatchedStreets && !isFetchingMatchedStreets) {
+      this.mapDraw.deleteAll();
+      forEach(currentItem.matchedStreets.features, (matchedStreetFeature, index) => {
+        // only render SharedStreetsMatchPaths for now, remove to enable intersections
+        if (matchedStreetFeature instanceof SharedStreetsMatchPath) {
+          this.mapDraw.add(matchedStreetFeature);
+        }
+      });
+    }
     
   }
 
@@ -115,10 +118,7 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
   }
 
   public handleLineCreated = (e: { type: string, target: any, features: GeoJSON.Feature[]}) => {
-    Promise.resolve(this.props.findMatchedStreet(e.features[0]))
-    .then(() => {
-      this.mapDraw.delete(e.features[0].id);
-    });
+    this.props.findMatchedStreet(e.features[0])
   }
 
   public handleLineDeleted = (e: { type: string, target: any, features: GeoJSON.Feature[]}) => {
