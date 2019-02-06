@@ -82,12 +82,12 @@ jobs:
 
     steps:
       - run:
-        name: Install awscli
-        command: sudo pip install awscli
+          name: Install awscli
+          command: sudo pip install awscli
 
       - run:
-        name: Deploy to S3
-        command: aws s3 sync build/ s3://shst-circleci-roadclosures/ --delete
+          name: Deploy to S3
+          command: aws s3 sync build/ s3://shst-circleci-roadclosures/ --delete
 
 workflows:
   version: 2
