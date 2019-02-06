@@ -67,6 +67,11 @@ jobs:
         
       # run tests!
       - run: yarn build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build
+
 
   deploy:
     docker:
@@ -81,6 +86,8 @@ jobs:
     working_directory: ~/repo
 
     steps:
+      - attach_workspace:
+          at: .
       - run:
           name: install pip
           command: sudo apt install python-pip
