@@ -71,7 +71,7 @@ jobs:
   deploy:
     docker:
       # specify the version you desire here
-      - image: circleci/node:10.12
+      - image: circleci/python:2.7-jessie
       
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -81,6 +81,10 @@ jobs:
     working_directory: ~/repo
 
     steps:
+      - run:
+          name: install pip
+          command: sudo apt install python-pip
+
       - run:
           name: Install awscli
           command: sudo pip install awscli
