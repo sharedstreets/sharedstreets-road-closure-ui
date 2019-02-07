@@ -1,7 +1,8 @@
 .SHST-Road-Closure-Form-Streets-Groups-Item-Content {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-evenly;
+    padding-bottom: 20px;
 }
 .SHST-Road-Closure-Form-Streets-Groups-Item-Content > span {
     flex: 1;

@@ -1,8 +1,4 @@
-import {
-    // Button,
-    // InputGroup,
-    // Card,
-} from '@blueprintjs/core';
+import { Card, Spinner } from '@blueprintjs/core';
 import * as React from 'react';
 import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
 import { SharedStreetsMatchPoint } from 'src/models/SharedStreets/SharedStreetsMatchPoint';
@@ -16,6 +12,7 @@ export interface IRoadClosureFormStreetsGroupsProps {
     currentMatchedStreetsFeatures: Array<SharedStreetsMatchPath | SharedStreetsMatchPoint>,
     geometryIdDirectionFilter: { [ geometryId: string] : { forward: boolean, backward: boolean } },
     streets: any,
+    isFetchingMatchedStreets: boolean,
     deleteStreetSegment: (payload: any) => void,
     inputChanged: (e: any) => void,
     toggleStreetSegmentDirection: (e: any) => void,
@@ -27,11 +24,7 @@ class RoadClosureFormStreetsGroups extends React.Component<IRoadClosureFormStree
     }
 
     public render() {
-        return <div>
-            <label className={"bp3-label"}>
-                Selections
-                <div className={"bp3-text-muted"}>Click a group to see individual street segments</div>
-            </label>
+        return <div className="SHST-Streets-Card">
             {
                 this.props.currentMatchedStreetsGroups.map((group: SharedStreetsMatchPath[], index) => {
                     if (group.length === 0) {
@@ -52,6 +45,20 @@ class RoadClosureFormStreetsGroups extends React.Component<IRoadClosureFormStree
                         toggleStreetSegmentDirection={this.props.toggleStreetSegmentDirection}
                     />
                 })
+            }
+            {
+                this.props.isFetchingMatchedStreets &&
+                <Card>
+                    <Spinner />
+                    <h4
+                        className="bp3-heading"
+                        style={{
+                            textAlign: "center"
+                        }}
+                        >
+                        Searching for SharedStreets matched streets
+                    </h4>
+                </Card>
             }
         </div>
     }
