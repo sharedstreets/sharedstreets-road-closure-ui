@@ -7,6 +7,9 @@ import RoadClosureMap from './containers/road-closure-map';
 import RoadClosureOutputViewer from './containers/road-closure-output-viewer';
 import { RootState } from './store/configureStore';
 
+import { FocusStyleManager } from "@blueprintjs/core";
+FocusStyleManager.onlyShowFocusOnTabs();
+
 export interface IAppProps {
   isShowingRoadClosureOutputViewer: boolean,
 };
