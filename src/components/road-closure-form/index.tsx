@@ -4,6 +4,7 @@ import {
   Card,
   FormGroup,
   InputGroup,
+  Spinner,
 } from '@blueprintjs/core';
 import {
   DateRange,
@@ -151,10 +152,20 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
     return <Card className="SHST-Streets-Card">
       <div className="SHST-Matched-Streets-Table-Empty bp3-non-ideal-state">
         <div className="bp3-non-ideal-state-visual">
-          <span className="bp3-icon bp3-icon-arrow-right" />
+          { this.props.roadClosure.isFetchingMatchedStreets ?
+            <Spinner />
+            : <span className="bp3-icon bp3-icon-arrow-right" />
+          }
         </div>
-        <h4 className="bp3-heading">No streets selected</h4>
-        <div>To start entering a road closure, click two (or more) points along the length of the affected street(s).</div>
+        <h4 className="bp3-heading">
+          { this.props.roadClosure.isFetchingMatchedStreets ?
+            "Searching for SharedStreets matched streets"
+            : "No streets selected"
+          }
+        </h4>
+        { this.props.roadClosure.isFetchingMatchedStreets ?
+          null
+          : <div>To start entering a road closure, click two (or more) points along the length of the affected street(s).</div>}
       </div>
     </Card>;
   }
@@ -187,6 +198,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                 inputChanged={this.props.inputChanged}
                 toggleStreetSegmentDirection={this.props.toggleStreetSegmentDirection}
                 streets={this.props.currentRoadClosureItem.form.street}
+                isFetchingMatchedStreets={this.props.roadClosure.isFetchingMatchedStreets}
               />
             }
             <FormGroup
