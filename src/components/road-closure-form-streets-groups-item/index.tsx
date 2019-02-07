@@ -3,6 +3,7 @@ import {
     Button,
     Card,
     Collapse,
+    H5,
 } from '@blueprintjs/core';
 import {
     head,
@@ -144,8 +145,8 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
         return <Card
                 elevation={1}>
                     <div className={"SHST-Road-Closure-Form-Streets-Groups-Item-Content"}>
-                        <span>{streetNames.join(", ")}</span>
-                        <span>
+                        <H5>{streetNames.join(", ")}</H5>
+                        <div>
                             {fromStreet.properties.fromStreetnames.join(",") + " "}
                             <Button
                                 onClick={this.handleToggleDirection}
@@ -153,7 +154,7 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
                                 icon={directionIcon}
                                 />
                             {" " + toStreet.properties.toStreetnames.join(",")}
-                        </span>
+                        </div>
                     </div>
                     <Button 
                         fill={true}

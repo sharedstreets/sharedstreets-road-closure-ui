@@ -12,6 +12,10 @@
     display: block;
 }
 
+.SHST-Streets-Card {
+    margin-bottom: 30px;
+}
+
 .SHST-Road-Closure-Form-Date-Range-Input-Group > span {
     width: 100%;
 }

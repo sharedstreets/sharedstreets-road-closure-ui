@@ -148,13 +148,15 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
   }
 
   public renderEmptyMatchedStreetsTable() {
-    return <div className="SHST-Matched-Streets-Table-Empty bp3-non-ideal-state">
-      <div className="bp3-non-ideal-state-visual">
-        <span className="bp3-icon bp3-icon-arrow-right" />
+    return <Card className="SHST-Streets-Card">
+      <div className="SHST-Matched-Streets-Table-Empty bp3-non-ideal-state">
+        <div className="bp3-non-ideal-state-visual">
+          <span className="bp3-icon bp3-icon-arrow-right" />
+        </div>
+        <h4 className="bp3-heading">No streets selected</h4>
+        <div>To start entering a road closure, click two (or more) points along the length of the affected street(s).</div>
       </div>
-      <h4 className="bp3-heading">No streets selected</h4>
-      <div>To start entering a road closure, click two (or more) points along the length of the affected street(s).</div>
-    </div>;
+    </Card>;
   }
 
   public render() {
@@ -172,23 +174,21 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
         <div
           className="SHST-Road-Closure-Form"
         >
-            <Card>
-              {
-                isEmpty(this.props.currentRoadClosureItem.form.street) ?
-                this.renderEmptyMatchedStreetsTable() :
-                <RoadClosureFormStreetsGroups
-                  currentMatchedStreetsFeatures={currentMatchedStreets.features}
-                  currentMatchedStreetsGroups={currentMatchedStreets.contiguousFeatureGroups}
-                  currentMatchedStreetsGroupsGeometryIdPathMap={currentMatchedStreets.geometryIdPathMap}
-                  currentMatchedStreetsGroupsDirections={currentMatchedStreets.contiguousFeatureGroupsDirections}
-                  geometryIdDirectionFilter={this.props.currentRoadClosureItem.geometryIdDirectionFilter}
-                  deleteStreetSegment={this.props.deleteStreetSegment}
-                  inputChanged={this.props.inputChanged}
-                  toggleStreetSegmentDirection={this.props.toggleStreetSegmentDirection}
-                  streets={this.props.currentRoadClosureItem.form.street}
-                />
-              }
-            </Card>
+            {
+              isEmpty(this.props.currentRoadClosureItem.form.street) ?
+              this.renderEmptyMatchedStreetsTable() :
+              <RoadClosureFormStreetsGroups
+                currentMatchedStreetsFeatures={currentMatchedStreets.features}
+                currentMatchedStreetsGroups={currentMatchedStreets.contiguousFeatureGroups}
+                currentMatchedStreetsGroupsGeometryIdPathMap={currentMatchedStreets.geometryIdPathMap}
+                currentMatchedStreetsGroupsDirections={currentMatchedStreets.contiguousFeatureGroupsDirections}
+                geometryIdDirectionFilter={this.props.currentRoadClosureItem.geometryIdDirectionFilter}
+                deleteStreetSegment={this.props.deleteStreetSegment}
+                inputChanged={this.props.inputChanged}
+                toggleStreetSegmentDirection={this.props.toggleStreetSegmentDirection}
+                streets={this.props.currentRoadClosureItem.form.street}
+              />
+            }
             <FormGroup
               label="Start and end time"
               labelInfo="(required)"  
