@@ -52,8 +52,8 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
                     <select
                         value={this.props.outputFormat}
                         onChange={this.handleSelectFormat}>
-                        <option defaultChecked={true} value="waze">Waze</option>
                         <option value="geojson">GeoJSON</option>
+                        <option value="waze">Waze</option>
                     </select>
                 </div>
                 <Pre className={"SHST-Road-Closure-Output-Viewer-Code"}>
