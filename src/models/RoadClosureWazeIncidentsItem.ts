@@ -2,6 +2,7 @@ import {
     forEach,
 } from 'lodash';
 import * as moment from 'moment';
+import { v4 as uuid } from 'uuid';
 import {
     IStreetsByGeometryId,
     RoadClosureFormStateItem
@@ -23,6 +24,7 @@ export class RoadClosureWazeIncidentsItem {
         direction: "BOTH_DIRECTIONS" | "ONE_DIRECTION" | '',
         polyline: string,
         incidentId: string,
+        referenceId: string,
         fromStreetnames: string[],
         toStreetnames: string[],
     } = {
@@ -30,6 +32,7 @@ export class RoadClosureWazeIncidentsItem {
         fromStreetnames: [],
         incidentId: '',
         polyline: '',
+        referenceId: '',
         street: '',
         toStreetnames: [],
     };
@@ -44,7 +47,8 @@ export class RoadClosureWazeIncidentsItem {
         this.subtype = form.subtype;
 
         this.location.direction = bothDirections ? "BOTH_DIRECTIONS" : "ONE_DIRECTION";
-        this.location.incidentId = matchedStreetSegment.properties.referenceId;
+        this.location.incidentId = uuid();
+        this.location.referenceId = matchedStreetSegment.properties.referenceId;
         this.location.fromStreetnames = matchedStreetSegment.properties.fromStreetnames;
         this.location.toStreetnames = matchedStreetSegment.properties.toStreetnames;
         this.location.street = this.setStreetname(matchedStreetSegment.properties, form.street);
