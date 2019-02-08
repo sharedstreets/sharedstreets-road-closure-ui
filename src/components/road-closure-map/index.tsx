@@ -91,18 +91,15 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
   public componentDidUpdate(prevProps: IRoadClosureMapProps) {
     const {
       currentItem,
-      isFetchingMatchedStreets,
     } = this.props.roadClosure;
 
-    if (prevProps.roadClosure.isFetchingMatchedStreets && !isFetchingMatchedStreets) {
-      this.mapDraw.deleteAll();
-      forEach(currentItem.matchedStreets.features, (matchedStreetFeature, index) => {
-        // only render SharedStreetsMatchPaths for now, remove to enable intersections
-        if (matchedStreetFeature instanceof SharedStreetsMatchPath) {
-          this.mapDraw.add(matchedStreetFeature);
-        }
-      });
-    }
+    this.mapDraw.deleteAll();
+    forEach(currentItem.matchedStreets.features, (matchedStreetFeature, index) => {
+      // only render SharedStreetsMatchPaths for now, remove to enable intersections
+      if (matchedStreetFeature instanceof SharedStreetsMatchPath) {
+        this.mapDraw.add(matchedStreetFeature);
+      }
+    });
     
   }
 
