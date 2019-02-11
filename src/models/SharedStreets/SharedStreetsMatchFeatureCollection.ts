@@ -149,7 +149,7 @@ export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
             }
         }
         if (newContiguousFeatureGroupsDirections.length === 0
-            && Object.keys(this.referenceIdFeatureMap).length === 1) {
+            && Object.keys(this.referenceIdFeatureMap).length === 1 || 2) {
                 // handle edge case: if there is one segment that is entirely within one street segment
                 const combinedOutput = forwardOutput.concat(backwardOutput);
                 if (!isEmpty(combinedOutput)) {
