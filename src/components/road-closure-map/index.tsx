@@ -1,5 +1,6 @@
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
+import { Feature } from 'geojson';
 import {
   forEach,
 } from 'lodash';
@@ -29,11 +30,13 @@ export interface IRoadClosureMapProps {
 };
 
 export interface IRoadClosureMapState {
+  createdLineId: any,
   viewport: object
 }
 
 class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureMapState> {
   public state = {
+    createdLineId: '',
     selectedPoints: [],
     viewport: {
       latitude: 38.5,
@@ -91,9 +94,23 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
   public componentDidUpdate(prevProps: IRoadClosureMapProps) {
     const {
       currentItem,
+      isFetchingMatchedStreets
     } = this.props.roadClosure;
 
-    this.mapDraw.deleteAll();
+    const drawnFeatures = this.mapDraw.getAll();
+
+    forEach(drawnFeatures.features, (feature: Feature) => {
+      if (feature.id === this.state.createdLineId) {
+        if (!isFetchingMatchedStreets && prevProps.roadClosure.isFetchingMatchedStreets) {
+          this.mapDraw.delete(feature.id);
+        } else {
+          return;
+        }
+      } else {
+        this.mapDraw.delete(feature.id)
+      }
+    });
+
     forEach(currentItem.matchedStreets.features, (matchedStreetFeature, index) => {
       // only render SharedStreetsMatchPaths for now, remove to enable intersections
       if (matchedStreetFeature instanceof SharedStreetsMatchPath) {
@@ -115,6 +132,9 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
   }
 
   public handleLineCreated = (e: { type: string, target: any, features: GeoJSON.Feature[]}) => {
+    this.setState({
+      createdLineId: e.features[0].id,
+    });
     this.props.findMatchedStreet(e.features[0])
   }
 
