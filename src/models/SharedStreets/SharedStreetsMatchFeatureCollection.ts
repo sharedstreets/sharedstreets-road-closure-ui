@@ -6,6 +6,7 @@ import {
     // forEach,
     isEmpty,
     isEqual,
+    omit,
     uniq,
 } from 'lodash';
 import { SharedStreetsMatchPath } from './SharedStreetsMatchPath';
@@ -59,15 +60,15 @@ export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
         });
         this.features = this.features.concat(newFeaturesArray);
         
-        this.getContiguousPaths();
+        this.setContiguousPaths();
     }
 
     /**
-     * getContiguousPaths
+     * setContiguousPaths
      * this does depth-first search on the `features` array on this class to find
      * paths connected by their intersection IDs, grouped by street name. 
      */
-    public getContiguousPaths(): void {
+    public setContiguousPaths(): void {
         const output: SharedStreetsMatchPath[][] = [];
         const newContiguousFeatureGroupsDirections: Array<{ forward: boolean, backward: boolean }> = []
         let forwardOutput: SharedStreetsMatchPath[] = [];
@@ -148,7 +149,7 @@ export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
             }
         }
         if (newContiguousFeatureGroupsDirections.length === 0
-            && Object.keys(this.referenceIdFeatureMap).length === 1) {
+            && Object.keys(this.referenceIdFeatureMap).length === 1 || 2) {
                 // handle edge case: if there is one segment that is entirely within one street segment
                 const combinedOutput = forwardOutput.concat(backwardOutput);
                 if (!isEmpty(combinedOutput)) {
@@ -182,10 +183,16 @@ export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
      * removePathByGeometryId
      */
     public removePathByGeometryId(geometryId: string) {
+        const outgoingRefIds: string[] = [];
         this.features = this.features.filter((feature: SharedStreetsMatchPath) => {
+            if (feature.properties.geometryId === geometryId) {
+                outgoingRefIds.push(feature.properties.referenceId);
+            }
             return feature.properties.geometryId !== geometryId;
         });
+        this.geometryIdPathMap = omit(this.geometryIdPathMap, geometryId);
+        this.referenceIdFeatureMap = omit(this.referenceIdFeatureMap, outgoingRefIds);
 
-        this.getContiguousPaths();
+        this.setContiguousPaths();
     }
 }
