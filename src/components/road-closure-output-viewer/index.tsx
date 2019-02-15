@@ -3,6 +3,9 @@ import {
     ButtonGroup,
     Pre,
 } from '@blueprintjs/core';
+import {
+    omit,
+} from 'lodash';
 import * as React from 'react';
 import {
     IRoadClosureOutputFormatName,
@@ -15,8 +18,12 @@ export interface IRoadClosureOutputViewerProps {
     hideRoadClosureOutput: () => void,
     selectOutputFormat: (format: string) => void,
     viewRoadClosureOutput: () => void,
-    incidents: RoadClosureOutputStateItem,
-    outputFormat: IRoadClosureOutputFormatName
+    outputItem: RoadClosureOutputStateItem,
+    outputFormat: IRoadClosureOutputFormatName,
+    downloadDataURI: string,
+    downloadFileName: string,
+    isOutputItemEmpty: boolean,
+    outputItemFormattedJSONString: string,
   };
 
 
@@ -46,6 +53,18 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
     }
 
     public render() {
+        let downloadButtonProps = {
+            className: "bp3-button bp3-large bp3-intent-success",
+            download: this.props.downloadFileName,
+            href: this.props.downloadDataURI,
+            title: 'Click to download',
+        } 
+
+        if (this.props.isOutputItemEmpty) {
+            downloadButtonProps.className += " bp3-disabled";
+            downloadButtonProps = omit(downloadButtonProps, ['href', 'download']);
+            downloadButtonProps.title = "You have to select a road before downloading road closure information"
+        }
         return (
             <div className={"SHST-Road-Closure-Output-Viewer"}>
                 <div className="bp3-select">
@@ -57,7 +76,7 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
                     </select>
                 </div>
                 <Pre className={"SHST-Road-Closure-Output-Viewer-Code"}>
-                    {JSON.stringify(this.props.incidents, null, 2)}
+                    {this.props.outputItemFormattedJSONString}
                 </Pre>
                 <RoadClosureBottomActionBar>
                     <ButtonGroup
@@ -69,13 +88,12 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
                         {/* <Button
                             large={true}
                             text={"Copy"}
-                            onClick={this.handleClickCopy}/>
-                        <Button
-                            intent="success"
-                            large={true}
-                            text={"Download"}
-                            onClick={this.handleClickDownload}
-                        /> */}
+                            onClick={this.handleClickCopy}/>  */}
+                        <a
+                            role="button"
+                            {...downloadButtonProps}>
+                                Download
+                        </a>
                     </ButtonGroup>
                 </RoadClosureBottomActionBar>
             </div>
