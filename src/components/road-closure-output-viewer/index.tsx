@@ -83,7 +83,7 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
                         fill={true}>
                         <Button
                             large={true}
-                            text={"Cancel"}
+                            text={"Back"}
                             onClick={this.handleClickCancel}/>
                         {/* <Button
                             large={true}
