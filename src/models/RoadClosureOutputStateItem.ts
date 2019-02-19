@@ -8,5 +8,18 @@ export enum IRoadClosureOutputFormatName {
 
 export class RoadClosureOutputStateItem {
     public outputFormat: IRoadClosureOutputFormatName = IRoadClosureOutputFormatName.geojson;
-    public incidents: RoadClosureWazeIncidentsItem[] | Feature[];
+    public type?: string;
+    public features?: Feature[];
+    public incidents?: RoadClosureWazeIncidentsItem[];
+
+    public constructor(outputFormat: string = "") {
+        switch (outputFormat) {
+            case IRoadClosureOutputFormatName.waze:
+                this.incidents = [];
+            case IRoadClosureOutputFormatName.geojson:
+            default:
+                this.features = [];
+                this.type = "FeatureCollection";
+        }
+    }
 }
