@@ -8,7 +8,7 @@ import {
     isOutputItemEmpty,
 } from 'src/selectors/road-closure-output-item';
 import { RootState } from 'src/store/configureStore';
-import { ACTIONS } from '../../store/road-closure';
+import { ACTIONS, saveRoadClosure } from '../../store/road-closure';
 
 const mapStateToProps = (state: RootState) => ({
     downloadDataURI: getDataURIFromOutputItem(state.roadClosure),
@@ -23,7 +23,8 @@ export default connect<{}, {}, IRoadClosureOutputViewerProps>(
     mapStateToProps,
     {
         hideRoadClosureOutput: ACTIONS.ROAD_CLOSURE_HIDE_OUTPUT,
+        saveRoadClosure,
         selectOutputFormat: ACTIONS.SELECT_OUTPUT_FORMAT,
-        viewRoadClosureOutput: ACTIONS.ROAD_CLOSURE_VIEW_OUTPUT
+        viewRoadClosureOutput: ACTIONS.ROAD_CLOSURE_VIEW_OUTPUT,
     },
 )(RoadClosureOutputViewer) as React.ComponentClass<{}>;

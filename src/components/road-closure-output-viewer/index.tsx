@@ -14,8 +14,10 @@ import {
 import RoadClosureBottomActionBar from '../road-closure-bottom-action-bar';
 import './road-closure-output-viewer.css';
 
+
 export interface IRoadClosureOutputViewerProps {
     hideRoadClosureOutput: () => void,
+    saveRoadClosure: () => void,
     selectOutputFormat: (format: string) => void,
     viewRoadClosureOutput: () => void,
     outputItem: RoadClosureOutputStateItem,
@@ -31,13 +33,13 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
     public constructor(props: IRoadClosureOutputViewerProps) {
         super(props);
         this.handleClickDownload = this.handleClickDownload.bind(this);
-        this.handleClickCopy = this.handleClickCopy.bind(this);
+        this.handleClickSave = this.handleClickSave.bind(this);
         this.handleClickCancel = this.handleClickCancel.bind(this);
         this.handleSelectFormat = this.handleSelectFormat.bind(this);
     }
 
-    public handleClickCopy() {
-        return;
+    public handleClickSave() {
+        this.props.saveRoadClosure();
     }
     
     public handleClickCancel() {
@@ -85,10 +87,11 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
                             large={true}
                             text={"Back"}
                             onClick={this.handleClickCancel}/>
-                        {/* <Button
+                        <Button
                             large={true}
-                            text={"Copy"}
-                            onClick={this.handleClickCopy}/>  */}
+                            intent={"primary"}
+                            text={"Save"}
+                            onClick={this.handleClickSave}/> 
                         <a
                             role="button"
                             {...downloadButtonProps}>

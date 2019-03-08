@@ -1,5 +1,8 @@
 import { forEach } from 'lodash';
-import { RoadClosureOutputStateItem } from 'src/models/RoadClosureOutputStateItem';
+import {
+    IRoadClosureOutputFormatName,
+    RoadClosureOutputStateItem
+} from 'src/models/RoadClosureOutputStateItem';
 import {
     RoadClosureWazeIncidentsItem,
 } from 'src/models/RoadClosureWazeIncidentsItem';
@@ -10,9 +13,17 @@ export const currentRoadClosureItemSelector = (state: IRoadClosureState) => {
     return state.currentItem;
 };
 
-export const currentRoadClosureItemOutput = (state: IRoadClosureState) : RoadClosureOutputStateItem => {
-    const output = new RoadClosureOutputStateItem(state.output.outputFormat);
-    switch(state.output.outputFormat) {
+export const currentRoadOutputToItem = (o: any) => {
+    return; 
+};
+
+export const currentRoadClosureItemOutput = (state: IRoadClosureState, outputFormat?: IRoadClosureOutputFormatName) : RoadClosureOutputStateItem => {
+    let outputFormatName = state.output.outputFormat;
+    if (outputFormat) {
+        outputFormatName = outputFormat;
+    }
+    const output = new RoadClosureOutputStateItem(outputFormatName);
+    switch(outputFormatName) {
         case 'waze':
             output.incidents = currentRoadClosureItemToWaze(state);
             return output;

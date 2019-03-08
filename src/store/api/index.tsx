@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux';
-import api from 'src/services/api';
+import apiService from 'src/services/api';
 
 export const fetchAction = ({
     requesting = '',
@@ -8,6 +8,10 @@ export const fetchAction = ({
     method = 'get',
     body = {},
     params = {},
+    headers = {},
+    requestUrl = '',
+    // fn = (...args: any[]) => Promise.resolve(new Response()),
+    // fnParams = [] as any[],
     afterRequest = (e: any) => e
 }) => (dispatch: Dispatch<any>) => {
     if (requesting) {
@@ -15,8 +19,8 @@ export const fetchAction = ({
             type: requesting
         });
     }
-
-    return api(endpoint, method, params, body)
+    // return fn(...fnParams)
+    return apiService(endpoint, method, params, body, headers, requestUrl)
     .then((response: any) => {
         return response.json()
     })
