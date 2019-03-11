@@ -9,7 +9,7 @@ class SharedStreetsHeader extends React.Component<ISharedStreetsHeaderProps, any
     return (
         <div className="SHST-Header">
             <span className="SHST-Header-Left-Content">
-              <img src="/ss_logo.png" className="SHST-Header-Logo"/>
+              <img src="/SharedStreets_symbol.svg" className="SHST-Header-Logo"/>
               <span className={"SHST-Header-Title"}>SharedStreets</span>
               <span className={"SHST-Header-Subtitle"}>Road Closures</span>
             </span>
