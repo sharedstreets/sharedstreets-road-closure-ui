@@ -10,6 +10,7 @@ export const fetchAction = ({
     params = {},
     headers = {},
     requestUrl = '',
+    mode = '',
     // fn = (...args: any[]) => Promise.resolve(new Response()),
     // fnParams = [] as any[],
     afterRequest = (e: any) => e
@@ -20,9 +21,16 @@ export const fetchAction = ({
         });
     }
     // return fn(...fnParams)
-    return apiService(endpoint, method, params, body, headers, requestUrl)
-    .then((response: any) => {
-        return response.json()
+    return apiService(endpoint, method, params, body, headers, requestUrl, mode)
+    .then(async (response: any) => {
+        let text;
+        try {
+            text = await response.text();
+            const data = JSON.parse(text);
+            return data;
+        } catch (err) {
+            return text;
+        }
     })
     .then((data: any) => dispatch({
         error: false,

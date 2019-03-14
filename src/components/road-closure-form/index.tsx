@@ -181,6 +181,8 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
         : undefined,
     ];
 
+    const currentDescription = this.props.currentRoadClosureItem.form.description;
+
     return (
         <div
           className="SHST-Road-Closure-Form"
@@ -232,7 +234,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
               <InputGroup
                   placeholder={"Enter a description of the closure here..."}
                   onChange={this.handleChangeDescription}
-                  value={this.props.currentRoadClosureItem.form.description}
+                  value={currentDescription}
               />
             </FormGroup>
             <FormGroup

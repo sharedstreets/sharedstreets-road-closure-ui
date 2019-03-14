@@ -24,6 +24,7 @@ export interface IRoadClosureOutputViewerProps {
     outputFormat: IRoadClosureOutputFormatName,
     downloadDataURI: string,
     downloadFileName: string,
+    isSavingOutput: boolean,
     isOutputItemEmpty: boolean,
     outputItemFormattedJSONString: string,
   };
@@ -88,9 +89,12 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
                             text={"Back"}
                             onClick={this.handleClickCancel}/>
                         <Button
+                            title={"You have to create a road closure before you can save & publish it"}
+                            disabled={this.props.isOutputItemEmpty}
                             large={true}
                             intent={"primary"}
                             text={"Save"}
+                            loading={this.props.isSavingOutput}
                             onClick={this.handleClickSave}/> 
                         <a
                             role="button"

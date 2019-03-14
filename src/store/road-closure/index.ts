@@ -19,10 +19,9 @@ import { SharedStreetsMatchFeatureCollection } from 'src/models/SharedStreets/Sh
 import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
 import { SharedStreetsMatchPoint } from 'src/models/SharedStreets/SharedStreetsMatchPoint';
 import { getFormattedJSONStringFromOutputItem } from 'src/selectors/road-closure-output-item';
-import {
-    // putObjectUrl,
-    s3,
-} from 'src/services/aws';
+// import apiService from 'src/services/api';
+import { generateUploadUrlsFromHash, IRoadClosureUploadUrls } from 'src/utils/upload-url-generator';
+import { v4 } from 'src/utils/uuid-regex';
 import {
     ActionType,
     createAsyncAction,
@@ -31,6 +30,7 @@ import {
 import { v4 as uuid } from 'uuid';
 import { fetchAction } from '../api';
 import { RootState } from '../configureStore';
+
 
 
 // actions
@@ -47,6 +47,10 @@ export interface IFetchSharedstreetPublicDataSuccessResponse {
 // export interface IPutSharedstreetPublicDataSuccessResponse {
 //     body: string;
 // }
+
+export interface IGenerateSharedstreetsPublicDataUploadUrlSuccessResponse {
+    [type: string] : string;
+};
 
 export interface IRoadClosureMapboxDrawLineString extends GeoJSON.Feature {
     id: number;
@@ -71,6 +75,7 @@ export interface IRoadClosureStateItemToggleDirectionPayload {
 }
 
 export const ACTIONS = {
+    CLEAR_LOADED_ROAD_CLOSURE: createStandardAction('ROAD_CLOSURE/CLEAR_LOADED_ROAD_CLOSURE')<void>(),
     DELETE_STREET_SEGMENT: createStandardAction('ROAD_CLOSURE/DELETE_STREET_SEGMENT')<RoadClosureFormStateStreet>(),
     FETCH_SHAREDSTREETS_PUBLIC_DATA: createAsyncAction(
         'ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_DATA_REQUEST',
@@ -81,9 +86,14 @@ export const ACTIONS = {
         'ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_REQUEST',
         'ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS',
         'ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_FAILURE'
-        )<void, IFetchSharedstreetGeomsSuccessResponse, Error>(),
+    )<void, IFetchSharedstreetGeomsSuccessResponse, Error>(),
+    GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL: createAsyncAction(
+        'ROAD_CLOSURE/GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL_REQUEST',
+        'ROAD_CLOSURE/GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL_SUCCESS',
+        'ROAD_CLOSURE/GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL_FAILURE'
+    )<void, IGenerateSharedstreetsPublicDataUploadUrlSuccessResponse, Error>(),
     INPUT_CHANGED: createStandardAction('ROAD_CLOSURE/INPUT_CHANGED')<IRoadClosureFormInputChangedPayload>(),
-    LOAD_INPUT: createStandardAction('ROAD_CLOSURE/LOAD_INPUT'),
+    LOAD_INPUT: createStandardAction('ROAD_CLOSURE/LOAD_INPUT')<IRoadClosureUploadUrls>(),
     PUT_SHAREDSTREETS_PUBLIC_DATA: createAsyncAction(
         'ROAD_CLOSURE/PUT_SHAREDSTREETS_PUBLIC_DATA_REQUEST',
         'ROAD_CLOSURE/PUT_SHAREDSTREETS_PUBLIC_DATA_SUCCESS',
@@ -91,7 +101,8 @@ export const ACTIONS = {
     )<void, any, Error>(),
     ROAD_CLOSURE_HIDE_OUTPUT: createStandardAction('ROAD_CLOSURE/ROAD_CLOSURE_HIDE_OUTPUT')<void>(),
     ROAD_CLOSURE_VIEW_OUTPUT: createStandardAction('ROAD_CLOSURE/ROAD_CLOSURE_VIEW_OUTPUT')<void>(),
-    SAVE_OUTPUT: createStandardAction('ROAD_CLOSURE/SAVE_OUTPUT'),
+    SAVED_OUTPUT: createStandardAction('ROAD_CLOSURE/SAVED_OUTPUT')<void>(),
+    SAVING_OUTPUT: createStandardAction('ROAD_CLOSURE/SAVING_OUTPUT')<void>(),
     SELECT_OUTPUT_FORMAT: createStandardAction('ROAD_CLOSURE/SELECT_OUTPUT_FORMAT')<IRoadClosureOutputFormatName>(),
     TOGGLE_DIRECTION_STREET_SEGMENT: createStandardAction('ROAD_CLOSURE/TOGGLE_DIRECTION_STREET_SEGMENT')<IRoadClosureStateItemToggleDirectionPayload>(),
     VIEWPORT_CHANGED: createStandardAction('ROAD_CLOSURE/VIEWPORT_CHANGED'),
@@ -127,31 +138,28 @@ export const findMatchedStreet = (linestring: IRoadClosureMapboxDrawLineString) 
         requested: 'ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS',
         requesting: 'ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_REQUEST',
     }));
-};
+}; 
 
 export const loadRoadClosure = (url: string) => (dispatch: Dispatch<any>, getState: any) => {
     const method = 'get';
-    // https://sharedstreets-public-data.s3.amazonaws.com/road-closures/b8818994-9567-4f75-9c29-dd62aecd9259
-    const v4 = new RegExp(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i);
-    let urlHash: string = '';
+    let filename: string = '';
     forEach(url.split("/"), (part) => {
         if (part.match(v4)) {
-            urlHash = part;
+            filename = part;
         }
     })
-    if (isEmpty(urlHash)) {
+    if (isEmpty(filename)) {
         return;
     }
-    const requestUrl = `https://sharedstreets-public-data.s3.amazonaws.com/road-closures/${urlHash}/state`;
+    const uploadUrls = generateUploadUrlsFromHash(filename);
+    dispatch(ACTIONS.LOAD_INPUT(uploadUrls));
 
-
-    dispatch(ACTIONS.LOAD_INPUT);
     return dispatch(fetchAction({
         afterRequest: (data) => {
-            return data;
+            return JSON.parse(data);
         },
         method,
-        requestUrl,
+        requestUrl: uploadUrls.stateUploadUrl,
         requested: 'ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_DATA_SUCCESS',
         requesting: 'ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_DATA_REQUEST',
     }));
@@ -159,81 +167,96 @@ export const loadRoadClosure = (url: string) => (dispatch: Dispatch<any>, getSta
 
 export const saveRoadClosure = () => (dispatch: Dispatch<any>, getState: any) => {
     const state = getState() as RootState;
-    // const payload = getFormattedJSONStringFromOutputItem(state.roadClosure);
-    const filename = uuid();
+    let filename = uuid();
+    if (!isEmpty(state.roadClosure.uploadUrls.stateUploadUrl)) {
+        forEach(state.roadClosure.uploadUrls.stateUploadUrl.split("/"), (part) => {
+            if (part.match(v4)) {
+                filename = part;
+            }
+        })   
+    }
 
-    // const method = 'post';
-    // const requestUrl = putObjectUrl(payload, filename);
-    dispatch(ACTIONS.SAVE_OUTPUT);
+    dispatch(ACTIONS.SAVING_OUTPUT);
+    const stateUploadPayload = serialize(state.roadClosure.currentItem);
 
-    // save state 
-    s3.upload({
-        Body: serialize(state.roadClosure.currentItem),
-        Bucket: 'sharedstreets-public-data',
-        ContentType: 'application/json',
-        Key: 'road-closures/' + filename + '/state',
-    }, (err, data) => {
-        if (err) {
-            dispatch(ACTIONS.PUT_SHAREDSTREETS_PUBLIC_DATA.failure(err));
-        } else {
-            // tslint:disable-next-line
-            console.log(data);
-            dispatch({
-                payload: data,
-                type: ACTIONS.PUT_SHAREDSTREETS_PUBLIC_DATA.success(),
-            });
-        }
+    const generateStateUploadUrl = async () => {
+        dispatch({
+            payload: {
+
+            },
+            type: "ROAD_CLOSURE/GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL_REQUEST"
+        })
+        const response = await fetch(`https://api.sharedstreets.io/v0.1.0/data/upload?contentType=application/json&filePath=road-closures/${filename}/state`);
+        const json = await response.json();
+        const url = await json.url;
+        return url;
+    };
+    generateStateUploadUrl().then((signedStateUploadUrl) => {
+        dispatch({
+            payload: {
+                stateUrl: signedStateUploadUrl,
+            },
+            type: 'ROAD_CLOSURE/GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL_SUCCESS',
+        });
+        dispatch(fetchAction({
+                afterRequest: (data) => {
+                    return data;
+                },
+                body: stateUploadPayload,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                method: 'put',
+                requestUrl: signedStateUploadUrl,
+                requested: 'ROAD_CLOSURE/PUT_SHAREDSTREETS_PUBLIC_DATA_SUCCESS',
+                requesting: 'ROAD_CLOSURE/PUT_SHAREDSTREETS_PUBLIC_DATA_REQUEST',
+        }));
     });
-    // save waze
-    dispatch(ACTIONS.SAVE_OUTPUT);
-
-    s3.upload({
-        Body: getFormattedJSONStringFromOutputItem(state.roadClosure, IRoadClosureOutputFormatName.waze),
-        Bucket: 'sharedstreets-public-data',
-        ContentType: 'application/json',
-        Key: 'road-closures/' + filename + '/' + IRoadClosureOutputFormatName.waze,
-    }, (err, data) => {
-        if (err) {
-            dispatch(ACTIONS.PUT_SHAREDSTREETS_PUBLIC_DATA.failure(err));
-        } else {
-            // tslint:disable-next-line
-            console.log(data);
-            dispatch({
-                payload: data,
-                type: ACTIONS.PUT_SHAREDSTREETS_PUBLIC_DATA.success(),
-            });
-        }
+       
+    const generateGeojsonUploadUrl = async () => {
+        const response = await fetch(`https://api.sharedstreets.io/v0.1.0/data/upload?contentType=application/json&filePath=road-closures/${filename}/geojson`);
+        const json = await response.json();
+        const url = await json.url;
+        return url;
+    };
+    generateGeojsonUploadUrl().then((signedGeojsonUploadUrl) => {
+        dispatch(fetchAction({
+                afterRequest: (data) => {
+                    return data;
+                },
+                body: getFormattedJSONStringFromOutputItem(state.roadClosure, IRoadClosureOutputFormatName.geojson),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                method: 'put',
+                requestUrl: signedGeojsonUploadUrl,
+                requested: 'ROAD_CLOSURE/PUT_SHAREDSTREETS_PUBLIC_DATA_SUCCESS',
+                requesting: 'ROAD_CLOSURE/PUT_SHAREDSTREETS_PUBLIC_DATA_REQUEST',
+        }));
     });
-    // save geojson
-    dispatch(ACTIONS.SAVE_OUTPUT);
-
-    s3.upload({
-        Body: getFormattedJSONStringFromOutputItem(state.roadClosure, IRoadClosureOutputFormatName.geojson),
-        Bucket: 'sharedstreets-public-data',
-        ContentType: 'application/json',
-        Key: 'road-closures/' + filename + '/' + IRoadClosureOutputFormatName.geojson,
-    }, (err, data) => {
-        if (err) {
-            dispatch(ACTIONS.PUT_SHAREDSTREETS_PUBLIC_DATA.failure(err));
-        } else {
-            // tslint:disable-next-line
-            console.log(data);
-            dispatch({
-                payload: data,
-                type: ACTIONS.PUT_SHAREDSTREETS_PUBLIC_DATA.success(),
-            });
-        }
+           
+    const generateWazeUploadUrl = async () => {
+        const response = await fetch(`https://api.sharedstreets.io/v0.1.0/data/upload?contentType=application/json&filePath=road-closures/${filename}/waze`);
+        const json = await response.json();
+        const url = await json.url;
+        return url;
+    };
+    generateWazeUploadUrl().then((signedWazeUploadUrl) => {
+        dispatch(fetchAction({
+                afterRequest: (data) => {
+                    return data;
+                },
+                body: getFormattedJSONStringFromOutputItem(state.roadClosure, IRoadClosureOutputFormatName.waze),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                method: 'put',
+                requestUrl: signedWazeUploadUrl,
+                requested: 'ROAD_CLOSURE/PUT_SHAREDSTREETS_PUBLIC_DATA_SUCCESS',
+                requesting: 'ROAD_CLOSURE/PUT_SHAREDSTREETS_PUBLIC_DATA_REQUEST',
+        }));
+        dispatch(ACTIONS.SAVED_OUTPUT);
     });
-    // return dispatch(fetchAction({
-    //     afterRequest: (data) => {
-    //         return data;
-    //     },
-    //     body: payload,
-    //     method,
-    //     requestUrl,
-    //     requested: 'ROAD_CLOSURE/PUT_SHAREDSTREETS_PUBLIC_DATA_SUCCESS',
-    //     requesting: 'ROAD_CLOSURE/PUT_SHAREDSTREETS_PUBLIC_DATA_REQUEST',
-    // }));
 };
 
 // reducer
@@ -241,22 +264,32 @@ export interface IRoadClosureState {
     currentItem: RoadClosureStateItem,
     isFetchingInput: boolean,
     isFetchingMatchedStreets: boolean,
+    isGeneratingUploadUrl: boolean,
+    isLoadedInput: boolean,
     isLoadingInput: boolean,
     isPuttingOutput: boolean,
     isSavingOutput: boolean,
     isShowingRoadClosureOutputViewer: boolean,
     output: RoadClosureOutputStateItem,
+    uploadUrls: IRoadClosureUploadUrls,
 };
 
 const defaultState: IRoadClosureState = {
     currentItem: new RoadClosureStateItem(),
     isFetchingInput: false,
     isFetchingMatchedStreets: false,
+    isGeneratingUploadUrl: false,
+    isLoadedInput: false,
     isLoadingInput: false,
     isPuttingOutput: false,
     isSavingOutput: false,
     isShowingRoadClosureOutputViewer: false,
     output: new RoadClosureOutputStateItem(),
+    uploadUrls: {
+        geojsonUploadUrl: '',
+        stateUploadUrl: '',
+        wazeUploadUrl: '',
+    }
 };
 
 export const roadClosureReducer = (state: IRoadClosureState = defaultState, action: RoadClosureAction) => {
@@ -281,6 +314,23 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 isShowingRoadClosureOutputViewer: true,
             };
 
+        case "ROAD_CLOSURE/LOAD_INPUT":
+            return {
+                ...state,
+                uploadUrls: action.payload
+            }
+
+        case "ROAD_CLOSURE/SAVING_OUTPUT":
+            return {
+                ...state,
+                isSavingOutput: true,
+            };
+        case "ROAD_CLOSURE/SAVED_OUTPUT":
+            return {
+                ...state,
+                isSavingOutput: false,
+            };
+            
         case "ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_DATA_REQUEST":
             return {
                 ...state,
@@ -290,7 +340,6 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             return {
                 ...state,
                 isFetchingInput: false,
-                isSavingOutput: false,
             };
         case "ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_DATA_SUCCESS":
             // const loadedStateItem = plainToClass(RoadClosureStateItem, action.payload);
@@ -301,26 +350,40 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             loadedStateItem.unmatchedStreets = action.payload.unmatchedStreets;
             loadedStateItem.matchedStreets.addFeaturesFromGeojson(action.payload.matchedStreets.features);
 
-            // tslint:disable-next-line
-            console.log(action.payload, loadedStateItem);
             return {
                 ...state,
                 currentItem: loadedStateItem,
                 isFetchingInput: false,
-                isSavingOutput: false,
+                isLoadedInput: true,
             };
-        
+        case "ROAD_CLOSURE/GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL_REQUEST":
+            return {
+                ...state,
+                isGeneratingUploadUrl: true,
+            };
+
+        case "ROAD_CLOSURE/GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL_SUCCESS":
+            const newUploadUrls = Object.assign({}, state.uploadUrls, action.payload);
+            return {
+                ...state,
+                isGeneratingUploadUrl: false,
+                uploadUrls: newUploadUrls
+            };
+
         case "ROAD_CLOSURE/PUT_SHAREDSTREETS_PUBLIC_DATA_REQUEST":
             return {
                 ...state,
                 isPuttingOutput: true,
             };
         case "ROAD_CLOSURE/PUT_SHAREDSTREETS_PUBLIC_DATA_FAILURE":
+            return {
+                ...state,
+                isPuttingOutput: false,
+            };
         case "ROAD_CLOSURE/PUT_SHAREDSTREETS_PUBLIC_DATA_SUCCESS":
             return {
                 ...state,
                 isPuttingOutput: false,
-                isSavingOutput: false,
             };
         
         case "ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_REQUEST":
@@ -422,6 +485,13 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 ...state,
                 currentItem: updatedItem,
             }
+        
+        case "ROAD_CLOSURE/CLEAR_LOADED_ROAD_CLOSURE":
+            return {
+                ...state,
+                currentItem: new RoadClosureStateItem(),
+            };
+            
         default:
             return state;
     }

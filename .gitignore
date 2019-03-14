@@ -3,6 +3,7 @@
 # config
 /config
 /src/config/
+/src/services/aws.ts
 
 # dependencies
 /node_modules

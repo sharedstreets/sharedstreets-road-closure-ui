@@ -13,8 +13,9 @@ const paramStringBuilder = (obj: {}) => {
 
     Object.keys(obj).forEach((key) => {
         output += key + '=' + obj[key] + '&';
-    })
-    return output;
+    });
+
+    return output.slice(0, -1); // remove trailing &
 }
 
 const getRequestURLBuilder = (endpoint: string, queryParams: {}) => {
@@ -22,19 +23,23 @@ const getRequestURLBuilder = (endpoint: string, queryParams: {}) => {
 }
 
 // TODO -  add requestUrl optional param, use to override getRequestURLBuilder
-const apiService = (endpoint: string, method: string, queryParams: {} = { authKey: '' }, payload: {}, headers: {}, requestUrl: string) => {
+const apiService = (endpoint: string, method: string, queryParams: {} = { authKey: '' }, payload: {}, headers: {}, requestUrl: string, mode: string = '') => {
     if (isEmpty(requestUrl)) {
         requestUrl = getRequestURLBuilder(endpoint, queryParams);
     }
     let fetchOptions = {
         body: JSON.stringify(payload),
-        headers,
+        headers: new Headers(headers),
         method,
     };
 
     if (method === "get") {
         fetchOptions = omit(fetchOptions, ["body"]);
     }
+    if (!isEmpty(mode)) {
+        fetchOptions = Object.assign({}, fetchOptions, { mode });
+    }
+
     return fetch(requestUrl, fetchOptions);
 };
 
