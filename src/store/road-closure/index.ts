@@ -1,7 +1,6 @@
-import {
-    // plainToClass,
-    serialize
-} from 'class-transformer';
+// import {
+//     serialize
+// } from 'class-transformer';
 import {
     concat,
     forEach,
@@ -19,7 +18,6 @@ import { SharedStreetsMatchFeatureCollection } from 'src/models/SharedStreets/Sh
 import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
 import { SharedStreetsMatchPoint } from 'src/models/SharedStreets/SharedStreetsMatchPoint';
 import { getFormattedJSONStringFromOutputItem } from 'src/selectors/road-closure-output-item';
-// import apiService from 'src/services/api';
 import { generateUploadUrlsFromHash, IRoadClosureUploadUrls } from 'src/utils/upload-url-generator';
 import { v4 } from 'src/utils/uuid-regex';
 import {
@@ -44,10 +42,6 @@ export interface IFetchSharedstreetGeomsSuccessResponse {
 export interface IFetchSharedstreetPublicDataSuccessResponse {
     body: string;
 }
-// export interface IPutSharedstreetPublicDataSuccessResponse {
-//     body: string;
-// }
-
 export interface IGenerateSharedstreetsPublicDataUploadUrlSuccessResponse {
     [type: string] : string;
 };
@@ -133,8 +127,6 @@ export const findMatchedStreet = (linestring: IRoadClosureMapboxDrawLineString) 
         endpoint,
         method,
         params: queryParams,
-        // fn: apiService,
-        // fnParams: [endpoint, method, queryParams, body], // order matters here
         requested: 'ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS',
         requesting: 'ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_REQUEST',
     }));
@@ -156,7 +148,7 @@ export const loadRoadClosure = (url: string) => (dispatch: Dispatch<any>, getSta
 
     return dispatch(fetchAction({
         afterRequest: (data) => {
-            return JSON.parse(data);
+            return data;
         },
         method,
         requestUrl: uploadUrls.stateUploadUrl,
@@ -177,7 +169,7 @@ export const saveRoadClosure = () => (dispatch: Dispatch<any>, getState: any) =>
     }
 
     dispatch(ACTIONS.SAVING_OUTPUT);
-    const stateUploadPayload = serialize(state.roadClosure.currentItem);
+    const stateUploadPayload = state.roadClosure.currentItem;
 
     const generateStateUploadUrl = async () => {
         dispatch({
@@ -224,7 +216,7 @@ export const saveRoadClosure = () => (dispatch: Dispatch<any>, getState: any) =>
                 afterRequest: (data) => {
                     return data;
                 },
-                body: getFormattedJSONStringFromOutputItem(state.roadClosure, IRoadClosureOutputFormatName.geojson),
+                body: JSON.parse(getFormattedJSONStringFromOutputItem(state.roadClosure, IRoadClosureOutputFormatName.geojson)),
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -246,7 +238,7 @@ export const saveRoadClosure = () => (dispatch: Dispatch<any>, getState: any) =>
                 afterRequest: (data) => {
                     return data;
                 },
-                body: getFormattedJSONStringFromOutputItem(state.roadClosure, IRoadClosureOutputFormatName.waze),
+                body: JSON.parse(getFormattedJSONStringFromOutputItem(state.roadClosure, IRoadClosureOutputFormatName.waze)),
                 headers: {
                     'Content-Type': 'application/json',
                 },
