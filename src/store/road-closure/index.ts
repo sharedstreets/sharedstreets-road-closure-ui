@@ -185,9 +185,7 @@ export const saveRoadClosure = () => (dispatch: Dispatch<any>, getState: any) =>
     };
     generateStateUploadUrl().then((signedStateUploadUrl) => {
         dispatch({
-            payload: {
-                stateUrl: signedStateUploadUrl,
-            },
+            payload: generateUploadUrlsFromHash(filename),
             type: 'ROAD_CLOSURE/GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL_SUCCESS',
         });
         dispatch(fetchAction({
