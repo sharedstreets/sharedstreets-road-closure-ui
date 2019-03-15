@@ -1,6 +1,9 @@
 import {
     Button,
     ButtonGroup,
+    Classes,
+    Dialog,
+    H5,
     Pre,
 } from '@blueprintjs/core';
 import {
@@ -11,6 +14,7 @@ import {
     IRoadClosureOutputFormatName,
     RoadClosureOutputStateItem
 } from 'src/models/RoadClosureOutputStateItem';
+import { IRoadClosureUploadUrls } from 'src/utils/upload-url-generator';
 import RoadClosureBottomActionBar from '../road-closure-bottom-action-bar';
 import './road-closure-output-viewer.css';
 
@@ -27,30 +31,41 @@ export interface IRoadClosureOutputViewerProps {
     isSavingOutput: boolean,
     isOutputItemEmpty: boolean,
     outputItemFormattedJSONString: string,
+    uploadUrls: IRoadClosureUploadUrls,
   };
 
+export interface IRoadClosureOutputViewerState {
+    isSavedUrlsDialogOpen: boolean;
+}
 
-class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerProps, any> {
+class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerProps, IRoadClosureOutputViewerState> {
     public constructor(props: IRoadClosureOutputViewerProps) {
         super(props);
-        this.handleClickDownload = this.handleClickDownload.bind(this);
         this.handleClickSave = this.handleClickSave.bind(this);
+        this.handleCloseDialog = this.handleCloseDialog.bind(this);
         this.handleClickCancel = this.handleClickCancel.bind(this);
         this.handleSelectFormat = this.handleSelectFormat.bind(this);
+        this.state = {
+            isSavedUrlsDialogOpen: false,
+        };
     }
 
     public handleClickSave() {
         this.props.saveRoadClosure();
+        this.setState({
+            isSavedUrlsDialogOpen: true,
+        });
     }
     
+    public handleCloseDialog(e: any) {
+        this.setState({
+            isSavedUrlsDialogOpen: false,
+        });
+    }
+
     public handleClickCancel() {
         this.props.hideRoadClosureOutput();
     }
-
-    public handleClickDownload() {
-        return;
-    }
-
     public handleSelectFormat(e: any) {
         this.props.selectOutputFormat(e.target.value);
     }
@@ -93,7 +108,7 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
                             disabled={this.props.isOutputItemEmpty}
                             large={true}
                             intent={"primary"}
-                            text={"Save"}
+                            text={"Save & Copy URL"}
                             loading={this.props.isSavingOutput}
                             onClick={this.handleClickSave}/> 
                         <a
@@ -103,6 +118,27 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
                         </a>
                     </ButtonGroup>
                 </RoadClosureBottomActionBar>
+                <Dialog
+                    isOpen={this.state.isSavedUrlsDialogOpen}
+                    usePortal={true}
+                    title={"Saved road closure links"}
+                    onClose={this.handleCloseDialog}
+                >
+                    <div className={Classes.DIALOG_BODY}>
+                        <H5>GeoJSON</H5>
+                            <p>
+                                <a target="_blank" href={this.props.uploadUrls.geojsonUploadUrl}>
+                                    {this.props.uploadUrls.geojsonUploadUrl}
+                                </a>
+                            </p>
+                        <H5>Waze</H5>
+                            <p>
+                                <a target="_blank" href={this.props.uploadUrls.wazeUploadUrl}>
+                                    {this.props.uploadUrls.wazeUploadUrl}
+                                </a>
+                            </p>
+                    </div>
+                </Dialog>
             </div>
         );
     }

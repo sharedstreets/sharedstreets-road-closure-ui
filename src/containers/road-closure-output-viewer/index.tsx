@@ -14,9 +14,11 @@ const mapStateToProps = (state: RootState) => ({
     downloadDataURI: getDataURIFromOutputItem(state.roadClosure),
     downloadFileName: getFileNameFromOutputItem(state.roadClosure),
     isOutputItemEmpty: isOutputItemEmpty(state.roadClosure),
+    isSavingOutput: state.roadClosure.isSavingOutput,
     outputFormat: state.roadClosure.output.outputFormat,
     outputItem: currentRoadClosureItemOutput(state.roadClosure),
     outputItemFormattedJSONString: getFormattedJSONStringFromOutputItem(state.roadClosure),
+    uploadUrls: state.roadClosure.uploadUrls,
 });
 
 export default connect<{}, {}, IRoadClosureOutputViewerProps>(
