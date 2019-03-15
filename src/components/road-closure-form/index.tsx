@@ -181,6 +181,8 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
         : undefined,
     ];
 
+    const currentDescription = this.props.currentRoadClosureItem.form.description;
+
     return (
         <div
           className="SHST-Road-Closure-Form"
@@ -230,9 +232,9 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
               labelInfo="(required)"
             >
               <InputGroup
-                  placeholder={"Enter a description here..."}
+                  placeholder={"Enter a description of the closure here..."}
                   onChange={this.handleChangeDescription}
-                  value={this.props.currentRoadClosureItem.form.description}
+                  value={currentDescription}
               />
             </FormGroup>
             <FormGroup
@@ -241,7 +243,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
               labelInfo="(required)"
             >
               <InputGroup
-                  placeholder={"Enter a organization reference name here..."}
+                  placeholder={"Enter the name of your organization here..."}
                   onChange={this.handleChangeReference}
                   value={this.props.currentRoadClosureItem.form.reference}
               />
@@ -254,9 +256,9 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                   value={this.props.currentRoadClosureItem.form.subtype}
                   onChange={this.handleChangeSubtype}>
                   <option defaultChecked={true} value={''}>Choose a subtype...</option>
-                  <option value="ROAD_CLOSED_HAZARD">ROAD_CLOSED_HAZARD</option>
-                  <option value="ROAD_CLOSED_CONSTRUCTION">ROAD_CLOSED_CONSTRUCTION</option>
-                  <option value="ROAD_CLOSED_EVENT">ROAD_CLOSED_EVENT</option>
+                  <option value="ROAD_CLOSED_HAZARD">Hazard</option>
+                  <option value="ROAD_CLOSED_CONSTRUCTION">Construction</option>
+                  <option value="ROAD_CLOSED_EVENT">Event</option>
                 </select>
               </div>
             </FormGroup>

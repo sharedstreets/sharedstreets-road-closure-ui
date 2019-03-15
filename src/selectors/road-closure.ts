@@ -1,5 +1,8 @@
 import { forEach } from 'lodash';
-import { RoadClosureOutputStateItem } from 'src/models/RoadClosureOutputStateItem';
+import {
+    IRoadClosureOutputFormatName,
+    RoadClosureOutputStateItem
+} from 'src/models/RoadClosureOutputStateItem';
 import {
     RoadClosureWazeIncidentsItem,
 } from 'src/models/RoadClosureWazeIncidentsItem';
@@ -10,9 +13,17 @@ export const currentRoadClosureItemSelector = (state: IRoadClosureState) => {
     return state.currentItem;
 };
 
-export const currentRoadClosureItemOutput = (state: IRoadClosureState) : RoadClosureOutputStateItem => {
-    const output = new RoadClosureOutputStateItem(state.output.outputFormat);
-    switch(state.output.outputFormat) {
+export const currentRoadOutputToItem = (o: any) => {
+    return; 
+};
+
+export const currentRoadClosureItemOutput = (state: IRoadClosureState, outputFormat?: IRoadClosureOutputFormatName) : RoadClosureOutputStateItem => {
+    let outputFormatName = state.output.outputFormat;
+    if (outputFormat) {
+        outputFormatName = outputFormat;
+    }
+    const output = new RoadClosureOutputStateItem(outputFormatName);
+    switch(outputFormatName) {
         case 'waze':
             output.incidents = currentRoadClosureItemToWaze(state);
             return output;
@@ -20,6 +31,17 @@ export const currentRoadClosureItemOutput = (state: IRoadClosureState) : RoadClo
         default:
             const fc = state.currentItem.matchedStreets.getFeatureCollectionOfPaths();
             output.features = fc.features;
+            // TODO - this is a bad hack. need to write an actual geojson output layer
+            const tempIncidents = currentRoadClosureItemToWaze(state);
+            forEach(output.features, (feature) => {
+                feature.properties!.creationtime = tempIncidents[0].creationtime;
+                feature.properties!.updatetime = tempIncidents[0].updatetime;
+                feature.properties!.starttime = tempIncidents[0].starttime;
+                feature.properties!.endtime = tempIncidents[0].endtime;
+                feature.properties!.type = tempIncidents[0].type;
+                feature.properties!.subtype = tempIncidents[0].subtype;
+                feature.properties!.description = tempIncidents[0].description;
+            });
             output.type = fc.type;
             return output;
     }

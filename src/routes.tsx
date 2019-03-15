@@ -10,7 +10,7 @@ import {
 import App from './App';
 
 export default () => (
-	<BrowserRouter basename={'/road-closures'}>
+	<BrowserRouter>
 		<Switch>
 			<Route path='/' component={App} />
 		</Switch>

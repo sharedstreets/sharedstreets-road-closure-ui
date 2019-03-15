@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import './App.css';
 import SharedStreetsHeader from './components/sharedstreets-header';
 import RoadClosureForm from './containers/road-closure-form';
+import RoadClosureLoadFromURL from './containers/road-closure-load-from-url';
 import RoadClosureMap from './containers/road-closure-map';
 import RoadClosureOutputViewer from './containers/road-closure-output-viewer';
 import { RootState } from './store/configureStore';
@@ -18,7 +19,8 @@ class App extends React.Component<IAppProps, any> {
   public render() {
     return (
       <div className="SHST-App">
-        <SharedStreetsHeader />
+        <SharedStreetsHeader
+          rightChildComponent={RoadClosureLoadFromURL}/>
         <div className="SHST-Container">
           {
             this.props.isShowingRoadClosureOutputViewer &&

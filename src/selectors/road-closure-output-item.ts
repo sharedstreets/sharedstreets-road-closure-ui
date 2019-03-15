@@ -32,12 +32,16 @@ export const getDataURIFromOutputItem = (state: IRoadClosureState) => {
     return "data: text/json;charset=utf-8," + encodeURIComponent(getFormattedJSONStringFromOutputItem(state));
 }
 
-export const getFormattedJSONStringFromOutputItem = (state: IRoadClosureState) => {
+export const getFormattedJSONStringFromOutputItem = (state: IRoadClosureState, outputFormat?: IRoadClosureOutputFormatName) => {
     if (isOutputItemEmpty(state)) {
         return '';
     }
-    const item = currentRoadClosureItemOutput(state);
-    if (state.output.outputFormat === IRoadClosureOutputFormatName.waze) {
+    let outputFormatName = state.output.outputFormat;
+    if (outputFormat) {
+        outputFormatName = outputFormat;
+    }
+    const item = currentRoadClosureItemOutput(state, outputFormatName);
+    if (outputFormatName === IRoadClosureOutputFormatName.waze) {
         return JSON.stringify(item.incidents!, null, 2);
     } else {
         return JSON.stringify(item.features!, null, 2);
