@@ -31,6 +31,17 @@ export const currentRoadClosureItemOutput = (state: IRoadClosureState, outputFor
         default:
             const fc = state.currentItem.matchedStreets.getFeatureCollectionOfPaths();
             output.features = fc.features;
+            // TODO - this is a bad hack. need to write an actual geojson output layer
+            const tempIncidents = currentRoadClosureItemToWaze(state);
+            forEach(output.features, (feature) => {
+                feature.properties!.creationtime = tempIncidents[0].creationtime;
+                feature.properties!.updatetime = tempIncidents[0].updatetime;
+                feature.properties!.starttime = tempIncidents[0].starttime;
+                feature.properties!.endtime = tempIncidents[0].endtime;
+                feature.properties!.type = tempIncidents[0].type;
+                feature.properties!.subtype = tempIncidents[0].subtype;
+                feature.properties!.description = tempIncidents[0].description;
+            });
             output.type = fc.type;
             return output;
     }
