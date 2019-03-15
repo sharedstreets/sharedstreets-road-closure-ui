@@ -98,7 +98,7 @@ jobs:
 
       - run:
           name: Deploy to S3
-          command: aws s3 sync build/ s3://shst-circleci-roadclosures/ --delete
+          command: aws s3 sync build/ s3://roadclosures-test.sharedstreets.io/ --delete
 
 workflows:
   version: 2
