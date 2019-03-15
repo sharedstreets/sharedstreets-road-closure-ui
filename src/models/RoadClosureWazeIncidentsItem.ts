@@ -45,6 +45,7 @@ export class RoadClosureWazeIncidentsItem {
         this.endtime = form.endTime ? moment(form.endTime).format() : '';
         this.type = form.type;
         this.subtype = form.subtype;
+        this.description = form.description;
 
         this.location.direction = bothDirections ? "BOTH_DIRECTIONS" : "ONE_DIRECTION";
         this.location.incidentId = uuid();
