@@ -7,6 +7,7 @@ import {
 } from '@blueprintjs/core';
 import {
     head,
+    isEmpty,
     last,
     uniq,
 } from 'lodash';
@@ -145,15 +146,24 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
         return <Card
                 elevation={1}>
                     <div className={"SHST-Road-Closure-Form-Streets-Groups-Item-Content"}>
-                        <H5>{streetNames.join(", ")}</H5>
+                        <H5>{streetNames.filter((name) => !isEmpty(name)).join(", ")}</H5>
                         <div>
-                            {fromStreet.properties.fromStreetnames.join(",") + " "}
+                            {fromStreet.properties.fromStreetnames.filter((name) => !isEmpty(name)).join(",") + " "}
+                            {
+                                fromStreet.properties.fromStreetnames.filter((name) => !isEmpty(name)).length === 0 &&
+                                "No streetname found"
+                            }
+                            {" "}
                             <Button
                                 onClick={this.handleToggleDirection}
                                 disabled={!this.state.canToggleDirection}
                                 icon={directionIcon}
                                 />
-                            {" " + toStreet.properties.toStreetnames.join(",")}
+                            {" " + toStreet.properties.toStreetnames.filter((name) => !isEmpty(name)).join(",")}
+                            {
+                                toStreet.properties.toStreetnames.filter((name) => !isEmpty(name)).length === 0 &&
+                                "No streetname found"
+                            }
                         </div>
                     </div>
                     <Button 
