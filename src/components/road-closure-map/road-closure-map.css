@@ -1,7 +1,14 @@
-.SHST-RoadClosure-Map-Container {
+.SHST-Road-Closure-Map-Container {
     margin: 0 auto;
     height: 100%;
     flex: 1;
+}
+
+.SHST-Road-Closure-Map-Container-Drawing {
+    margin: 0 auto;
+    height: 100%;
+    flex: 1;   
+    cursor: pointer;
 }
 
 .SHST-Map-Point-Marker {

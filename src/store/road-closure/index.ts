@@ -36,6 +36,7 @@ import { RootState } from '../configureStore';
 // actions
 export type RoadClosureAction = ActionType<typeof ACTIONS>;
 export interface IFetchSharedstreetGeomsSuccessResponse {
+    currentLineId: string,
     matched: SharedStreetsMatchFeatureCollection,
     invalid: GeoJSON.FeatureCollection,
     unmatched: GeoJSON.FeatureCollection
@@ -124,7 +125,7 @@ export const ACTIONS = {
 };
 
 // side effects
-export const findMatchedStreet = (linestring: IRoadClosureMapboxDrawLineString) => (dispatch: Dispatch<any>, getState: any) => {
+export const findMatchedStreet = (linestring: IRoadClosureMapboxDrawLineString, currentLineId: string) => (dispatch: Dispatch<any>, getState: any) => {
     const endpoint = 'match/geoms';
     const method = 'post';
     const queryParams = {
@@ -142,7 +143,7 @@ export const findMatchedStreet = (linestring: IRoadClosureMapboxDrawLineString) 
 
     return dispatch(fetchAction({
         afterRequest: (data) => {
-            return data;
+            return Object.assign({}, data, {currentLineId});
         },
         body,
         endpoint,
@@ -342,6 +343,7 @@ export interface IRoadClosureState {
     allRoadClosureItems: RoadClosureStateItem[],
     allRoadClosuresUploadUrls: IRoadClosureUploadUrls[],
     currentItem: RoadClosureStateItem,
+    currentLineId: string,
     isEditingExistingClosure: boolean,
     isFetchingInput: boolean,
     isFetchingMatchedStreets: boolean,
@@ -361,6 +363,7 @@ const defaultState: IRoadClosureState = {
     allRoadClosureItems: [],
     allRoadClosuresUploadUrls: [],
     currentItem: new RoadClosureStateItem(),
+    currentLineId: '',
     isEditingExistingClosure: false,
     isFetchingInput: false,
     isFetchingMatchedStreets: false,
@@ -527,6 +530,7 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
         case "ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_REQUEST":
             return {
                 ...state,
+                currentLineId: '',
                 isFetchingMatchedStreets: true,
             };
         case "ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS":
@@ -576,6 +580,7 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             return {
                 ...state,
                 currentItem: updatedItem,
+                currentLineId: action.payload.currentLineId,
                 isFetchingMatchedStreets: false,
             };
 
