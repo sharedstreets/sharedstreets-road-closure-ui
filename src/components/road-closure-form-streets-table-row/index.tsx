@@ -2,6 +2,9 @@ import {
     Button,
     InputGroup
 } from '@blueprintjs/core';
+import {
+    isEmpty
+} from 'lodash';
 import * as React from 'react';
 import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
 import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
@@ -67,10 +70,19 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
                     />
                 </td>
                 <td>
-                    {this.props.currentFeature.properties.fromStreetnames.join(", ")}
+                    {this.props.currentFeature.properties.fromStreetnames.filter((name) => !isEmpty(name)).join(", ")}
+                    {
+                        this.props.currentFeature.properties.fromStreetnames.filter((name) => !isEmpty(name)).length === 0 && 
+                        "No streetname found"
+                    }
+                    
                 </td>
                 <td>
-                    {this.props.currentFeature.properties.toStreetnames.join(", ")}
+                    {this.props.currentFeature.properties.toStreetnames.filter((name) => !isEmpty(name)).join(", ")}
+                    {
+                        this.props.currentFeature.properties.toStreetnames.filter((name) => !isEmpty(name)).length === 0 && 
+                        "No streetname found"
+                    }
                 </td>
             </tr>
     }
