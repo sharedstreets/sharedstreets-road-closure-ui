@@ -4,10 +4,10 @@ export interface IRoadClosureUploadUrls {
     wazeUploadUrl: string,
 }
 
-export const generateUploadUrlsFromHash = (urlHash: string) : IRoadClosureUploadUrls => {
+export const generateUploadUrlsFromHash = (urlHash: string, orgName: string) : IRoadClosureUploadUrls => {
     return {
-        geojsonUploadUrl: `https://sharedstreets-public-data.s3.amazonaws.com/road-closures/${urlHash}/geojson`,
-        stateUploadUrl: `https://sharedstreets-public-data.s3.amazonaws.com/road-closures/${urlHash}/state`,
-        wazeUploadUrl: `https://sharedstreets-public-data.s3.amazonaws.com/road-closures/${urlHash}/waze`,
+        geojsonUploadUrl: `https://sharedstreets-public-data.s3.amazonaws.com/road-closures/${orgName}/${urlHash}/geojson`,
+        stateUploadUrl: `https://sharedstreets-public-data.s3.amazonaws.com/road-closures/${orgName}/${urlHash}/state`,
+        wazeUploadUrl: `https://sharedstreets-public-data.s3.amazonaws.com/road-closures/${orgName}/${urlHash}/waze`,
     };
 }

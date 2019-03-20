@@ -5,6 +5,7 @@ import {
     Dialog,
     H5,
     Pre,
+    Spinner,
 } from '@blueprintjs/core';
 import {
     omit,
@@ -28,6 +29,8 @@ export interface IRoadClosureOutputViewerProps {
     outputFormat: IRoadClosureOutputFormatName,
     downloadDataURI: string,
     downloadFileName: string,
+    isEditingExistingClosure: boolean,
+    isGeneratingUploadUrl: boolean,
     isSavingOutput: boolean,
     isOutputItemEmpty: boolean,
     outputItemFormattedJSONString: string,
@@ -108,7 +111,7 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
                             disabled={this.props.isOutputItemEmpty}
                             large={true}
                             intent={"primary"}
-                            text={"Save & Copy URL"}
+                            text={this.props.isEditingExistingClosure ? "Update & Copy URL" : "Save & Copy URL"}
                             loading={this.props.isSavingOutput}
                             onClick={this.handleClickSave}/> 
                         <a
@@ -128,12 +131,14 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
                         <H5>GeoJSON</H5>
                             <p>
                                 <a target="_blank" href={this.props.uploadUrls.geojsonUploadUrl}>
+                                    {this.props.isGeneratingUploadUrl && <Spinner />}
                                     {this.props.uploadUrls.geojsonUploadUrl}
                                 </a>
                             </p>
                         <H5>Waze</H5>
                             <p>
                                 <a target="_blank" href={this.props.uploadUrls.wazeUploadUrl}>
+                                {this.props.isGeneratingUploadUrl && <Spinner />}
                                     {this.props.uploadUrls.wazeUploadUrl}
                                 </a>
                             </p>

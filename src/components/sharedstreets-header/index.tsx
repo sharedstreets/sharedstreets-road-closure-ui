@@ -14,9 +14,7 @@ class SharedStreetsHeader extends React.Component<ISharedStreetsHeaderProps, any
               <span className={"SHST-Header-Subtitle"}>Road Closures</span>
             </span>
             <span className="SHST-Header-Right-Content">
-              { this.props.rightChildComponent && 
-                <this.props.rightChildComponent />
-              }
+              {this.props.children}
             </span>
         </div>
     );
