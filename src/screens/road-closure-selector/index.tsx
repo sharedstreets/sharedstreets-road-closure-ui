@@ -6,9 +6,9 @@ import { RootState } from '../../store/configureStore';
 import './road-closure-selector.css';
 
 import {
-  Dialog,
   FocusStyleManager
 } from "@blueprintjs/core";
+import RoadClosureOrgSelector from 'src/containers/road-closure-org-selector';
 FocusStyleManager.onlyShowFocusOnTabs();
 
 export interface IRoadClosureSelectorProps {
@@ -23,7 +23,7 @@ class RoadClosureSelector extends React.Component<IRoadClosureSelectorProps, any
         <SharedStreetsHeader
           rightChildComponent={RoadClosureLoadFromURL}/>
         <div className="SHST-Container">
-          <Dialog isOpen={true} />
+          <RoadClosureOrgSelector />
         </div>
       </div>
     );
