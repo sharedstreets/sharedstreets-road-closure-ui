@@ -15,7 +15,7 @@ const mapStateToProps = (state: RootState) => ({
 export default connect<{}, {}, IRoadClosureLoadFromURLProps>(
     mapStateToProps,
     {
-        clearRoadClosure: ACTIONS.CLEAR_LOADED_ROAD_CLOSURE,
+        clearRoadClosure: ACTIONS.RESET_ROAD_CLOSURE,
         loadRoadClosure,
     },
 )(RoadClosureLoadFromURL) as React.ComponentClass<{}>;

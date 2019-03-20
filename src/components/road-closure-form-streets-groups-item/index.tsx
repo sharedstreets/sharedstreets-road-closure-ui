@@ -183,11 +183,13 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
                         fill={true}
                     >
                         <Button
-                            text={'Delete this group'}
+                            title={'Delete this group'}
+                            icon={"delete"}
                             intent={"danger"}
                             onClick={this.handleDeleteGroup}
                         />
                         <Button 
+                            fill={true}
                             text={!this.state.isCollapsed && !!this.props.matchedStreetsGroup ? 'Hide segments' : 'Show segments'}
                             onClick={this.handleToggleCollapsed}
                         />

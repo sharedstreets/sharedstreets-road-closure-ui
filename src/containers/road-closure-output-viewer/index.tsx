@@ -13,6 +13,8 @@ import { ACTIONS, saveRoadClosure } from '../../store/road-closure';
 const mapStateToProps = (state: RootState) => ({
     downloadDataURI: getDataURIFromOutputItem(state.roadClosure),
     downloadFileName: getFileNameFromOutputItem(state.roadClosure),
+    isEditingExistingClosure: state.roadClosure.isEditingExistingClosure,
+    isGeneratingUploadUrl: state.roadClosure.isGeneratingUploadUrl,
     isOutputItemEmpty: isOutputItemEmpty(state.roadClosure),
     isSavingOutput: state.roadClosure.isSavingOutput,
     outputFormat: state.roadClosure.output.outputFormat,

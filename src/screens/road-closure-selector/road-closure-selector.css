@@ -1,0 +1,17 @@
+.SHST-App {
+    height: 100%
+}
+
+.SHST-Container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 44px;
+    width: 100%;
+    height: calc(100% - 44px);
+}
+/* 
+@media screen and (max-width: 1024px) {
+    .SHST-Container {
+        flex-direction: column;
+    }
+} */
