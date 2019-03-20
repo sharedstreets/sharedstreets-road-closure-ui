@@ -1,14 +1,19 @@
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
+import { lineString, point } from '@turf/helpers';
 import { Feature } from 'geojson';
 import {
   forEach,
+  omit
 } from 'lodash';
 import * as mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import * as React from 'react';
 import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
 import { IRoadClosureState } from 'src/store/road-closure';
+import { v4 as uuid } from 'uuid';
+import BaseControl from '../base-map-control';
+import SharedStreetsMapDrawControl from '../sharedstreets-map-draw-control';
 import './road-closure-map.css';
 
 // tslint:disable
@@ -20,7 +25,7 @@ const mapboxToken = "pk.eyJ1IjoidHJhbnNwb3J0cGFydG5lcnNoaXAiLCJhIjoiY2ptOTN5N3Q3
 (mapboxgl as any).accessToken = mapboxToken;
 
 export interface IRoadClosureMapProps {
-  findMatchedStreet: (payload: any) => void,
+  findMatchedStreet: (payload: any, currentLineId: string) => void,
   lineCreated: (payload: any) => void,
   lineDeleted: (payload: any) => void,
   lineEdited: (payload: any) => void,
@@ -29,24 +34,39 @@ export interface IRoadClosureMapProps {
   roadClosure: IRoadClosureState
 };
 
+interface IRoadClosureMapSelectedCoordinates {
+  [lineId: string] : number[][];
+}
+
 export interface IRoadClosureMapState {
   createdLineId: any,
-  viewport: object
+  currentLineId: string,
+  viewport: any,
+  isDrawing: boolean,
+  selectedCoordinates: IRoadClosureMapSelectedCoordinates,
+  lastPointIndex: number,
 }
 
 class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureMapState> {
-  public state = {
-    createdLineId: '',
-    selectedPoints: [],
-    viewport: {
-      latitude: 38.5,
-      longitude: -98,
-      zoom: 3
-    },
-  }
-
   public mapContainer: any;
   public mapDraw: any;
+
+  public constructor(props: IRoadClosureMapProps) {
+    super(props);
+
+    this.state = {
+      createdLineId: 'lineId',
+      currentLineId: '',
+      isDrawing: false,
+      lastPointIndex: 0,
+      selectedCoordinates: {},
+      viewport: {
+        latitude: 38.5,
+        longitude: -98,
+        zoom: 3
+      },
+    }
+  }
 
   public componentDidMount() {
     const {
@@ -59,23 +79,24 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
 
     this.mapContainer = new mapboxgl.Map({
       center: [longitude, latitude],
-      container: 'SHST-RoadClosure-Map',
+      container: 'SHST-Road-Closure-Map',
       style: 'mapbox://styles/mapbox/light-v9',
       zoom
     });
 
     this.mapDraw = new MapboxDraw({
       controls: {
-        line_string: true,
+        // line_string: true,
       },
       displayControlsDefault: false,
     });
 
     this.mapContainer.on('move', this.handleMapMove);
-
-    this.mapContainer.on('draw.create', this.handleLineCreated);
-    this.mapContainer.on('draw.delete', this.handleLineDeleted);
-    this.mapContainer.on('draw.update', this.handleLineEdited);
+    this.mapContainer.on('mousemove', () => {
+      // set pointer style to crosshair when isDrawing is toggled
+      this.mapContainer.getCanvas().style.cursor = this.state.isDrawing ? 'crosshair' : '';
+    })
+    this.mapContainer.on('click', this.handleMapClick);
     this.mapContainer.addControl(
       new mapboxgl.NavigationControl()
     );
@@ -89,11 +110,24 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
       this.mapDraw,
       'top-left'
     );
+    this.mapContainer.addControl(
+      new BaseControl('SHST-Road-Closure-Map-Line-Draw-Control',
+        SharedStreetsMapDrawControl,
+        {
+          onCancel: this.handleCancelDrawing,
+          onConfirm: this.handleConfirmDrawing,
+          onStart: this.handleStartDrawing,
+          onUndo: this.handleUndoLastDrawnPoint,
+        }
+      ),
+      'top-left'
+    )
   }
 
   public componentDidUpdate(prevProps: IRoadClosureMapProps) {
     const {
       currentItem,
+      currentLineId,
       isFetchingMatchedStreets
     } = this.props.roadClosure;
 
@@ -117,7 +151,138 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
         this.mapDraw.add(matchedStreetFeature);
       }
     });
+
+    if (prevProps.roadClosure.currentLineId !== currentLineId) {
+      this.removeAllSelectedPoints(currentLineId);
+      this.removeSelectedLine(currentLineId);
+    }
+  }
+
+  public removeAllSelectedPoints = (lineId: string) => {
+    let pointIndex = 0;
+    let lastPointId = `point-${lineId}-${pointIndex}`;
+    while (this.mapContainer.getLayer(lastPointId)) {
+      if (this.mapContainer.getLayer(lastPointId)) {
+        this.mapContainer.removeLayer(lastPointId);
+        this.mapContainer.removeSource(lastPointId);
+      }
+      pointIndex++;
+      lastPointId = `point-${lineId}-${pointIndex}`;
+    }
+  }
+
+  public removeSelectedLine = (lineId: string) => {
+    if (this.mapContainer.getLayer(lineId)) {
+      this.mapContainer.removeLayer(lineId);
+      this.mapContainer.removeSource(lineId);
+    }
+  }
+
+  public handleStartDrawing = (event: any) => {
+    const lineUuid = uuid();
+    const newSelectedCoordinates = Object.assign({}, this.state.selectedCoordinates);
+    newSelectedCoordinates[lineUuid] = [];
+    this.setState({
+      currentLineId: lineUuid,
+      isDrawing: true,
+      selectedCoordinates: newSelectedCoordinates
+    });
+  }
+  
+  public handleConfirmDrawing = (event: any) => {
+    if (this.state.selectedCoordinates[this.state.currentLineId].length > 1) {
+      const selectedLine = lineString(this.state.selectedCoordinates[this.state.currentLineId]);
+      this.props.findMatchedStreet(selectedLine, this.state.currentLineId)
+      this.setState({
+        currentLineId: '',
+        isDrawing: false,
+      });
+    }
+
+  }
+  public handleCancelDrawing = (event: any) => {
+    this.removeAllSelectedPoints(this.state.currentLineId);
+    this.removeSelectedLine(this.state.currentLineId);
+
+    const newSelectedCoordinates = omit(this.state.selectedCoordinates, this.state.currentLineId);
+
+    this.setState({
+      currentLineId: '',
+      isDrawing: false,
+      selectedCoordinates: newSelectedCoordinates,
+    });
+  }
+  public handleUndoLastDrawnPoint = (event: any) => {
+    if (this.state.selectedCoordinates[this.state.currentLineId].length === 0) {
+      return;
+    }
+
+    const newSelectedCoordinates = Object.assign({}, this.state.selectedCoordinates);
+    const lastPointId = `point-${this.state.currentLineId}-${newSelectedCoordinates[this.state.currentLineId].length-1}`;
+    if (this.mapContainer.getLayer(lastPointId)) {
+      this.mapContainer.removeLayer(lastPointId);
+      this.mapContainer.removeSource(lastPointId);
+    }
+    newSelectedCoordinates[this.state.currentLineId].pop();
+
+
+    if (newSelectedCoordinates[this.state.currentLineId].length > 1) {
+      const selectedLine = lineString(newSelectedCoordinates[this.state.currentLineId]);
+      this.mapContainer.getSource(this.state.currentLineId).setData(selectedLine);
+    } else {
+      this.removeSelectedLine(this.state.currentLineId);
+    }
     
+    this.setState({
+      selectedCoordinates: newSelectedCoordinates,
+    });
+  }
+
+  public handleMapClick = (event: any) => {
+    if (this.state.isDrawing) {
+      const newSelectedCoordinates = Object.assign({}, this.state.selectedCoordinates);
+      newSelectedCoordinates[this.state.currentLineId].push([event.lngLat.lng, event.lngLat.lat]);
+      const newPoint = point([event.lngLat.lng, event.lngLat.lat]);
+      const pointId = `point-${this.state.currentLineId}-${newSelectedCoordinates[this.state.currentLineId].length-1}`;
+      this.mapContainer.addSource(pointId, {
+        data: newPoint,
+        type: "geojson",
+      });
+      this.mapContainer.addLayer({
+        "id": pointId,
+        "paint": {
+          "circle-color": "red",
+          "circle-opacity": 0.5
+        },
+        "source": pointId,
+        "type": "circle",
+      });
+
+      if (newSelectedCoordinates[this.state.currentLineId].length > 1) {
+        const selectedLine = lineString(this.state.selectedCoordinates[this.state.currentLineId]);
+
+        this.removeSelectedLine(this.state.currentLineId);
+        this.mapContainer.addSource(this.state.currentLineId, {
+          data: selectedLine,
+          type: "geojson",
+        });
+        this.mapContainer.addLayer({
+          "id": this.state.currentLineId,
+          "paint": {
+            "line-color": "orange",
+            "line-dasharray": [5, 1],
+            "line-opacity": 0.75,
+            "line-width": 3,
+          },
+          "source": this.state.currentLineId,
+          "type": "line",
+        });
+      }
+
+      this.setState({
+        selectedCoordinates: newSelectedCoordinates
+      });
+    }
   }
 
   public handleMapMove = () => {
@@ -131,25 +296,10 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
     });
   }
 
-  public handleLineCreated = (e: { type: string, target: any, features: GeoJSON.Feature[]}) => {
-    this.setState({
-      createdLineId: e.features[0].id,
-    });
-    this.props.findMatchedStreet(e.features[0])
-  }
-
-  public handleLineDeleted = (e: { type: string, target: any, features: GeoJSON.Feature[]}) => {
-    this.props.lineDeleted(e.features[0]);
-  }
-
-  public handleLineEdited = (e: { type: string, target: any, features: GeoJSON.Feature[]}) => {
-    this.props.findMatchedStreet(e.features[0]);
-  }
-
   public render() {
     return (
-      <div className={'SHST-RoadClosure-Map-Container'}>
-        <div id={'SHST-RoadClosure-Map'} style={{
+      <div className={'SHST-Road-Closure-Map-Container'}>
+        <div id={'SHST-Road-Closure-Map'} style={{
           height: '100%',
           margin: '0 auto',
           width: '100%',

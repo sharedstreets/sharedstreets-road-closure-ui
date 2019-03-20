@@ -8,12 +8,12 @@ class BaseControl implements mapboxgl.IControl {
     public classname: string;
     public controlText: string;
     public component: any;
-    public onClick: () => void;
+    public props: any;
 
-    public constructor(className: string, component: any, onClick: () => void) {
+    public constructor(className: string, component: any, props: any) {
         this.classname = className;
         this.component = component;
-        this.onClick = onClick;
+        this.props = props;
     }
 
     public onAdd(map: any) {
@@ -21,9 +21,7 @@ class BaseControl implements mapboxgl.IControl {
         this.container = document.createElement('div');
         this.container.className = this.classname;
 
-        ReactDOM.render(React.createElement(this.component, {
-            onClick: this.onClick
-        }), this.container)
+        ReactDOM.render(React.createElement(this.component, this.props), this.container)
 
         return this.container;
     }
