@@ -1,11 +1,13 @@
 import {
     // InputGroup,
     Button,
+    ButtonGroup,
     Card,
     Collapse,
     H5,
 } from '@blueprintjs/core';
 import {
+    forEach,
     head,
     isEmpty,
     last,
@@ -52,6 +54,17 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
         };
         this.handleToggleCollapsed = this.handleToggleCollapsed.bind(this);
         this.handleToggleDirection = this.handleToggleDirection.bind(this);
+        this.handleDeleteGroup = this.handleDeleteGroup.bind(this);
+    }
+
+    public handleDeleteGroup () {
+        forEach(this.props.matchedStreetsGroup, (feature: SharedStreetsMatchPath) => {
+            const directionFilter = this.props.geometryIdDirectionFilter[feature.properties.geometryId];
+            const street = this.props.streets[feature.properties.geometryId] && directionFilter.forward ?
+                            this.props.streets[feature.properties.geometryId].forward
+                            : this.props.streets[feature.properties.geometryId].backward;
+            this.props.deleteStreetSegment(street);
+        });
     }
 
     public handleToggleCollapsed() {
@@ -166,11 +179,19 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
                             }
                         </div>
                     </div>
-                    <Button 
+                    <ButtonGroup
                         fill={true}
-                        text={!this.state.isCollapsed && !!this.props.matchedStreetsGroup ? 'Hide segments' : 'Show segments'}
-                        onClick={this.handleToggleCollapsed}
-                    />
+                    >
+                        <Button
+                            text={'Delete this group'}
+                            intent={"danger"}
+                            onClick={this.handleDeleteGroup}
+                        />
+                        <Button 
+                            text={!this.state.isCollapsed && !!this.props.matchedStreetsGroup ? 'Hide segments' : 'Show segments'}
+                            onClick={this.handleToggleCollapsed}
+                        />
+                    </ButtonGroup>
                     <Collapse
                         className={'SHST-Road-Closure-Form-Streets-Groups-Item-Collapse'}
                         isOpen={!this.state.isCollapsed && !!this.props.matchedStreetsGroup}>
