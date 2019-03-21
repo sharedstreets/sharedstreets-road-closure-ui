@@ -338,6 +338,7 @@ export const saveRoadClosure = () => (dispatch: Dispatch<any>, getState: any) =>
                 },
                 body: stateUploadPayload,
                 headers: {
+                    'Cache-control': 'max-age=0, no-cache',
                     'Content-Type': 'application/json',
                 },
                 method: 'put',
@@ -360,6 +361,7 @@ export const saveRoadClosure = () => (dispatch: Dispatch<any>, getState: any) =>
                 },
                 body: JSON.parse(getFormattedJSONStringFromOutputItem(state.roadClosure, IRoadClosureOutputFormatName.geojson)),
                 headers: {
+                    'Cache-control': 'max-age=0, no-cache',
                     'Content-Type': 'application/json',
                 },
                 method: 'put',
@@ -382,6 +384,7 @@ export const saveRoadClosure = () => (dispatch: Dispatch<any>, getState: any) =>
                 },
                 body: JSON.parse(getFormattedJSONStringFromOutputItem(state.roadClosure, IRoadClosureOutputFormatName.waze)),
                 headers: {
+                    'Cache-control': 'max-age=0, no-cache',
                     'Content-Type': 'application/json',
                 },
                 method: 'put',
