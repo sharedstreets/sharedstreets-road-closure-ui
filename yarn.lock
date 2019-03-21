@@ -25,7 +25,23 @@
   dependencies:
     regenerator-runtime "^0.12.0"
 
-"@blueprintjs/core@^3.6.0", "@blueprintjs/core@^3.7.0", "@blueprintjs/core@^3.8.0":
+"@blueprintjs/core@^3.14.0":
+  version "3.14.1"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/core/-/core-3.14.1.tgz#9a0c816bbe6c232d6515361f502506a1fb53acfb"
+  integrity sha512-DlBkztfvk5RgD+MBo22LFxLa7Rz8DVgszNdXF0MY63QGjb1uYwdSJIKXtsN1bn42SRTz24Bzp498VhSJ2+5FuQ==
+  dependencies:
+    "@blueprintjs/icons" "^3.6.0"
+    "@types/dom4" "^2.0.1"
+    classnames "^2.2"
+    dom4 "^2.0.1"
+    normalize.css "^8.0.0"
+    popper.js "^1.14.1"
+    react-popper "^1.0.0"
+    react-transition-group "^2.2.1"
+    resize-observer-polyfill "^1.5.0"
+    tslib "^1.9.0"
+
+"@blueprintjs/core@^3.7.0", "@blueprintjs/core@^3.8.0":
   version "3.8.0"
   resolved "https://registry.yarnpkg.com/@blueprintjs/core/-/core-3.8.0.tgz#1b296451478bb6a0d035811c9161104024bdcb20"
   integrity sha512-maw63uME+spdyDUOJH47r+YRc8kDeux8kQz4poiAQKk4eJavc160/aU7w5k4sV29mVputp7P22qNY1oBNXjtDQ==
@@ -59,12 +75,20 @@
     classnames "^2.2"
     tslib "^1.9.0"
 
-"@blueprintjs/select@^3.2.1":
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/select/-/select-3.2.1.tgz#44d2fd82c7d08d03e8decd47131fe848b17d7cc0"
-  integrity sha512-fAxmfRI5jorG4TsHe8WlwycL9tti2J1yt+U6r83IjuuT4ddZ6HS1Dt7RaLPpGEMQDCAcTvDBlrBpSDewjGG1+w==
+"@blueprintjs/icons@^3.6.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/icons/-/icons-3.6.0.tgz#af1d2de091d67927ed61671e6967c43620cb416d"
+  integrity sha512-sgB6rJtMjc2mS4aCS+65gK5DCr8fiWgOYi0buc0ODvGD2fwOtOFZuE4Duuj6/GZnCYj4s7E8NZgYK9Krd7G73Q==
   dependencies:
-    "@blueprintjs/core" "^3.6.0"
+    classnames "^2.2"
+    tslib "^1.9.0"
+
+"@blueprintjs/select@^3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/select/-/select-3.7.0.tgz#a3aadb3f4f8ea48c9ea482666808f2312d581271"
+  integrity sha512-T3mj6h3NjbxsSJlDvkgi0AJYQc/pcxtynV2t0tlTysasOHcw/iQ3+/LKZdhb1UWobttOkpWDKR06NPJWJHLIlw==
+  dependencies:
+    "@blueprintjs/core" "^3.14.0"
     classnames "^2.2"
     tslib "^1.9.0"
 
@@ -230,7 +254,7 @@
   dependencies:
     "@turf/helpers" "6.x"
 
-"@types/dom4@^2.0.0":
+"@types/dom4@^2.0.0", "@types/dom4@^2.0.1":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@types/dom4/-/dom4-2.0.1.tgz#506d5781b9bcab81bd9a878b198aec7dee2a6033"
   integrity sha512-kSkVAvWmMZiCYtvqjqQEwOmvKwcH+V4uiv3qPQ8pAh1Xl39xggGEo8gHUqV4waYGHezdFw0rKBR8Jt0CrQSDZA==

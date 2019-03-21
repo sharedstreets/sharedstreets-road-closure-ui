@@ -8,6 +8,7 @@ import {
     omit,
     reverse,
     sortBy,
+    // uniq,
 } from 'lodash';
 import { Dispatch } from 'redux';
 import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
@@ -78,6 +79,11 @@ export interface IRoadClosureStateItemToggleDirectionPayload {
     direction: { forward: boolean, backward: boolean }
 }
 
+export interface IRoadClosureOrgName {
+    name: string,
+    closureIds: string[],
+}
+
 export const ACTIONS = {
     DELETE_STREET_SEGMENT: createStandardAction('ROAD_CLOSURE/DELETE_STREET_SEGMENT')<RoadClosureFormStateStreet>(),
     FETCH_SHAREDSTREETS_ALL_PUBLIC_DATA: createAsyncAction(
@@ -106,6 +112,8 @@ export const ACTIONS = {
         'ROAD_CLOSURE/GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL_FAILURE'
     )<void, IGenerateSharedstreetsPublicDataUploadUrlSuccessResponse, Error>(),
     INPUT_CHANGED: createStandardAction('ROAD_CLOSURE/INPUT_CHANGED')<IRoadClosureFormInputChangedPayload>(),
+    LOADED_ALL_ROAD_CLOSURES: createStandardAction('ROAD_CLOSURE/LOADED_ALL_ROAD_CLOSURES')<void>(),
+    LOAD_ALL_ORGS: createStandardAction('ROAD_CLOSURE/LOAD_ALL_ORGS')<{ [name: string]: IRoadClosureOrgName }>(),
     LOAD_ALL_ROAD_CLOSURES: createStandardAction('ROAD_CLOSURE/LOAD_ALL_ROAD_CLOSURES')<void>(),
     LOAD_INPUT: createStandardAction('ROAD_CLOSURE/LOAD_INPUT')<IRoadClosureUploadUrls>(),
     PUT_SHAREDSTREETS_PUBLIC_DATA: createAsyncAction(
@@ -154,6 +162,50 @@ export const findMatchedStreet = (linestring: IRoadClosureMapboxDrawLineString, 
     }));
 }; 
 
+export const loadAllOrgs = () => (dispatch: Dispatch<any>, getState: any) => {
+    const generateListObjectsUrl = async () => {
+        const response = await fetch(`https://api.sharedstreets.io/v0.1.0/data/list?filePath=road-closures/`);
+        const json = await response.json();
+        const url = await json.url;
+        return url;
+    };
+    generateListObjectsUrl()
+    .then((url) => {
+        const getAllOrgs = async (listObjectsUrl: string) => {
+            const response = await fetch(listObjectsUrl);
+            const text = await response.text();
+            return text;
+        };
+
+        getAllOrgs(url).then((data) => {
+            const responseDoc = new DOMParser().parseFromString(data, 'application/xml');
+                const contents = responseDoc.querySelectorAll('Contents');
+                const orgNames: { [name: string]: IRoadClosureOrgName } = {};
+                contents.forEach((content) => {
+                    content.querySelectorAll("Key").forEach((key, index) => {
+                        if (key.textContent) {
+                            // road-closures/<org>/<uuid>/<type>
+                            const parts = key.textContent.split("/");
+                            if (parts.length !== 4) {
+                                return;
+                            }
+                            if (!orgNames[parts[1]]) {
+                                orgNames[parts[1]] = {
+                                    closureIds: [],
+                                    name: parts[1],
+                                }
+                            }
+                            if (orgNames[parts[1]].closureIds.indexOf(parts[2]) === -1) {
+                                orgNames[parts[1]].closureIds.push(parts[2]);
+                            }
+                        }
+                    })
+                });
+                return dispatch(ACTIONS.LOAD_ALL_ORGS(orgNames));
+        });
+    });
+};
+
 export const loadAllRoadClosures = () => (dispatch: Dispatch<any>, getState: any) => {
     const state = getState() as RootState;
     const orgName = state.roadClosure.orgName;
@@ -182,11 +234,15 @@ export const loadAllRoadClosures = () => (dispatch: Dispatch<any>, getState: any
                         if (key.textContent) {
                             // road-closures/<org>/<uuid>/<type>
                             const parts = key.textContent.split("/");
+                            if (parts.length !== 4) {
+                                return;
+                            }
                             if (!output[parts[1]]) {
                                 output[parts[1]] = {};
                             }
                             output[parts[1]][parts[2]] = true;
-                            output[parts[1]].id = parts[1];
+                            output[parts[1]].id = parts[2];
+                            output[parts[1]].org = parts[1];
                             output[parts[1]].lastModified = lastModifieds[index].textContent as string;
                         }
                     })
@@ -213,7 +269,6 @@ export const loadAllRoadClosures = () => (dispatch: Dispatch<any>, getState: any
                 }
             })
         });
-        return;
     });
 }
 
@@ -340,6 +395,7 @@ export const saveRoadClosure = () => (dispatch: Dispatch<any>, getState: any) =>
 
 // reducer
 export interface IRoadClosureState {
+    allOrgs: any,
     allRoadClosureItems: RoadClosureStateItem[],
     allRoadClosuresUploadUrls: IRoadClosureUploadUrls[],
     currentItem: RoadClosureStateItem,
@@ -360,6 +416,7 @@ export interface IRoadClosureState {
 };
 
 const defaultState: IRoadClosureState = {
+    allOrgs: [],
     allRoadClosureItems: [],
     allRoadClosuresUploadUrls: [],
     currentItem: new RoadClosureStateItem(),
@@ -629,11 +686,18 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 currentItem: updatedItem,
             }
         
+        case "ROAD_CLOSURE/LOAD_ALL_ORGS": 
+            return {
+                ...state,
+                allOrgs: action.payload
+            };
+
         case "ROAD_CLOSURE/LOAD_ALL_ROAD_CLOSURES":
             return {
                 ...state,
                 allRoadClosureItems: [],
                 allRoadClosuresUploadUrls: [],
+                isLoadingAllRoadClosures: true,
             }
 
         case "ROAD_CLOSURE/RESET_ROAD_CLOSURE":
