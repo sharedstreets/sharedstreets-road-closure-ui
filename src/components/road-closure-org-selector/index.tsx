@@ -39,7 +39,7 @@ class RoadClosureOrgSelector extends React.Component<IRoadClosureOrgSelectorProp
     }
 
     public itemListRenderer = (itemListProps: IItemListRendererProps<string>) => {
-        return <Menu>
+        return <Menu className={"SHST-Road-Closure-Org-Selector-List-Menu"}>
             {itemListProps.query && this.renderCreateOrgOption(itemListProps.query, false, (event: any) => { return; })}
             {
                 itemListProps.filteredItems.map((org, index) => {

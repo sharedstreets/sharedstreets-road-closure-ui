@@ -14,6 +14,7 @@ import './road-closure-saved-data-viewer.css';
 
 export interface IRoadClosureSavedDataViewerProps {
     allRoadClosureItems: RoadClosureStateItem[],
+    allRoadClosureMetadata: any[],
     allRoadClosuresUploadUrls: IRoadClosureUploadUrls[],
     isLoadingAllRoadClosures: boolean,
     orgName: string,
@@ -72,6 +73,7 @@ class RoadClosureSavedDataViewer extends React.Component<IRoadClosureSavedDataVi
                             return <RoadClosureSavedDataItem
                                         key={roadClosureId} 
                                         item={this.props.allRoadClosureItems[roadClosureId]}
+                                        metadata={this.props.allRoadClosureMetadata[roadClosureId]}
                                         uploadUrls={this.props.allRoadClosuresUploadUrls[roadClosureId]} />
                         })
                     }
