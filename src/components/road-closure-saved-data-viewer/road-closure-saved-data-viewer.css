@@ -8,6 +8,10 @@
     padding: 50px;
 }
 
+.SHST-Road-Closure-Saved-Data-Viewer-List > * {
+    margin-bottom: 20px
+}
+
 .SHST-Road-Closure-Saved-Data-Viewer-Create-Button {
     width: 750px;
     padding-right: 0px;
