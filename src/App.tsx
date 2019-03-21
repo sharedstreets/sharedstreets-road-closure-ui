@@ -25,6 +25,9 @@ export interface IAppProps {
 
 class App extends React.Component<IAppProps, any> {
   public componentDidMount() {
+    if (this.props.match.params.org) {
+      this.props.setOrgName(this.props.match.params.org);
+    }
     if (this.props.location.search) {
       const queryParams = qs.parse(this.props.location.search, {
         ignoreQueryPrefix: true
@@ -36,10 +39,6 @@ class App extends React.Component<IAppProps, any> {
       }
     } else {
       this.props.resetRoadClosure();
-    }
-
-    if (this.props.match.params.org) {
-        this.props.setOrgName(this.props.match.params.org);
     }
   }
 
