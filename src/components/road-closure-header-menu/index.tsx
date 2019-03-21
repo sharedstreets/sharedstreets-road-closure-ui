@@ -1,7 +1,8 @@
 import {
-    AnchorButton, 
+    // AnchorButton, 
     // FormGroup,
     // Label,
+    Tag,
     Text,
 } from '@blueprintjs/core';
 import {
@@ -95,12 +96,12 @@ class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps,
         return (
             <React.Fragment>
                 {this.props.edit && this.props.isEditingExistingClosure &&
-                    <AnchorButton   
-                        onClick={this.handleClickClear}
-                        minimal={true}
-                        intent={'danger'}
-                        className="SHST-Road-Closure-Load-From-URL-Clear-Button"
-                        text={"Reset & create new closure"}/>
+                    <Tag
+                        large={true}
+                        intent={"danger"}
+                        title={"Editing"}>
+                            You are editing a published closure
+                    </Tag>
                 }
                 { this.props.explore && <Link className={"bp3-button bp3-intent-success"} to="edit">Create new closure</Link> }
                 { this.props.edit && <Link className={"bp3-button bp3-intent-primary"} to="explore">View all road closures</Link> }
