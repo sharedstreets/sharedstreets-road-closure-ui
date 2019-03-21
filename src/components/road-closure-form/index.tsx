@@ -15,9 +15,10 @@ import {
 } from 'lodash';
 import * as moment from 'moment';
 import * as React from 'react';
+import RoadClosureOutputViewer from 'src/containers/road-closure-output-viewer';
 import { RoadClosureStateItem } from 'src/models/RoadClosureStateItem';
 import { IRoadClosureState } from 'src/store/road-closure';
-import RoadClosureBottomActionBar from '../road-closure-bottom-action-bar';
+// import RoadClosureBottomActionBar from '../road-closure-bottom-action-bar';
 import RoadClosureFormStreetsGroups from '../road-closure-form-streets-groups';
 
 import '../../../node_modules/@blueprintjs/core/lib/css/blueprint.css';
@@ -262,7 +263,10 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                 </select>
               </div>
             </FormGroup>
-            <RoadClosureBottomActionBar>
+            <Divider />
+            <H3>Output</H3>
+            <RoadClosureOutputViewer />
+            {/* <RoadClosureBottomActionBar>
                 <ButtonGroup
                   fill={true}
                 >
@@ -273,7 +277,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                     onClick={this.props.viewRoadClosureOutput}
                   />
                 </ButtonGroup>
-              </RoadClosureBottomActionBar>
+              </RoadClosureBottomActionBar> */}
         </div>
     );
   }

@@ -46,6 +46,7 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
         super(props);
         this.handleClickSave = this.handleClickSave.bind(this);
         this.handleCloseDialog = this.handleCloseDialog.bind(this);
+        this.handleOpenDialog = this.handleOpenDialog.bind(this);
         this.handleClickCancel = this.handleClickCancel.bind(this);
         this.handleSelectFormat = this.handleSelectFormat.bind(this);
         this.state = {
@@ -59,7 +60,11 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
             isSavedUrlsDialogOpen: true,
         });
     }
-    
+    public handleOpenDialog(e: any) {
+        this.setState({
+            isSavedUrlsDialogOpen: true,
+        });
+    }
     public handleCloseDialog(e: any) {
         this.setState({
             isSavedUrlsDialogOpen: false,
@@ -87,13 +92,13 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
             downloadButtonProps.title = "You have to select a road before downloading road closure information"
         }
         return (
-            <div className={"SHST-Road-Closure-Output-Viewer"}>
+            <div>
                 <div className="bp3-select">
                     <select
                         value={this.props.outputFormat}
                         onChange={this.handleSelectFormat}>
                         <option value="geojson">GeoJSON</option>
-                        <option value="waze">Waze</option>
+                        <option value="waze">Waze (CIFS)</option>
                     </select>
                 </div>
                 <Pre className={"SHST-Road-Closure-Output-Viewer-Code"}>
@@ -102,18 +107,24 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
                 <RoadClosureBottomActionBar>
                     <ButtonGroup
                         fill={true}>
-                        <Button
+                        {/* <Button
                             large={true}
                             text={"Back"}
-                            onClick={this.handleClickCancel}/>
+                            onClick={this.handleClickCancel}/> */}
                         <Button
                             title={"You have to create a road closure before you can save & publish it"}
                             disabled={this.props.isOutputItemEmpty}
                             large={true}
                             intent={"primary"}
-                            text={this.props.isEditingExistingClosure ? "Update & Copy URL" : "Save & Copy URL"}
+                            text={this.props.isEditingExistingClosure ? "Save closure & Publish" : "Save closure & Publish"}
                             loading={this.props.isSavingOutput}
                             onClick={this.handleClickSave}/> 
+                        {
+                            this.props.isEditingExistingClosure &&
+                            <Button 
+                                onClick={this.handleOpenDialog}
+                                text={"View published closure links"}/>
+                        }
                         <a
                             role="button"
                             {...downloadButtonProps}>
@@ -124,22 +135,28 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
                 <Dialog
                     isOpen={this.state.isSavedUrlsDialogOpen}
                     usePortal={true}
-                    title={"Saved road closure links"}
+                    title={"Published road closure links"}
                     onClose={this.handleCloseDialog}
                 >
                     <div className={Classes.DIALOG_BODY}>
                         <H5>GeoJSON</H5>
                             <p>
                                 <a target="_blank" href={this.props.uploadUrls.geojsonUploadUrl}>
-                                    {this.props.isGeneratingUploadUrl && <Spinner />}
-                                    {this.props.uploadUrls.geojsonUploadUrl}
+                                    {
+                                        this.props.isGeneratingUploadUrl ? 
+                                            <Spinner />
+                                            : this.props.uploadUrls.geojsonUploadUrl
+                                    }
                                 </a>
                             </p>
                         <H5>Waze</H5>
                             <p>
                                 <a target="_blank" href={this.props.uploadUrls.wazeUploadUrl}>
-                                {this.props.isGeneratingUploadUrl && <Spinner />}
-                                    {this.props.uploadUrls.wazeUploadUrl}
+                                {
+                                    this.props.isGeneratingUploadUrl ? 
+                                        <Spinner />
+                                        : this.props.uploadUrls.wazeUploadUrl
+                                }
                                 </a>
                             </p>
                     </div>
