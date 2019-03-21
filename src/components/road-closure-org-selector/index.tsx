@@ -9,6 +9,7 @@ import {
     Omnibar,
 } from '@blueprintjs/select';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { IRoadClosureOrgName } from 'src/store/road-closure';
 import './road-closure-org-selector.css';
 
@@ -42,10 +43,12 @@ class RoadClosureOrgSelector extends React.Component<IRoadClosureOrgSelectorProp
             {itemListProps.query && this.renderCreateOrgOption(itemListProps.query, false, (event: any) => { return; })}
             {
                 itemListProps.filteredItems.map((org, index) => {
-                    return <MenuItem
+                    return <Link key={index} to={`/${org}/explore`}>
+                            <MenuItem
                             text={org}
-                            label={`${this.props.allOrgs[org].count} closures`}
+                            label={`${this.props.allOrgs[org].closureIds.length} closures`}
                             key={index}/>
+                        </Link>
                 })
             }
         </Menu>;
@@ -56,13 +59,15 @@ class RoadClosureOrgSelector extends React.Component<IRoadClosureOrgSelectorProp
         active: boolean,
         handleClick: React.MouseEventHandler<HTMLElement>,
     ) => {
-        return <MenuItem
-            icon="add"
-            text={`Create organization with name: "${query}"`}
-            active={active}
-            onClick={handleClick}
-            shouldDismissPopover={false}
-        />
+        return <Link to={`/${query}/explore`}>
+            <MenuItem
+                icon="add"
+                text={`Create organization with name: "${query}"`}
+                active={active}
+                onClick={handleClick}
+                shouldDismissPopover={false}
+            />
+        </Link>
     };
 
     public createOrg(org: string): string {

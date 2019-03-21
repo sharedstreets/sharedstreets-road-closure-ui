@@ -81,7 +81,7 @@ export interface IRoadClosureStateItemToggleDirectionPayload {
 
 export interface IRoadClosureOrgName {
     name: string,
-    count: number,
+    closureIds: string[],
 }
 
 export const ACTIONS = {
@@ -112,6 +112,7 @@ export const ACTIONS = {
         'ROAD_CLOSURE/GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL_FAILURE'
     )<void, IGenerateSharedstreetsPublicDataUploadUrlSuccessResponse, Error>(),
     INPUT_CHANGED: createStandardAction('ROAD_CLOSURE/INPUT_CHANGED')<IRoadClosureFormInputChangedPayload>(),
+    LOADED_ALL_ROAD_CLOSURES: createStandardAction('ROAD_CLOSURE/LOADED_ALL_ROAD_CLOSURES')<void>(),
     LOAD_ALL_ORGS: createStandardAction('ROAD_CLOSURE/LOAD_ALL_ORGS')<{ [name: string]: IRoadClosureOrgName }>(),
     LOAD_ALL_ROAD_CLOSURES: createStandardAction('ROAD_CLOSURE/LOAD_ALL_ROAD_CLOSURES')<void>(),
     LOAD_INPUT: createStandardAction('ROAD_CLOSURE/LOAD_INPUT')<IRoadClosureUploadUrls>(),
@@ -190,11 +191,13 @@ export const loadAllOrgs = () => (dispatch: Dispatch<any>, getState: any) => {
                             }
                             if (!orgNames[parts[1]]) {
                                 orgNames[parts[1]] = {
-                                    count: 0,
+                                    closureIds: [],
                                     name: parts[1],
                                 }
                             }
-                            orgNames[parts[1]].count++;
+                            if (orgNames[parts[1]].closureIds.indexOf(parts[2]) === -1) {
+                                orgNames[parts[1]].closureIds.push(parts[2]);
+                            }
                         }
                     })
                 });
@@ -238,7 +241,8 @@ export const loadAllRoadClosures = () => (dispatch: Dispatch<any>, getState: any
                                 output[parts[1]] = {};
                             }
                             output[parts[1]][parts[2]] = true;
-                            output[parts[1]].id = parts[1];
+                            output[parts[1]].id = parts[2];
+                            output[parts[1]].org = parts[1];
                             output[parts[1]].lastModified = lastModifieds[index].textContent as string;
                         }
                     })
@@ -265,7 +269,6 @@ export const loadAllRoadClosures = () => (dispatch: Dispatch<any>, getState: any
                 }
             })
         });
-        return;
     });
 }
 
@@ -694,6 +697,7 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 ...state,
                 allRoadClosureItems: [],
                 allRoadClosuresUploadUrls: [],
+                isLoadingAllRoadClosures: true,
             }
 
         case "ROAD_CLOSURE/RESET_ROAD_CLOSURE":
