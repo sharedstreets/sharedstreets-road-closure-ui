@@ -259,7 +259,7 @@ export const loadAllRoadClosures = () => (dispatch: Dispatch<any>, getState: any
                             if (typeof data === "string") {
                                 return;
                             }
-                            return { ...data, ...uploadUrls };
+                            return { ...data, ...uploadUrls, ...{lastModified: roadClosure.lastModified} };
                         },
                         method: 'get',
                         requestUrl: uploadUrls.stateUploadUrl,
@@ -397,6 +397,7 @@ export const saveRoadClosure = () => (dispatch: Dispatch<any>, getState: any) =>
 export interface IRoadClosureState {
     allOrgs: any,
     allRoadClosureItems: RoadClosureStateItem[],
+    allRoadClosureMetadata: any[],
     allRoadClosuresUploadUrls: IRoadClosureUploadUrls[],
     currentItem: RoadClosureStateItem,
     currentLineId: string,
@@ -418,6 +419,7 @@ export interface IRoadClosureState {
 const defaultState: IRoadClosureState = {
     allOrgs: [],
     allRoadClosureItems: [],
+    allRoadClosureMetadata: [],
     allRoadClosuresUploadUrls: [],
     currentItem: new RoadClosureStateItem(),
     currentLineId: '',
@@ -504,16 +506,21 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             newStateItem.unmatchedStreets = action.payload.unmatchedStreets;
             newStateItem.matchedStreets.addFeaturesFromGeojson(action.payload.matchedStreets.features);
 
-            const newStateItemMetadata = {
+            const newStateItemUploadUrls = {
                 geojsonUploadUrl: action.payload.geojsonUploadUrl,
                 stateUploadUrl: action.payload.stateUploadUrl,
                 wazeUploadUrl: action.payload.wazeUploadUrl,
             };
 
+            const newStateItemMetadata = {
+                lastModified: action.payload.lastModified
+            }
+
             return {
                 ...state,
                 allRoadClosureItems: [ ...state.allRoadClosureItems, ...[newStateItem]],
-                allRoadClosuresUploadUrls: [ ...state.allRoadClosuresUploadUrls, ...[newStateItemMetadata]]
+                allRoadClosureMetadata: [ ...state.allRoadClosureMetadata, ...[newStateItemMetadata] ],
+                allRoadClosuresUploadUrls: [ ...state.allRoadClosuresUploadUrls, ...[newStateItemUploadUrls]],
             };
             
         case "ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_DATA_REQUEST":

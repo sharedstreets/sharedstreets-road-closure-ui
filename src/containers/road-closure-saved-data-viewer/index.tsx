@@ -5,6 +5,7 @@ import { loadAllRoadClosures } from '../../store/road-closure';
 
 const mapStateToProps = (state: RootState) => ({
     allRoadClosureItems: state.roadClosure.allRoadClosureItems,
+    allRoadClosureMetadata: state.roadClosure.allRoadClosureMetadata,
     allRoadClosuresUploadUrls: state.roadClosure.allRoadClosuresUploadUrls,
     isLoadingAllRoadClosures: state.roadClosure.isLoadingAllRoadClosures,
     orgName: state.roadClosure.orgName,
