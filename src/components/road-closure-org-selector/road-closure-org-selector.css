@@ -1,5 +1,10 @@
 .SHST-Road-Closure-Org-Selector {
-    top: calc(44px + 20vh);
-    left: calc(50% - 250px);
-    width: 500px;
+    top: calc(44px + 10vh);
+    width: 100%;
+    padding: 5vh;
+}
+
+.SHST-Road-Closure-Org-Selector-List-Menu {
+    height: calc(100vh / 2);
+    overflow: scroll;
 }
