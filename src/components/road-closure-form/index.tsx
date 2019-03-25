@@ -1,10 +1,11 @@
 import {
-  // Button,
+  Button,
   // ButtonGroup,
   Card,
   Divider,
   FormGroup,
   H3,
+  // Icon,
   InputGroup,
   Position,
   Spinner,
@@ -228,7 +229,8 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
             }
             <FormGroup
               label="Start and end time"
-              labelInfo="(required)"  
+              labelInfo="(required)"
+              className={"SHST-Road-Closure-Form-Group-Date-Time"}
             >
               <DateRangeInput
                 value={currentDateRange}
@@ -249,12 +251,18 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                 }}
               />
               <TimezonePicker
+                inputProps={{
+                  className: "SHST-Timezone-Picker-Input",
+                }}
                 popoverProps={{
                   // minimal: true,
+                  className: "SHST-Timezone-Picker-Popover",
                   position: Position.BOTTOM_RIGHT
                 }}
                 onChange={this.handleChangeTimeZone}
-              />
+              >
+                <Button icon="globe" />
+              </TimezonePicker>
             </FormGroup>
             <FormGroup
               label="Description"
