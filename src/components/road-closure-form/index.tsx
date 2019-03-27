@@ -1,17 +1,19 @@
 import {
-  // Button,
-  // ButtonGroup,
   Card,
   Divider,
   FormGroup,
   H3,
   InputGroup,
+  Position,
   Spinner,
 } from '@blueprintjs/core';
 import {
   DateRange,
   DateRangeInput,
 } from '@blueprintjs/datetime';
+import {
+  TimezonePicker
+} from '@blueprintjs/timezone';
 import {
   isEmpty,
 } from 'lodash';
@@ -26,6 +28,7 @@ import RoadClosureFormStreetsGroups from '../road-closure-form-streets-groups';
 import '../../../node_modules/@blueprintjs/core/lib/css/blueprint.css';
 import '../../../node_modules/@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 import '../../../node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css';
+import '../../../node_modules/@blueprintjs/timezone/lib/css/blueprint-timezone.css';
 import '../../../node_modules/normalize.css/normalize.css'
 import './road-closure-form.css';
 
@@ -51,6 +54,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
     this.handleChangeReference = this.handleChangeReference.bind(this);
     this.handleChangeSubtype = this.handleChangeSubtype.bind(this);
     this.handleChangeTime = this.handleChangeTime.bind(this);
+    this.handleChangeTimeZone = this.handleChangeTimeZone.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleStreetMouseover = this.handleStreetMouseover.bind(this);
     this.renderDateButtonText = this.renderDateButtonText.bind(this);
@@ -109,6 +113,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
       "dddd, MMMM Do YYYY, h:mm:ss a",
       "YYYY-MM-DD",
       "DD/MM/YYYY",
+      "DD-MM-YYYY",
       "YYYY-MM-DD HH:mm:ss",
       "DD/MM/YYYY HH:mm:ss",
       "YYYY-MM-DD HH:mm:ss a",
@@ -121,14 +126,26 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
   }
 
   public handleChangeTime(e: DateRange) {
+    if (e[0]) {
+      this.props.inputChanged({
+        key: 'startTime',
+        startTime: moment(e[0]).format('ddd MMM DD YYYY HH:mm:ss'),
+      });
+    }
+
+    if (e[1]) {
+      this.props.inputChanged({
+        endTime: moment(e[1]).format('ddd MMM DD YYYY HH:mm:ss'),
+        key: 'endTime',
+      })
+    }
+  }
+
+  public handleChangeTimeZone(timezone: string) {
     this.props.inputChanged({
-      key: 'startTime',
-      startTime: e[0],
+      key: 'timezone',
+      timezone,
     });
-    this.props.inputChanged({
-      endTime: e[1],
-      key: 'endTime',
-    })
   }
 
   public handleStreetMouseover(e: any) {
@@ -175,14 +192,14 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
 
   public render() {
     const currentMatchedStreets = this.props.currentRoadClosureItem.matchedStreets;
-    const currentDateRange: DateRange = [
-      this.props.roadClosure.currentItem.form.startTime ? 
-        moment(this.props.roadClosure.currentItem.form.startTime).toDate()
-        : undefined,
-      this.props.roadClosure.currentItem.form.endTime ? 
-        moment(this.props.roadClosure.currentItem.form.endTime).toDate()
-        : undefined,
-    ];
+    const currentDateRange: DateRange = [undefined, undefined];
+    if (this.props.roadClosure.currentItem.form.startTime) {
+      currentDateRange[0] = moment(this.props.roadClosure.currentItem.form.startTime).toDate();
+      
+    }
+    if (this.props.roadClosure.currentItem.form.endTime) {
+      currentDateRange[1] = moment(this.props.roadClosure.currentItem.form.endTime).toDate();
+    }
 
     const currentDescription = this.props.currentRoadClosureItem.form.description;
 
@@ -208,7 +225,8 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
             }
             <FormGroup
               label="Start and end time"
-              labelInfo="(required)"  
+              labelInfo="(required)"
+              className={"SHST-Road-Closure-Form-Group-Date-Time"}
             >
               <DateRangeInput
                 value={currentDateRange}
@@ -227,6 +245,19 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                 endInputProps={{
                   className: "SHST-Road-Closure-Form-Date-Range-Input"
                 }}
+              />
+              <TimezonePicker
+                inputProps={{
+                  className: "SHST-Timezone-Picker-Input",
+                }}
+                popoverProps={{
+                  // minimal: true,
+                  className: "SHST-Timezone-Picker-Popover",
+                  position: Position.BOTTOM_RIGHT
+                }}
+                onChange={this.handleChangeTimeZone}
+                value={this.props.currentRoadClosureItem.form.timezone}
+                valueDisplayFormat={"name"}
               />
             </FormGroup>
             <FormGroup

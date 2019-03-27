@@ -24,10 +24,18 @@
     flex: 1 1;
 }
 
-/* .SHST-Matched-Streets-Table-Empty > * {
-    margin: 0 auto;
-    width: 100%;
-} */
+.SHST-Road-Closure-Form-Group-Date-Time > div {
+    display: flex;
+}
+
+.SHST-Road-Closure-Form-Date-Range-Input-Group {
+    flex: 2;
+}
+
+.SHST-Timezone-Picker-Input + ul {
+    max-height: 150px;
+    overflow-y: scroll;
+}
 
 .SHST-Road-Closure-Form-Bottom-Actions {
     position: absolute;

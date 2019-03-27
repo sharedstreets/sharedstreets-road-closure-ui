@@ -19,6 +19,7 @@ import './road-closure-map.css';
 // tslint:disable
 const MapboxDraw = require('@mapbox/mapbox-gl-draw');
 const MapboxGeocoder = require('@mapbox/mapbox-gl-geocoder');
+const MapboxTimespace = require('@mapbox/timespace');
 // tslint:enable
 
 const mapboxToken = "pk.eyJ1IjoidHJhbnNwb3J0cGFydG5lcnNoaXAiLCJhIjoiY2ptOTN5N3Q3MHN5aDNxbGs2MzhsN3dneiJ9.K4j9mXsvfGCYtM8YouwCKg";
@@ -31,6 +32,7 @@ export interface IRoadClosureMapProps {
   lineEdited: (payload: any) => void,
   pointRemoved: () => void,
   pointSelected: (payload: any) => void,
+  inputChanged: (payload: any) => void,
   roadClosure: IRoadClosureState
 };
 
@@ -241,6 +243,16 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
   public handleMapClick = (event: any) => {
     if (this.state.isDrawing) {
       const newSelectedCoordinates = Object.assign({}, this.state.selectedCoordinates);
+      if (newSelectedCoordinates[this.state.currentLineId].length === 0) {
+        const timeFromPointClicked = MapboxTimespace.getFuzzyLocalTimeFromPoint(new Date(), [event.lngLat.lng, event.lngLat.lat])
+        if (timeFromPointClicked._z.name) {
+          this.props.inputChanged({
+            key: 'timezone',
+            timezone: timeFromPointClicked._z.name
+          });
+        }
+      }
+
       newSelectedCoordinates[this.state.currentLineId].push([event.lngLat.lng, event.lngLat.lat]);
       const newPoint = point([event.lngLat.lng, event.lngLat.lat]);
       const pointId = `point-${this.state.currentLineId}-${newSelectedCoordinates[this.state.currentLineId].length-1}`;

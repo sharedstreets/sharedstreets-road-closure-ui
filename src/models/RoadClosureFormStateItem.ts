@@ -13,6 +13,7 @@ export class RoadClosureFormStateItem {
     public type: string = "ROAD_CLOSED";
     public startTime: string;
     public endTime: string;
+    public timezone: string;
     public description: string;
     public reference: string;
     public subtype: string;
