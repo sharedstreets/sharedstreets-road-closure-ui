@@ -1,11 +1,8 @@
 import {
-  Button,
-  // ButtonGroup,
   Card,
   Divider,
   FormGroup,
   H3,
-  // Icon,
   InputGroup,
   Position,
   Spinner,
@@ -116,6 +113,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
       "dddd, MMMM Do YYYY, h:mm:ss a",
       "YYYY-MM-DD",
       "DD/MM/YYYY",
+      "DD-MM-YYYY",
       "YYYY-MM-DD HH:mm:ss",
       "DD/MM/YYYY HH:mm:ss",
       "YYYY-MM-DD HH:mm:ss a",
@@ -128,28 +126,26 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
   }
 
   public handleChangeTime(e: DateRange) {
-    this.props.inputChanged({
-      key: 'startTime',
-      startTime: e[0],
-    });
-    this.props.inputChanged({
-      endTime: e[1],
-      key: 'endTime',
-    })
+    if (e[0]) {
+      this.props.inputChanged({
+        key: 'startTime',
+        startTime: moment(e[0]).format('ddd MMM DD YYYY HH:mm:ss'),
+      });
+    }
+
+    if (e[1]) {
+      this.props.inputChanged({
+        endTime: moment(e[1]).format('ddd MMM DD YYYY HH:mm:ss'),
+        key: 'endTime',
+      })
+    }
   }
 
   public handleChangeTimeZone(timezone: string) {
-    const start = moment(this.props.roadClosure.currentItem.form.startTime).tz(timezone).format();
-    const end = moment(this.props.roadClosure.currentItem.form.endTime).tz(timezone).format();
     this.props.inputChanged({
-      key: 'startTime',
-      startTime: start,
+      key: 'timezone',
+      timezone,
     });
-    this.props.inputChanged({
-      endTime: end,
-      key: 'endTime',
-    })
-    return;
   }
 
   public handleStreetMouseover(e: any) {
@@ -196,14 +192,14 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
 
   public render() {
     const currentMatchedStreets = this.props.currentRoadClosureItem.matchedStreets;
-    const currentDateRange: DateRange = [
-      this.props.roadClosure.currentItem.form.startTime ? 
-        moment(this.props.roadClosure.currentItem.form.startTime).toDate()
-        : undefined,
-      this.props.roadClosure.currentItem.form.endTime ? 
-        moment(this.props.roadClosure.currentItem.form.endTime).toDate()
-        : undefined,
-    ];
+    const currentDateRange: DateRange = [undefined, undefined];
+    if (this.props.roadClosure.currentItem.form.startTime) {
+      currentDateRange[0] = moment(this.props.roadClosure.currentItem.form.startTime).toDate();
+      
+    }
+    if (this.props.roadClosure.currentItem.form.endTime) {
+      currentDateRange[1] = moment(this.props.roadClosure.currentItem.form.endTime).toDate();
+    }
 
     const currentDescription = this.props.currentRoadClosureItem.form.description;
 
@@ -260,9 +256,9 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                   position: Position.BOTTOM_RIGHT
                 }}
                 onChange={this.handleChangeTimeZone}
-              >
-                <Button icon="globe" />
-              </TimezonePicker>
+                value={this.props.currentRoadClosureItem.form.timezone}
+                valueDisplayFormat={"name"}
+              />
             </FormGroup>
             <FormGroup
               label="Description"

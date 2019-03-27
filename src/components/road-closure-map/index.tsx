@@ -32,6 +32,7 @@ export interface IRoadClosureMapProps {
   lineEdited: (payload: any) => void,
   pointRemoved: () => void,
   pointSelected: (payload: any) => void,
+  inputChanged: (payload: any) => void,
   roadClosure: IRoadClosureState
 };
 
@@ -244,8 +245,12 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
       const newSelectedCoordinates = Object.assign({}, this.state.selectedCoordinates);
       if (newSelectedCoordinates[this.state.currentLineId].length === 0) {
         const timeFromPointClicked = MapboxTimespace.getFuzzyLocalTimeFromPoint(new Date(), [event.lngLat.lng, event.lngLat.lat])
-        // tslint:disable-next-line
-        console.log(timeFromPointClicked);
+        if (timeFromPointClicked._z.name) {
+          this.props.inputChanged({
+            key: 'timezone',
+            timezone: timeFromPointClicked._z.name
+          });
+        }
       }
 
       newSelectedCoordinates[this.state.currentLineId].push([event.lngLat.lng, event.lngLat.lat]);

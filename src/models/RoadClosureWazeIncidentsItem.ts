@@ -41,8 +41,13 @@ export class RoadClosureWazeIncidentsItem {
 
     public constructor(matchedStreetSegment: SharedStreetsMatchPath, form: RoadClosureFormStateItem, bothDirections: boolean) {
         this.creationtime = moment().format();
-        this.starttime = form.startTime ? moment(form.startTime).format() : '';
-        this.endtime = form.endTime ? moment(form.endTime).format() : '';
+        if (form.timezone) {
+            this.starttime = form.startTime ? moment.tz(form.startTime, form.timezone).format() : '';
+            this.endtime = form.endTime ? moment.tz(form.endTime, form.timezone).format() : '';
+        } else {
+            this.starttime = form.startTime ? moment(form.startTime).format() : '';
+            this.endtime = form.endTime ? moment(form.endTime).format() : '';
+        }
         this.type = form.type;
         this.subtype = form.subtype;
         this.description = form.description;
