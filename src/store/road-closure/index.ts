@@ -203,7 +203,7 @@ export const loadAllOrgs = () => (dispatch: Dispatch<any>, getState: any) => {
 export const loadAllRoadClosures = () => (dispatch: Dispatch<any>, getState: any) => {
     const state = getState() as RootState;
     const orgName = state.roadClosure.orgName;
-    dispatch({ type: 'ROAD_CLOSURE/LOAD_ALL_ROAD_CLOSURES' });
+    dispatch(ACTIONS.LOAD_ALL_ROAD_CLOSURES());
     const generateListObjectsUrl = async () => {
         const response = await fetch(`https://api.sharedstreets.io/v0.1.0/data/list?filePath=road-closures/${orgName}/`);
         const json = await response.json();
@@ -267,6 +267,9 @@ export const loadAllRoadClosures = () => (dispatch: Dispatch<any>, getState: any
                     }
                 })
             })
+        })
+        .then(() => {
+            dispatch(ACTIONS.LOADED_ALL_ROAD_CLOSURES());
         });
     });
 }
@@ -707,7 +710,13 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 allRoadClosureItems: [],
                 allRoadClosuresUploadUrls: [],
                 isLoadingAllRoadClosures: true,
-            }
+            };
+        
+        case "ROAD_CLOSURE/LOADED_ALL_ROAD_CLOSURES":
+            return {
+                ...state,
+                isLoadingAllRoadClosures: false,
+            };
 
         case "ROAD_CLOSURE/RESET_ROAD_CLOSURE":
             return {

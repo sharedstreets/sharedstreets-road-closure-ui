@@ -1,6 +1,5 @@
 import {
-    // Button,
-    // ButtonGroup,
+    Spinner,
 } from '@blueprintjs/core';
 import * as React from 'react';
 // import { Link } from 'react-router-dom';
@@ -58,13 +57,23 @@ class RoadClosureSavedDataViewer extends React.Component<IRoadClosureSavedDataVi
         return (
             <div className={"SHST-Road-Closure-Saved-Data-Viewer"}>
                 <div className={"SHST-Road-Closure-Saved-Data-Viewer-List"}>
-                    {this.props.allRoadClosureItems.length === 0 &&
+                    {this.props.allRoadClosureItems.length === 0 && !this.props.isLoadingAllRoadClosures &&
                         <div className="bp3-non-ideal-state">
                             <div className="bp3-non-ideal-state-visual">
                                 <span className="bp3-icon bp3-icon-arrow-top-right" />
                             </div>
                             <h4 className="bp3-heading">
-                            { "Create a new road closure!" }
+                                Create a new closure!
+                            </h4>
+                        </div>
+                    }
+                    {this.props.isLoadingAllRoadClosures &&
+                        <div className="bp3-non-ideal-state">
+                            <div className="bp3-non-ideal-state-visual">
+                                <Spinner />
+                            </div>
+                            <h4 className="bp3-heading">
+                                Loading saved closures...
                             </h4>
                         </div>
                     }
