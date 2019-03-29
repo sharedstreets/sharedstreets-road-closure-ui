@@ -2,12 +2,12 @@ import { forEach } from 'lodash';
 import {
     IRoadClosureOutputFormatName,
     RoadClosureOutputStateItem
-} from 'src/models/RoadClosureOutputStateItem';
+} from '../models/RoadClosureOutputStateItem';
 import {
     RoadClosureWazeIncidentsItem,
-} from 'src/models/RoadClosureWazeIncidentsItem';
-import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
-import { IRoadClosureState } from 'src/store/road-closure';
+} from '../models/RoadClosureWazeIncidentsItem';
+import { SharedStreetsMatchPath } from '../models/SharedStreets/SharedStreetsMatchPath';
+import { IRoadClosureState } from '../store/road-closure';
 
 export const currentRoadClosureItemSelector = (state: IRoadClosureState) => {
     return state.currentItem;

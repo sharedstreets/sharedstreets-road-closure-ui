@@ -3,26 +3,26 @@ import {
     forEach,
     isEmpty,
     omit,
-} from 'lodash';
+} from 'lodash';    
 import { Dispatch } from 'redux';
-import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
-import {
-    IRoadClosureOutputFormatName,
-    RoadClosureOutputStateItem,
-} from 'src/models/RoadClosureOutputStateItem';
-import { RoadClosureStateItem } from "src/models/RoadClosureStateItem";
-import { SharedStreetsMatchFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchFeatureCollection';
-import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
-import { SharedStreetsMatchPoint } from 'src/models/SharedStreets/SharedStreetsMatchPoint';
-import { getFormattedJSONStringFromOutputItem } from 'src/selectors/road-closure-output-item';
-import { generateUploadUrlsFromHash, IRoadClosureUploadUrls } from 'src/utils/upload-url-generator';
-import { v4 } from 'src/utils/uuid-regex';
 import {
     ActionType,
     createAsyncAction,
     createStandardAction,
 } from 'typesafe-actions';
 import { v4 as uuid } from 'uuid';
+import { RoadClosureFormStateStreet } from '../../models/RoadClosureFormStateStreet';
+import {
+    IRoadClosureOutputFormatName,
+    RoadClosureOutputStateItem,
+} from '../../models/RoadClosureOutputStateItem';
+import { RoadClosureStateItem } from "../../models/RoadClosureStateItem";
+import { SharedStreetsMatchFeatureCollection } from '../../models/SharedStreets/SharedStreetsMatchFeatureCollection';
+import { SharedStreetsMatchPath } from '../../models/SharedStreets/SharedStreetsMatchPath';
+import { SharedStreetsMatchPoint } from '../../models/SharedStreets/SharedStreetsMatchPoint';
+import { getFormattedJSONStringFromOutputItem } from '../../selectors/road-closure-output-item';
+import { generateUploadUrlsFromHash, IRoadClosureUploadUrls } from '../../utils/upload-url-generator';
+import { v4 } from '../../utils/uuid-regex';
 import { fetchAction } from '../api';
 import { RootState } from '../configureStore';
 

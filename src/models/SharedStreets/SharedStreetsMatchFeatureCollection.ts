@@ -15,7 +15,8 @@ import { SharedStreetsMatchPoint } from './SharedStreetsMatchPoint';
 export class SharedStreetsMatchFeatureCollection implements FeatureCollection {
     public type: "FeatureCollection" = "FeatureCollection";
     public features: Array<SharedStreetsMatchPath | SharedStreetsMatchPoint> = [];
-
+    
+    public properties: any = {};
     public contiguousFeatureGroups: SharedStreetsMatchPath[][] = [];
     public contiguousFeatureGroupsDirections: Array<{ forward: boolean, backward: boolean }> = [];
     public geometryIdPathMap: { [geomId: string]: { [direction: string] : SharedStreetsMatchPath} } = {};

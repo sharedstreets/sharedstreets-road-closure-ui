@@ -3,8 +3,8 @@ import {
 } from '@turf/helpers';
 import {
     IRoadClosureOutputFormatName,
-} from 'src/models/RoadClosureOutputStateItem';
-import { IRoadClosureState } from 'src/store/road-closure';
+} from '../models/RoadClosureOutputStateItem';
+import { IRoadClosureState } from '../store/road-closure';
 import { currentRoadClosureItemOutput } from './road-closure';
 
 export const getFileNameFromOutputItem = (state: IRoadClosureState) => {
