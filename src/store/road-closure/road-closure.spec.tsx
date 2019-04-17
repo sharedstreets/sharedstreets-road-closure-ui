@@ -1,6 +1,7 @@
+import { RoadClosureFormStateItem } from '../../models/RoadClosureFormStateItem';
+import { RoadClosureFormStateStreet } from '../../models/RoadClosureFormStateStreet';
 import { RoadClosureOutputStateItem } from '../../models/RoadClosureOutputStateItem';
-import { RoadClosureStateItem } from '../../models/RoadClosureStateItem';
-import { SharedStreetsMatchFeatureCollection } from '../../models/SharedStreets/SharedStreetsMatchFeatureCollection';
+import { SharedStreetsMatchFeatureCollection } from "../../models/SharedStreets/SharedStreetsMatchFeatureCollection";
 import {
     ISharedStreetsMatchPathProperties,
     SharedStreetsMatchPath,
@@ -8,6 +9,7 @@ import {
 import {
     ACTIONS as ROAD_CLOSURE_ACTIONS,
     IFetchSharedstreetGeomsSuccessResponse,
+    IRoadClosureFormInputChangedPayload,
     IRoadClosureState,
     IRoadClosureStateItemToggleDirectionPayload,
     roadClosureReducer,
@@ -19,7 +21,7 @@ const defaultState: IRoadClosureState = {
     allRoadClosureItems: [],
     allRoadClosureMetadata: [],
     allRoadClosuresUploadUrls: [],
-    currentItem: new RoadClosureStateItem(),
+    currentItem: new SharedStreetsMatchFeatureCollection(),
     currentLineId: '',
     isEditingExistingClosure: false,
     isFetchingInput: false,
@@ -35,12 +37,217 @@ const defaultState: IRoadClosureState = {
     output: new RoadClosureOutputStateItem(),
     uploadUrls: {
         geojsonUploadUrl: '',
-        stateUploadUrl: '',
+        // stateUploadUrl: '',
         wazeUploadUrl: '',
     }
 };
 
-test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS - 1 street - 1 direction', () => {
+test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_METADATA_SUCCESS - 0 items in payload', () => {
+    const startingState = Object.assign({}, defaultState);
+    const payload = {};
+    const expectedState = Object.assign({}, defaultState);
+    
+    expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.FETCH_SHAREDSTREETS_PUBLIC_METADATA.success(payload))).toEqual(expectedState)
+});
+
+test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_METADATA_SUCCESS - 1 item in payload', () => {
+    const startingState = Object.assign({}, defaultState);
+
+    const pathProperties: ISharedStreetsMatchPathProperties = {
+        direction: 'forward',
+        fromIntersectionId: '',
+        fromStreetnames: [''],
+        geometryId: 'a',
+        originalFeature: {
+            geometry: {
+                coordinates: [
+                    [1, 2],
+                    [2, 3]
+                ],
+                type: "LineString",
+            },
+            properties: {},
+            type: "Feature"
+        },
+        point: 1,
+        referenceId: 'b',
+        referenceLength: 1,
+        roadClass: '',
+        section: [1],
+        side: '',
+        streetname: '',
+        toIntersectionId: '',
+        toStreetnames: ['']
+    };
+    const path = new SharedStreetsMatchPath({
+        geometry: {
+            coordinates: [
+                [1, 2],
+                [2, 3],
+            ],
+            type: "LineString",
+        },
+        properties: pathProperties,
+        type: "Feature",
+    });
+
+    const roadClosureItemProperties = new RoadClosureFormStateItem();
+
+    const geometryIdDirectionFilter = {
+        "a": {
+            backward: false,
+            forward: true,
+        }
+    };
+
+    
+    const forwardStreet = new RoadClosureFormStateStreet();
+    forwardStreet.geometryId = 'a';
+    forwardStreet.referenceId = 'b';
+    forwardStreet.streetname = '';
+
+    const roadClosureItem = new SharedStreetsMatchFeatureCollection();
+    roadClosureItem.features = [path];
+    roadClosureItem.properties = {
+        ...roadClosureItemProperties,
+        geometryIdDirectionFilter,
+        street: {
+            "a": {
+                backward: new RoadClosureFormStateStreet(),
+                forward: forwardStreet,
+            }
+        }
+    }
+
+    const expectedState = Object.assign({}, startingState, {
+        allRoadClosureItems: [roadClosureItem],
+        allRoadClosureMetadata: [{
+            lastModified: '04-16-2019'
+        }],
+        allRoadClosuresUploadUrls: [{
+            geojsonUploadUrl: 'https://geojsonuploadurl.com',
+            wazeUploadUrl: 'https://wazeuploadurl.com',
+        }],
+    });
+
+    const payload = {
+        features: [path],
+        geojsonUploadUrl: 'https://geojsonuploadurl.com',
+        lastModified: '04-16-2019',
+        properties: roadClosureItemProperties,
+        wazeUploadUrl: 'https://wazeuploadurl.com',
+    };
+
+    expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.FETCH_SHAREDSTREETS_PUBLIC_METADATA.success(payload))).toEqual(expectedState);
+});
+
+test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_DATA_SUCCESS', () => {
+    const startingState = Object.assign({}, defaultState, {
+        isFetchingInput: true,
+        isLoadedInput: false,
+    });
+
+    const pathProperties: ISharedStreetsMatchPathProperties = {
+        direction: 'forward',
+        fromIntersectionId: '',
+        fromStreetnames: [''],
+        geometryId: 'a',
+        originalFeature: {
+            geometry: {
+                coordinates: [
+                    [1, 2],
+                    [2, 3]
+                ],
+                type: "LineString",
+            },
+            properties: {},
+            type: "Feature"
+        },
+        point: 1,
+        referenceId: 'b',
+        referenceLength: 1,
+        roadClass: '',
+        section: [1],
+        side: '',
+        streetname: '',
+        toIntersectionId: '',
+        toStreetnames: ['']
+    };
+    const path = new SharedStreetsMatchPath({
+        geometry: {
+            coordinates: [
+                [1, 2],
+                [2, 3],
+            ],
+            type: "LineString",
+        },
+        properties: pathProperties,
+        type: "Feature",
+    });
+
+    const roadClosureItemProperties = new RoadClosureFormStateItem();
+
+    const geometryIdDirectionFilter = {
+        "a": {
+            backward: false,
+            forward: true,
+        }
+    };
+
+    
+    const forwardStreet = new RoadClosureFormStateStreet();
+    forwardStreet.geometryId = 'a';
+    forwardStreet.referenceId = 'b';
+    forwardStreet.streetname = '';
+
+    const roadClosureItem = new SharedStreetsMatchFeatureCollection();
+    roadClosureItem.features = [path];
+    roadClosureItem.properties = {
+        ...roadClosureItemProperties,
+        geometryIdDirectionFilter,
+        street: {
+            "a": {
+                backward: new RoadClosureFormStateStreet(),
+                forward: forwardStreet,
+            }
+        }
+    }
+
+    const expectedState = Object.assign({}, startingState, {
+        currentItem: roadClosureItem,
+        isFetchingInput: false,
+        isLoadedInput: true,
+    });
+
+    const payload = new SharedStreetsMatchFeatureCollection();
+    payload.features = [path];
+    payload.properties = roadClosureItemProperties;
+
+    expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.FETCH_SHAREDSTREETS_PUBLIC_DATA.success(payload))).toEqual(expectedState);
+});
+
+test('ACTION: ROAD_CLOSURE/GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL_SUCCESS', () => {
+    const startingState = Object.assign({}, defaultState, {
+        isGeneratingUploadUrl: true,
+    });
+    const expectedState = Object.assign({}, startingState, {
+        isGeneratingUploadUrl: false,
+        uploadUrls: {
+            geojsonUploadUrl: 'https://geojsonuploadurl.com',
+            wazeUploadUrl: 'https://geojsonuploadurl.com',
+        }
+    });
+
+    const payload = {
+        geojsonUploadUrl: 'https://geojsonuploadurl.com',
+        wazeUploadUrl: 'https://geojsonuploadurl.com',
+    }
+
+    expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL.success(payload))).toEqual(expectedState);
+});
+
+
+test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS - 1 street & 1 direction', () => {
     const startingState = Object.assign({}, defaultState, {
         isFetchingMatchedStreets: true,
     });
@@ -65,7 +272,7 @@ test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS - 1 street - 1 direc
             type: "Feature"
         },
         point: 1,
-        referenceId: '',
+        referenceId: 'b',
         referenceLength: 1,
         roadClass: '',
         section: [1],
@@ -87,16 +294,24 @@ test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS - 1 street - 1 direc
     });
     const matched = new SharedStreetsMatchFeatureCollection();
     matched.features = [path];
-    matched.geometryIdPathMap = {
-        "a": {
-            'forward': path,
-        }
-    };
-    expectedState.currentItem.matchedStreets = matched;
-    expectedState.currentItem.geometryIdDirectionFilter = {
+
+    expectedState.currentItem = matched;
+    expectedState.currentItem.properties.geometryIdDirectionFilter = {
         "a": {
             backward: false,
             forward: true,
+        }
+    }
+
+    const forwardStreet = new RoadClosureFormStateStreet();
+    forwardStreet.geometryId = 'a';
+    forwardStreet.referenceId = 'b';
+    forwardStreet.streetname = '';
+    
+    expectedState.currentItem.properties.street = {
+        "a": {
+            backward: new RoadClosureFormStateStreet(),
+            forward: forwardStreet,
         }
     }
 
@@ -112,13 +327,13 @@ test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS - 1 street - 1 direc
             type: "FeatureCollection",
         },
     };
-    expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.FETCH_SHAREDSTREET_GEOMS.success(payload))).toEqual(expectedState)
 
+    expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.FETCH_SHAREDSTREET_GEOMS.success(payload))).toEqual(expectedState)
 });
 
 test('ACTION: ROAD_CLOSURE/TOGGLE_DIRECTION_STREET_SEGMENT - geometryIds', () => {
-    const startingItem = new RoadClosureStateItem();
-    startingItem.geometryIdDirectionFilter = {
+    const startingItem = new SharedStreetsMatchFeatureCollection();
+    startingItem.properties.geometryIdDirectionFilter = {
         "a": {
             "backward": false,
             "forward": true
@@ -127,8 +342,8 @@ test('ACTION: ROAD_CLOSURE/TOGGLE_DIRECTION_STREET_SEGMENT - geometryIds', () =>
     const startingState = Object.assign({}, defaultState);
     startingState.currentItem = startingItem;
 
-    const expectedItem = Object.assign({}, new RoadClosureStateItem());
-    expectedItem.geometryIdDirectionFilter = {
+    const expectedItem = Object.assign({}, new SharedStreetsMatchFeatureCollection());
+    expectedItem.properties.geometryIdDirectionFilter = {
         "a": {
             "backward": true,
             "forward": false
@@ -147,8 +362,129 @@ test('ACTION: ROAD_CLOSURE/TOGGLE_DIRECTION_STREET_SEGMENT - geometryIds', () =>
 
     expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.TOGGLE_DIRECTION_STREET_SEGMENT(togglePayload)))
         .toEqual(expectedState);
-})
+});
 
+test('ACTION: ROAD_CLOSURE/INPUT_CHANGED - text', () => {
+    const startingState = Object.assign({}, defaultState);
+
+    const payload: IRoadClosureFormInputChangedPayload = {
+        description: 'updated description',
+        geometryId: 'geomId',
+        key: 'description',
+        referenceId: 'refId',
+    };
+
+    const geometryIdDirectionFilter = {
+        "a": {
+            backward: false,
+            forward: true,
+        }
+    };
+
+    const forwardStreet = new RoadClosureFormStateStreet();
+    forwardStreet.geometryId = 'a';
+    forwardStreet.referenceId = 'b';
+    forwardStreet.streetname = '';
+
+    const currentItem = new SharedStreetsMatchFeatureCollection();
+    currentItem.properties.description = 'updated description';
+    currentItem.properties.geometryIdDirectionFilter = geometryIdDirectionFilter;
+    currentItem.properties.street = {
+        "a": {
+            backward: new RoadClosureFormStateStreet(),
+            forward: forwardStreet,
+        }
+    };
+    
+
+    const expectedState = Object.assign({}, startingState, {
+        currentItem
+    });
+
+    expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.INPUT_CHANGED(payload))).toEqual(expectedState)
+});
+
+
+// test('ACTION: ROAD_CLOSURE/INPUT_CHANGED - date', () => {
+//     const startingState = Object.assign({}, defaultState);
+
+//     const payload: IRoadClosureFormInputChangedPayload = {
+//         description: 'updated description',
+//         geometryId: 'geomId',
+//         key: 'description',
+//         referenceId: 'refId',
+//     };
+
+//     const geometryIdDirectionFilter = {
+//         "a": {
+//             backward: false,
+//             forward: true,
+//         }
+//     };
+
+//     const forwardStreet = new RoadClosureFormStateStreet();
+//     forwardStreet.geometryId = 'a';
+//     forwardStreet.referenceId = 'b';
+//     forwardStreet.streetname = '';
+
+//     const currentItem = new SharedStreetsMatchFeatureCollection();
+//     currentItem.properties.description = 'updated description';
+//     currentItem.properties.geometryIdDirectionFilter = geometryIdDirectionFilter;
+//     currentItem.properties.street = {
+//         "a": {
+//             backward: new RoadClosureFormStateStreet(),
+//             forward: forwardStreet,
+//         }
+//     };
+    
+
+//     const expectedState = Object.assign({}, startingState, {
+//         currentItem
+//     });
+
+//     expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.INPUT_CHANGED(payload))).toEqual(expectedState)
+// });
+
+
+// test('ACTION: ROAD_CLOSURE/INPUT_CHANGED - form', () => {
+//     const startingState = Object.assign({}, defaultState);
+
+//     const payload: IRoadClosureFormInputChangedPayload = {
+//         description: 'updated description',
+//         geometryId: 'geomId',
+//         key: 'description',
+//         referenceId: 'refId',
+//     };
+
+//     const geometryIdDirectionFilter = {
+//         "a": {
+//             backward: false,
+//             forward: true,
+//         }
+//     };
+
+//     const forwardStreet = new RoadClosureFormStateStreet();
+//     forwardStreet.geometryId = 'a';
+//     forwardStreet.referenceId = 'b';
+//     forwardStreet.streetname = '';
+
+//     const currentItem = new SharedStreetsMatchFeatureCollection();
+//     currentItem.properties.description = 'updated description';
+//     currentItem.properties.geometryIdDirectionFilter = geometryIdDirectionFilter;
+//     currentItem.properties.street = {
+//         "a": {
+//             backward: new RoadClosureFormStateStreet(),
+//             forward: forwardStreet,
+//         }
+//     };
+    
+
+//     const expectedState = Object.assign({}, startingState, {
+//         currentItem
+//     });
+
+//     expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.INPUT_CHANGED(payload))).toEqual(expectedState)
+// });
 
 test('ACTION: ROAD_CLOSURE/LOAD_ALL_ROAD_CLOSURES', () => {
     const startingState = Object.assign({}, defaultState, {
