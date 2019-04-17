@@ -1,7 +1,4 @@
 import {
-    featureCollection
-} from '@turf/helpers';
-import {
     IRoadClosureOutputFormatName,
 } from '../models/RoadClosureOutputStateItem';
 import { IRoadClosureState } from '../store/road-closure';
@@ -47,7 +44,6 @@ export const getFormattedJSONStringFromOutputItem = (state: IRoadClosureState, o
     if (outputFormatName === IRoadClosureOutputFormatName.waze) {
         return JSON.stringify(item.incidents!, null, 2);
     } else {
-        const newFeatureCollection = featureCollection(item.features!);
-        return JSON.stringify(newFeatureCollection, null, 2);
+        return JSON.stringify(item, null, 2);
     }
 } 

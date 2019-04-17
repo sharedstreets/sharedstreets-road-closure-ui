@@ -18,7 +18,7 @@ export interface IRoadClosureHeaderMenuProps {
     isFetchingInput: boolean,
     isGeneratingUploadUrl: boolean,
     orgName: string,
-    stateUploadUrl: string,
+    geojsonUploadUrl: string,
     edit?: boolean,
     explore?: boolean,
     clearRoadClosure: () => void,
@@ -50,7 +50,7 @@ class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps,
     public componentDidUpdate(prevProps: IRoadClosureHeaderMenuProps, prevState: IRoadClosureHeaderMenuState) {
         if (prevProps.isGeneratingUploadUrl && !this.props.isGeneratingUploadUrl) {
             this.setState({
-                url: this.props.stateUploadUrl
+                url: this.props.geojsonUploadUrl
             });
         }
     }

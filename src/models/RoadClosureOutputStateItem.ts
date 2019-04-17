@@ -11,6 +11,7 @@ export class RoadClosureOutputStateItem {
     public type?: string;
     public features?: Feature[];
     public incidents?: RoadClosureWazeIncidentsItem[];
+    public properties?: any;
 
     public constructor(outputFormat: string = "") {
         switch (outputFormat) {

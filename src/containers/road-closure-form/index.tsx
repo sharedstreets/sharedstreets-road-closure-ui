@@ -1,12 +1,18 @@
 import { connect } from 'react-redux';
+import RoadClosureForm, { IRoadClosureFormProps } from 'src/components/road-closure-form';
 import {
     currentRoadClosureItemSelector,
 } from 'src/selectors/road-closure';
+import {
+    getContiguousFeatureGroups, getContiguousFeatureGroupsDirections, getGeometryIdPathMap,
+} from 'src/selectors/road-closure-geojson';
 import { RootState } from 'src/store/configureStore';
-import RoadClosureForm, { IRoadClosureFormProps } from '../../components/road-closure-form';
-import { ACTIONS } from '../../store/road-closure';
+import { ACTIONS } from 'src/store/road-closure';
 
 const mapStateToProps = (state: RootState) => ({
+    currentRoadClosureGroups: getContiguousFeatureGroups(state.roadClosure),
+    currentRoadClosureGroupsDirection: getContiguousFeatureGroupsDirections(state.roadClosure),
+    currentRoadClosureGroupsGeometryIdPathMap: getGeometryIdPathMap(state.roadClosure),
     currentRoadClosureItem: currentRoadClosureItemSelector(state.roadClosure),
     roadClosure: state.roadClosure,
 });

@@ -17,4 +17,5 @@ export class RoadClosureFormStateItem {
     public description: string;
     public reference: string;
     public subtype: string;
+    public geometryIdDirectionFilter: { [ geometryId: string] : { forward: boolean, backward: boolean } } = {};
 }
