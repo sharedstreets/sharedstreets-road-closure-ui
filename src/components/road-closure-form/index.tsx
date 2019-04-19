@@ -20,9 +20,8 @@ import {
 import * as moment from 'moment';
 import * as React from 'react';
 import RoadClosureOutputViewer from 'src/containers/road-closure-output-viewer';
-import { RoadClosureStateItem } from 'src/models/RoadClosureStateItem';
+import { SharedStreetsMatchFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchFeatureCollection';
 import { IRoadClosureState } from 'src/store/road-closure';
-// import RoadClosureBottomActionBar from '../road-closure-bottom-action-bar';
 import RoadClosureFormStreetsGroups from '../road-closure-form-streets-groups';
 
 import '../../../node_modules/@blueprintjs/core/lib/css/blueprint.css';
@@ -41,7 +40,10 @@ export interface IRoadClosureFormProps {
   previousSelection: () => void,
   inputChanged: (payload: any) => void,
   roadClosure: IRoadClosureState,
-  currentRoadClosureItem: RoadClosureStateItem,
+  currentRoadClosureGroups: any,
+  currentRoadClosureGroupsDirection: any,
+  currentRoadClosureGroupsGeometryIdPathMap: any,
+  currentRoadClosureItem: SharedStreetsMatchFeatureCollection,
   streetnameToReferenceId: any,
   toggleStreetSegmentDirection: () => void,
   viewRoadClosureOutput: () => void,
@@ -91,7 +93,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
   }
 
   public handleChangeSubtype(e: any) {
-    if (e.target.value === this.props.currentRoadClosureItem.form.subtype) {
+    if (e.target.value === this.props.currentRoadClosureItem.properties.subtype) {
       this.props.inputChanged({
         key: 'subtype',
         subtype: null
@@ -158,12 +160,12 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
 
   public renderDateButtonText() {
     let output = "Click to pick start and end time";
-    if (this.props.currentRoadClosureItem && this.props.currentRoadClosureItem.form.startTime && this.props.currentRoadClosureItem.form.endTime) {
-      output = this.props.currentRoadClosureItem.form.startTime + " - " + this.props.currentRoadClosureItem.form.endTime;
-    } else if (this.props.currentRoadClosureItem && this.props.currentRoadClosureItem.form.startTime) {
-      output = this.props.currentRoadClosureItem.form.startTime + " - " + "?"
-    } else if (this.props.currentRoadClosureItem && this.props.currentRoadClosureItem.form.endTime) {
-      output = "?" + " - " + this.props.currentRoadClosureItem.form.endTime;
+    if (this.props.currentRoadClosureItem && this.props.currentRoadClosureItem.properties.startTime && this.props.currentRoadClosureItem.properties.endTime) {
+      output = this.props.currentRoadClosureItem.properties.startTime + " - " + this.props.currentRoadClosureItem.properties.endTime;
+    } else if (this.props.currentRoadClosureItem && this.props.currentRoadClosureItem.properties.startTime) {
+      output = this.props.currentRoadClosureItem.properties.startTime + " - " + "?"
+    } else if (this.props.currentRoadClosureItem && this.props.currentRoadClosureItem.properties.endTime) {
+      output = "?" + " - " + this.props.currentRoadClosureItem.properties.endTime;
     }
     return output;
   }
@@ -191,35 +193,34 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
   }
 
   public render() {
-    const currentMatchedStreets = this.props.currentRoadClosureItem.matchedStreets;
     const currentDateRange: DateRange = [undefined, undefined];
-    if (this.props.roadClosure.currentItem.form.startTime) {
-      currentDateRange[0] = moment(this.props.roadClosure.currentItem.form.startTime).toDate();
+    if (this.props.roadClosure.currentItem.properties.startTime) {
+      currentDateRange[0] = moment(this.props.roadClosure.currentItem.properties.startTime).toDate();
       
     }
-    if (this.props.roadClosure.currentItem.form.endTime) {
-      currentDateRange[1] = moment(this.props.roadClosure.currentItem.form.endTime).toDate();
+    if (this.props.roadClosure.currentItem.properties.endTime) {
+      currentDateRange[1] = moment(this.props.roadClosure.currentItem.properties.endTime).toDate();
     }
 
-    const currentDescription = this.props.currentRoadClosureItem.form.description;
+    const currentDescription = this.props.currentRoadClosureItem.properties.description;
 
     return (
         <div
           className="SHST-Road-Closure-Form"
         >
             {
-              isEmpty(this.props.currentRoadClosureItem.form.street) ?
+              isEmpty(this.props.currentRoadClosureItem.properties.street) ?
               this.renderEmptyMatchedStreetsTable() :
               <RoadClosureFormStreetsGroups
-                currentMatchedStreetsFeatures={currentMatchedStreets.features}
-                currentMatchedStreetsGroups={currentMatchedStreets.contiguousFeatureGroups}
-                currentMatchedStreetsGroupsGeometryIdPathMap={currentMatchedStreets.geometryIdPathMap}
-                currentMatchedStreetsGroupsDirections={currentMatchedStreets.contiguousFeatureGroupsDirections}
-                geometryIdDirectionFilter={this.props.currentRoadClosureItem.geometryIdDirectionFilter}
+                currentMatchedStreetsFeatures={this.props.currentRoadClosureItem.features}
+                currentMatchedStreetsGroups={this.props.currentRoadClosureGroups}
+                currentMatchedStreetsGroupsGeometryIdPathMap={this.props.currentRoadClosureGroupsGeometryIdPathMap}
+                currentMatchedStreetsGroupsDirections={this.props.currentRoadClosureGroupsDirection}
+                geometryIdDirectionFilter={this.props.currentRoadClosureItem.properties.geometryIdDirectionFilter}
                 deleteStreetSegment={this.props.deleteStreetSegment}
                 inputChanged={this.props.inputChanged}
                 toggleStreetSegmentDirection={this.props.toggleStreetSegmentDirection}
-                streets={this.props.currentRoadClosureItem.form.street}
+                streets={this.props.currentRoadClosureItem.properties.street}
                 isFetchingMatchedStreets={this.props.roadClosure.isFetchingMatchedStreets}
               />
             }
@@ -256,7 +257,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                   position: Position.BOTTOM_RIGHT
                 }}
                 onChange={this.handleChangeTimeZone}
-                value={this.props.currentRoadClosureItem.form.timezone}
+                value={this.props.currentRoadClosureItem.properties.timezone}
                 valueDisplayFormat={"name"}
               />
             </FormGroup>
@@ -279,7 +280,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
               <InputGroup
                   placeholder={"Enter the name of your organization here..."}
                   onChange={this.handleChangeReference}
-                  value={this.props.currentRoadClosureItem.form.reference}
+                  value={this.props.currentRoadClosureItem.properties.reference}
               />
             </FormGroup>
             <FormGroup
@@ -287,7 +288,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
               labelInfo={"(optional)"}>
               <div className="bp3-select">
                 <select
-                  value={this.props.currentRoadClosureItem.form.subtype}
+                  value={this.props.currentRoadClosureItem.properties.subtype}
                   onChange={this.handleChangeSubtype}>
                   <option defaultChecked={true} value={''}>Choose a subtype...</option>
                   <option value="ROAD_CLOSED_HAZARD">Hazard</option>

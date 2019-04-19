@@ -14,11 +14,11 @@ export interface IRoadClosureHeaderMenuContainerProps {
 const mapStateToProps = (state: RootState, ownProps: IRoadClosureHeaderMenuContainerProps) => ({
     edit: ownProps.edit,
     explore: ownProps.explore,
+    geojsonUploadUrl: state.roadClosure.uploadUrls.geojsonUploadUrl,
     isEditingExistingClosure: state.roadClosure.isEditingExistingClosure,
     isFetchingInput: state.roadClosure.isFetchingInput,
     isGeneratingUploadUrl: state.roadClosure.isGeneratingUploadUrl,
     orgName: state.roadClosure.orgName,
-    stateUploadUrl: state.roadClosure.uploadUrls.stateUploadUrl,
 });
 
 export default connect<{}, {}, IRoadClosureHeaderMenuProps>(

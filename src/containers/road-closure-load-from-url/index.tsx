@@ -7,9 +7,9 @@ import {
 } from '../../store/road-closure';
 
 const mapStateToProps = (state: RootState) => ({
+    geojsonUploadUrl: state.roadClosure.uploadUrls.geojsonUploadUrl,
     isFetchingInput: state.roadClosure.isFetchingInput,
     isGeneratingUploadUrl: state.roadClosure.isGeneratingUploadUrl,
-    stateUploadUrl: state.roadClosure.uploadUrls.stateUploadUrl
 });
 
 export default connect<{}, {}, IRoadClosureLoadFromURLProps>(

@@ -9,7 +9,7 @@ export interface IRoadClosureLoadFromURLProps {
     rightChildComponent?: React.ComponentClass,
     isFetchingInput: boolean,
     isGeneratingUploadUrl: boolean,
-    stateUploadUrl: string,
+    geojsonUploadUrl: string,
     clearRoadClosure: () => void,
     loadRoadClosure: (url: string) => void,
 }
@@ -39,7 +39,7 @@ class RoadClosureLoadFromURL extends React.Component<IRoadClosureLoadFromURLProp
     public componentDidUpdate(prevProps: IRoadClosureLoadFromURLProps, prevState: IRoadClosureLoadFromURLState) {
         if (prevProps.isGeneratingUploadUrl && !this.props.isGeneratingUploadUrl) {
             this.setState({
-                url: this.props.stateUploadUrl
+                url: this.props.geojsonUploadUrl
             });
         }
     }

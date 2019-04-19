@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux';
-import apiService from 'src/services/api';
+import apiService from '../../services/api';
 
 export const fetchAction = ({
     requesting = '',

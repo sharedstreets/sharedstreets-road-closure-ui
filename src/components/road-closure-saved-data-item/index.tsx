@@ -9,14 +9,14 @@ import {
 } from '@blueprintjs/core';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { RoadClosureStateItem } from 'src/models/RoadClosureStateItem';
+import { SharedStreetsMatchFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchFeatureCollection';
 import { IRoadClosureUploadUrls } from 'src/utils/upload-url-generator';
 import './road-closure-saved-data-item.css';
 
 
 export interface IRoadClosureSavedDataItemProps {
     key: string,
-    item: RoadClosureStateItem,
+    item: SharedStreetsMatchFeatureCollection,
     metadata: any,
     uploadUrls: IRoadClosureUploadUrls,
 };
@@ -33,17 +33,17 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
     public render() {
         return (
             <>
-            <Link to={'edit?url='+this.props.uploadUrls.stateUploadUrl}>
+            <Link to={'edit?url='+this.props.uploadUrls.geojsonUploadUrl}>
                 <Card
                     interactive={true}>
                     <div>
                         <div>
                             <H6><em>Last modified on: {new Date(this.props.metadata.lastModified).toString()}</em></H6>
-                            <H3>{this.props.item.form.description && this.props.item.form.description}</H3>
-                            <H4>{this.props.item.form.street && `${Object.keys(this.props.item.form.street).length} streets matched`}</H4>
+                            <H3>{this.props.item.properties.description && this.props.item.properties.description}</H3>
+                            <H4>{this.props.item.properties.street && `${Object.keys(this.props.item.properties.street).length} streets matched`}</H4>
                         </div>
                         <div>
-                            {this.props.item.form.startTime && new Date(this.props.item.form.startTime) + " to " + new Date(this.props.item.form.endTime)}
+                            {this.props.item.properties.startTime && new Date(this.props.item.properties.startTime) + " to " + new Date(this.props.item.properties.endTime)}
                         </div>
                     </div>
                 </Card>
