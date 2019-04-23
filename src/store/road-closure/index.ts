@@ -313,6 +313,7 @@ export const saveRoadClosure = () => (dispatch: Dispatch<any>, getState: any) =>
     }
 
     dispatch(ACTIONS.SAVING_OUTPUT);
+    dispatch(ACTIONS.GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL.request());
        
     const generateGeojsonUploadUrl = async () => {
         const response = await fetch(`https://api.sharedstreets.io/v0.1.0/data/upload?contentType=application/json&filePath=road-closures/${orgName}/${filename}/geojson`);
@@ -358,6 +359,10 @@ export const saveRoadClosure = () => (dispatch: Dispatch<any>, getState: any) =>
                 requested: 'ROAD_CLOSURE/PUT_SHAREDSTREETS_PUBLIC_DATA_SUCCESS',
                 requesting: 'ROAD_CLOSURE/PUT_SHAREDSTREETS_PUBLIC_DATA_REQUEST',
         }));
+        dispatch({	
+            payload: generateUploadUrlsFromHash(filename, orgName),	
+            type: 'ROAD_CLOSURE/GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL_SUCCESS',	
+        });
         dispatch(ACTIONS.SAVED_OUTPUT);
     });
 };
