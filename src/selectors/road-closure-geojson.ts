@@ -23,13 +23,6 @@ export const currentItemToGeojson = (state: IRoadClosureState) => {
     }
 }
 
-// export const getFeatureCollectionOfPaths = (state: IRoadClosureState) => {
-//     return {
-//         ...state.currentItem,
-//         features: state.currentItem.features.filter((feature) => feature instanceof SharedStreetsMatchPath)
-//     }
-// }
-
 export const getReferenceIdFeatureMap = (state: IRoadClosureState) => {
     const referenceIdFeatureMap: { [refId: string]: SharedStreetsMatchPath } = {};
     state.currentItem.features.map((feature) => {
@@ -101,6 +94,8 @@ export const groupPathsByContiguity = (state: IRoadClosureState, returnDirection
                 }
 
                 if ( !item.visited &&
+                    // refIdStackItemFeature.properties.direction === currFeature.properties.direction &&
+                    // refIdStackItemFeature.properties.geometryId !== currFeature.properties.geometryId &&
                     refIdStackItemFeature.properties.streetname === currFeature.properties.streetname &&
                     (
                         refIdStackItemFeature.properties.toIntersectionId === currFeature.properties.fromIntersectionId ||

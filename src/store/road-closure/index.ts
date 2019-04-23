@@ -35,6 +35,13 @@ export interface IFetchSharedstreetGeomsSuccessResponse {
     unmatched: GeoJSON.FeatureCollection
 }
 
+export interface IFetchSharedstreetGeomsSuccessResponse {
+    currentLineId: string,
+    matched: SharedStreetsMatchFeatureCollection,
+    invalid: GeoJSON.FeatureCollection,
+    unmatched: GeoJSON.FeatureCollection
+}
+
 export interface IFetchSharedstreetPublicDataSuccessResponse {
     body: string;
 }
@@ -83,6 +90,11 @@ export const ACTIONS = {
         'ROAD_CLOSURE/FETCH_SHAREDSTREETS_ALL_PUBLIC_DATA_SUCCESS',
         'ROAD_CLOSURE/FETCH_SHAREDSTREETS_ALL_PUBLIC_DATA_FAILURE'
     )<void, IFetchAllSharedstreetsRoadClosuresSuccessResponse, Error>(),
+    FETCH_SHAREDSTREETS_MATCH_POINT: createAsyncAction(
+        'ROAD_CLOSURE/FETCH_SHAREDSTREETS_MATCH_POINT_REQUEST',
+        'ROAD_CLOSURE/FETCH_SHAREDSTREETS_MATCH_POINT_SUCCESS',
+        'ROAD_CLOSURE/FETCH_SHAREDSTREETS_MATCH_POINT_FAILURE'
+    )<void, any, Error>(),
     FETCH_SHAREDSTREETS_PUBLIC_DATA: createAsyncAction(
         'ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_DATA_REQUEST',
         'ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_DATA_SUCCESS',
@@ -125,6 +137,34 @@ export const ACTIONS = {
 };
 
 // side effects
+export const findMatchedPoint = (point: GeoJSON.Feature<GeoJSON.Point>, currentLineId: string) => (dispatch: Dispatch<any>, getState: any) => {
+    const endpoint = `match/point/${point.geometry.coordinates[0]},${point.geometry.coordinates[1]}`;
+    const method = 'get';
+    const queryParams = {
+        authKey: "bdd23fa1-7ac5-4158-b354-22ec946bb575",
+        bearingTolerance: 35,
+        dataSource: 'osm/planet-181029',
+        ignoreDirection: false,
+        includeIntersections: true,
+        includeStreetnames: true,
+        maxCandidates: 2,
+        searchRadius: 25,
+        snapTopology: true,
+    };
+    const body = point;
+
+    return dispatch(fetchAction({
+        afterRequest: (data) => {
+            return Object.assign({}, data, {currentLineId});
+        },
+        body,
+        endpoint,
+        method,
+        params: queryParams,
+        requested: 'ROAD_CLOSURE/FETCH_SHAREDSTREETS_MATCH_POINT_SUCCESS',
+        requesting: 'ROAD_CLOSURE/FETCH_SHAREDSTREETS_MATCH_POINT_REQUEST',
+    }));
+}; 
 export const findMatchedStreet = (linestring: IRoadClosureMapboxDrawLineString, currentLineId: string) => (dispatch: Dispatch<any>, getState: any) => {
     const endpoint = 'match/geoms';
     const method = 'post';
@@ -515,7 +555,7 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                     }
                 }
             });
-            newStateItem.properties.geometryIdDirectionFilter = newStateItemGeometryIdDirectionFilter;
+        newStateItem.properties.geometryIdDirectionFilter = newStateItemGeometryIdDirectionFilter;
             newStateItem.properties.street = newStateItemStreet;
 
             const newStateItemUploadUrls = {

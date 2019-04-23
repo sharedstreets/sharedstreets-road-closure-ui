@@ -1,18 +1,22 @@
 import { connect } from 'react-redux';
+import { getRoadBlockIconPoints } from 'src/selectors/road-closure-map';
 import { RootState } from 'src/store/configureStore';
 import RoadClosureMap, { IRoadClosureMapProps } from '../../components/road-closure-map';
 import {
     ACTIONS,
-    findMatchedStreet
+    findMatchedPoint,
+    findMatchedStreet,
 } from '../../store/road-closure';
 
 const mapStateToProps = (state: RootState) => ({
-    roadClosure: state.roadClosure
+    roadBlockIconPoints: getRoadBlockIconPoints(state.roadClosure),
+    roadClosure: state.roadClosure,
 });
 
 export default connect<{}, {}, IRoadClosureMapProps>(
     mapStateToProps,
     {
+        findMatchedPoint,
         findMatchedStreet,
         inputChanged: ACTIONS.INPUT_CHANGED,
     },
