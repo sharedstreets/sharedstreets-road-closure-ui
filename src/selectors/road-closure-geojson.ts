@@ -12,15 +12,12 @@ export const currentItemToGeojson = (state: IRoadClosureState) => {
     return {
         ...state.currentItem,
         features: state.currentItem.features.filter((feature) => feature instanceof SharedStreetsMatchPath)
-                .filter((path: SharedStreetsMatchPath) => state.currentItem.properties.geometryIdDirectionFilter[path.properties.geometryId][path.properties.direction])
+                .filter((path: SharedStreetsMatchPath) => {
+                    return state.currentItem.properties.geometryIdDirectionFilter[path.properties.geometryId][path.properties.direction]
+                })
                 .map((path: SharedStreetsMatchPath) => {
-                    return {
-                        ...path,
-                        properties: {
-                            ...path.properties, 
-                            streetname: state.currentItem.properties.street[path.properties.geometryId][path.properties.direction].streetname
-                        }
-                    }
+                    path.properties.streetname = state.currentItem.properties.street[path.properties.geometryId][path.properties.direction].streetname;
+                    return path;
                 }),
         properties: omit(state.currentItem.properties, ['geometryIdDirectionFilter', 'street'])
     }
@@ -59,6 +56,7 @@ export const getGeometryIdPathMap = (state: IRoadClosureState) => {
 
 export const groupPathsByContiguity = (state: IRoadClosureState, returnDirections: boolean = false) => {
     const output: SharedStreetsMatchPath[][] = [];
+    // const intersectionIdDegreeCount = {};
     const newContiguousFeatureGroupsDirections: Array<{ forward: boolean, backward: boolean }> = []
     let forwardOutput: SharedStreetsMatchPath[] = [];
     let backwardOutput: SharedStreetsMatchPath[] = [];
@@ -76,6 +74,7 @@ export const groupPathsByContiguity = (state: IRoadClosureState, returnDirection
         const currFeature = referenceIdFeatureMap[curr!.refId];
         if (!curr!.visited) {
             curr!.visited = true;
+                        
             // place this feature in the correct linear order
             if (currFeature.properties.direction === "forward") {
                 if (!isEmpty(forwardOutput) &&
@@ -100,6 +99,7 @@ export const groupPathsByContiguity = (state: IRoadClosureState, returnDirection
                 if (isEqual(refIdStackItemFeature, currFeature)) {
                     return false;
                 }
+
                 if ( !item.visited &&
                     refIdStackItemFeature.properties.streetname === currFeature.properties.streetname &&
                     (
@@ -115,6 +115,7 @@ export const groupPathsByContiguity = (state: IRoadClosureState, returnDirection
                     return false;
                 }
             });
+
             // append them to refIdStack to look at next
             refIdStack.push(...adjacentPaths);
         } 
@@ -123,16 +124,54 @@ export const groupPathsByContiguity = (state: IRoadClosureState, returnDirection
             // and we're at the end of this connected component
             const combinedOutput = forwardOutput.concat(backwardOutput);
             if (!isEmpty(combinedOutput)) {
-                // first, keep track of directionality
-                const directions = uniq(combinedOutput.filter((feature) => feature instanceof SharedStreetsMatchPath)
-                    .map((feature: SharedStreetsMatchPath) => feature.properties.direction));
-                
-                // note use of unshift here — we want to add groups to the visual bottom of the list 
-                newContiguousFeatureGroupsDirections.unshift({
-                    backward: directions.indexOf("backward") >= 0 ? true : false,
-                    forward: directions.indexOf("forward") >= 0 ? true : false,
+                const intersections = {};
+                combinedOutput.forEach((outputValue) => {
+                    if (!intersections[outputValue.properties.toIntersectionId]) {
+                        intersections[outputValue.properties.toIntersectionId] = 0;
+                    }
+                    intersections[outputValue.properties.toIntersectionId]++;
+                    if (!intersections[outputValue.properties.fromIntersectionId]) {
+                        intersections[outputValue.properties.fromIntersectionId] = 0;
+                    }
+                    intersections[outputValue.properties.fromIntersectionId]++;
                 });
-                output.unshift(combinedOutput);
+                if (Object.values(intersections).filter(count => count > 2).length > 0) {
+                    // if there's a >2 way intersection, do not group these togther 
+                    // except for segments with the same geometryId
+                    const splitOutputByGeomId: {
+                        [key: string]: SharedStreetsMatchPath[]
+                    } = {};
+                    combinedOutput.forEach((out) => {
+                        if (!splitOutputByGeomId[out.properties.geometryId]) {
+                            splitOutputByGeomId[out.properties.geometryId] = [];
+                        }
+                        splitOutputByGeomId[out.properties.geometryId].push(out);
+                    });
+                    
+                    Object.values(splitOutputByGeomId).forEach((subdivision) => {
+                        const directions = uniq(subdivision.filter((feature) => feature instanceof SharedStreetsMatchPath)
+                        .map((feature: SharedStreetsMatchPath) => feature.properties.direction));
+                    
+                        // note use of unshift here — we want to add groups to the visual bottom of the list 
+                        newContiguousFeatureGroupsDirections.unshift({
+                            backward: directions.indexOf("backward") >= 0 ? true : false,
+                            forward: directions.indexOf("forward") >= 0 ? true : false,
+                        });
+                        output.unshift(subdivision);
+                    });
+                } else {
+                    // first, keep track of directionality
+                    const directions = uniq(combinedOutput.filter((feature) => feature instanceof SharedStreetsMatchPath)
+                        .map((feature: SharedStreetsMatchPath) => feature.properties.direction));
+                    
+                    // note use of unshift here — we want to add groups to the visual bottom of the list 
+                    newContiguousFeatureGroupsDirections.unshift({
+                        backward: directions.indexOf("backward") >= 0 ? true : false,
+                        forward: directions.indexOf("forward") >= 0 ? true : false,
+                    });
+                    output.unshift(combinedOutput);
+                }
+
                 forwardOutput = [];
                 backwardOutput = [];
             }

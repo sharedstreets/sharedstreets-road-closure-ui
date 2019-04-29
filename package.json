@@ -12,6 +12,8 @@
     "@mapbox/timespace": "^2.0.4",
     "@turf/helpers": "^6.1.4",
     "@turf/invariant": "^6.1.2",
+    "@turf/meta": "^6.0.2",
+    "@turf/random": "^6.0.2",
     "@types/geojson": "^7946.0.4",
     "@types/isomorphic-fetch": "^0.0.34",
     "@types/lodash": "^4.14.118",
