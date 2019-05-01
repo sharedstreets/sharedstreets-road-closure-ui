@@ -77,7 +77,7 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
     }
     
     public handleMouseout() {
-        // this.props.highlightMatchedStreetsGroup([]);
+        this.props.highlightMatchedStreetsGroup([]);
         this.setState({
             isHighlighted: false,
         })
@@ -168,10 +168,8 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
         }
         return <Card
                 className={this.state.isHighlighted ? 'SHST-Road-Closure-Form-Streets-Groups-Item-Card-Highlighted' : ''}
-                interactive={true}
                 onMouseEnter={this.handleMouseover}
                 onMouseLeave={this.handleMouseout}
-                onClick={this.handleClick}
                 elevation={1}>
                     <div className={"SHST-Road-Closure-Form-Streets-Groups-Item-Content"}>
                         <H5>{streetNames.filter((name) => !isEmpty(name)).join(", ")}</H5>
@@ -186,6 +184,7 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
                                 onClick={this.handleToggleDirection}
                                 disabled={!this.state.canToggleDirection}
                                 icon={directionIcon}
+                                small={true}
                                 />
                             {" " + toStreet.properties.toStreetnames.filter((name) => !isEmpty(name)).join(",")}
                             {
@@ -202,6 +201,12 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
                             icon={"delete"}
                             intent={"danger"}
                             onClick={this.handleDeleteGroup}
+                        />
+                        <Button
+                            title={'Zoom into this group'}
+                            icon={"zoom-in"}
+                            intent={"primary"}
+                            onClick={this.handleClick}
                         />
                         <Button 
                             fill={true}
