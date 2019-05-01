@@ -9,6 +9,7 @@ import {
 // import { Feature } from 'geojson';
 import {
   // forEach,
+  // flatten,
   omit
 } from 'lodash';
 import * as mapboxgl from 'mapbox-gl';
@@ -39,7 +40,7 @@ export interface IRoadClosureMapProps {
   pointRemoved: () => void,
   pointSelected: (payload: any) => void,
   inputChanged: (payload: any) => void,
-  currentRoadClosureGroups: any,
+  currentRoadClosureItemOutput: any,
   directionIconPoints: any,
   highlightedFeatureGroup: SharedStreetsMatchPath[],
   roadBlockIconPoints: any,
@@ -128,17 +129,19 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
       if (!this.mapContainer.getLayer('matchedFeatures')) {
         this.mapContainer.addSource('matchedFeatures', {
           // data: this.props.roadClosure.currentItem,
-          data: featureCollection(this.props.currentRoadClosureGroups),
+          data: this.props.currentRoadClosureItemOutput,
           type: "geojson",
         });
         this.mapContainer.addLayer({
           "id": 'matchedFeatures',
           "paint": {
             "line-color": [ 'match', ['get', 'color'],
-                            '#E35051', '#E35051', // #E35051 - red
+                            '#E35051', '#E35051', // #E35051 - highlighted
                             "#253EF7"], // default - blue 
             "line-offset": 5,
-            "line-opacity": 0.5,
+            "line-opacity": [ 'match', ['get', 'color'],
+                            '#E35051', 0.8, // #E35051 - highlighted
+                            0.5], // default - blue 
             "line-width": 3,
           },
           "source": 'matchedFeatures',
@@ -155,7 +158,7 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
             'icon-allow-overlap': true,
             'icon-ignore-placement': true,
             'icon-image': 'triangle-11',
-            'icon-offset': [3, 0],
+            'icon-offset': [5, 0],
             'icon-rotate': {
               'property': 'bearing',
               'type': 'identity',
@@ -205,12 +208,12 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
 
   public componentDidUpdate(prevProps: IRoadClosureMapProps) {
     const {
-      currentItem,
+      // currentItem,
       currentLineId,
     } = this.props.roadClosure;
 
     if (this.mapContainer.getLayer('matchedFeatures')) {
-      this.mapContainer.getSource('matchedFeatures').setData(currentItem);
+      this.mapContainer.getSource('matchedFeatures').setData(this.props.currentRoadClosureItemOutput);
     }
 
     // if (this.mapContainer.getLayer('roadblock')) {
@@ -232,7 +235,7 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
           featureCollection(this.props.highlightedFeatureGroup)
         ),
         {
-          padding: {top: 60, bottom:60, left: 60, right: 60}
+          padding: {top: 100, bottom:100, left: 100, right: 100}
         }
       )
     }
