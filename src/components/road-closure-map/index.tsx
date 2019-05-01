@@ -1,6 +1,11 @@
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
-import { lineString, point } from '@turf/helpers';
+import bbox from '@turf/bbox';
+import { 
+  featureCollection,
+  lineString,
+  point
+} from '@turf/helpers';
 // import { Feature } from 'geojson';
 import {
   // forEach,
@@ -10,6 +15,7 @@ import * as mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import * as React from 'react';
 // import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
+import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
 import { IRoadClosureState } from 'src/store/road-closure';
 import { v4 as uuid } from 'uuid';
 import BaseControl from '../base-map-control';
@@ -33,6 +39,9 @@ export interface IRoadClosureMapProps {
   pointRemoved: () => void,
   pointSelected: (payload: any) => void,
   inputChanged: (payload: any) => void,
+  currentRoadClosureGroups: any,
+  directionIconPoints: any,
+  highlightedFeatureGroup: SharedStreetsMatchPath[],
   roadBlockIconPoints: any,
   roadClosure: IRoadClosureState,
 };
@@ -118,13 +127,16 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
     this.mapContainer.on('load', () => {
       if (!this.mapContainer.getLayer('matchedFeatures')) {
         this.mapContainer.addSource('matchedFeatures', {
-          data: this.props.roadClosure.currentItem,
+          // data: this.props.roadClosure.currentItem,
+          data: featureCollection(this.props.currentRoadClosureGroups),
           type: "geojson",
         });
         this.mapContainer.addLayer({
           "id": 'matchedFeatures',
           "paint": {
-            "line-color": "#253EF7",
+            "line-color": [ 'match', ['get', 'color'],
+                            '#E35051', '#E35051', // #E35051 - red
+                            "#253EF7"], // default - blue 
             "line-offset": 5,
             "line-opacity": 0.5,
             "line-width": 3,
@@ -133,35 +145,60 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
           "type": "line",
         });
 
-        this.mapContainer.loadImage('/roadblock.png', (error: any, image: any) => {
-          if (error) {
-            throw error;
-          }
+        this.mapContainer.addSource('directionPoints', {
+          data: this.props.roadClosure.currentItem,
+          type: "geojson",
+        });
+        this.mapContainer.addLayer({
+          "id": "direction",
+          'layout': {
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true,
+            'icon-image': 'triangle-11',
+            'icon-offset': [3, 0],
+            'icon-rotate': {
+              'property': 'bearing',
+              'type': 'identity',
+            },
+            'icon-rotation-alignment': 'map',
+            'icon-size': 1.5,
+          },
+          // "paint": {
+          //   "icon-color": "red",
+          // },
+          "source": "directionPoints",
+          "type": "symbol",
+        });
+
+        // this.mapContainer.loadImage('/roadblock.png', (error: any, image: any) => {
+        //   if (error) {
+        //     throw error;
+        //   }
             
-          this.mapContainer.addImage("roadblock", image, {
-            "sdf": true
-          });
+        //   this.mapContainer.addImage("roadblock", image, {
+        //     "sdf": true
+        //   });
 
-          this.mapContainer.addSource('roadblockPoints', {
-            data: this.props.roadClosure.currentItem,
-            type: "geojson",
-          });
-          this.mapContainer.addLayer({
-            "id": "roadblock",
-            "layout": {
-              "icon-allow-overlap": true,
-              "icon-image": "roadblock",
-              "icon-size": 0.2
+        //   this.mapContainer.addSource('roadblockPoints', {
+        //     data: this.props.roadClosure.currentItem,
+        //     type: "geojson",
+        //   });
+        //   this.mapContainer.addLayer({
+        //     "id": "roadblock",
+        //     "layout": {
+        //       "icon-allow-overlap": true,
+        //       "icon-image": "roadblock",
+        //       "icon-size": 0.2
 
-            },
-            "paint": {
-              "icon-color": "red",
-            },
-            "source": "roadblockPoints",
-            "type": "symbol",
-          });
+        //     },
+        //     "paint": {
+        //       "icon-color": "red",
+        //     },
+        //     "source": "roadblockPoints",
+        //     "type": "symbol",
+        //   });
 
-        })
+        // })
       }
     })
   }
@@ -176,13 +213,28 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
       this.mapContainer.getSource('matchedFeatures').setData(currentItem);
     }
 
-    if (this.mapContainer.getLayer('roadblock')) {
-      this.mapContainer.getSource('roadblockPoints').setData(this.props.roadBlockIconPoints);
+    // if (this.mapContainer.getLayer('roadblock')) {
+    //   this.mapContainer.getSource('roadblockPoints').setData(this.props.roadBlockIconPoints);
+    // }
+    
+    if (this.mapContainer.getLayer('direction')) {
+      this.mapContainer.getSource('directionPoints').setData(this.props.directionIconPoints);
     }
 
     if (prevProps.roadClosure.currentLineId !== currentLineId) {
       this.removeAllSelectedPoints(currentLineId);
       this.removeSelectedLine(currentLineId);
+    }
+
+    if (prevProps.highlightedFeatureGroup !== this.props.highlightedFeatureGroup) {
+      this.mapContainer.fitBounds(
+        bbox(
+          featureCollection(this.props.highlightedFeatureGroup)
+        ),
+        {
+          padding: {top: 60, bottom:60, left: 60, right: 60}
+        }
+      )
     }
   }
 

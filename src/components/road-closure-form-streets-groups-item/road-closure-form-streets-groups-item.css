@@ -1,3 +1,6 @@
+.SHST-Road-Closure-Form-Streets-Groups-Item-Card-Highlighted {
+    border: 2px solid #E35051;
+}
 .SHST-Road-Closure-Form-Streets-Groups-Item-Content {
     display: flex;
     flex-direction: column;

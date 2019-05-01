@@ -21,6 +21,7 @@ import './road-closure-form-streets-groups-item.css';
 
 export interface IRoadClosureFormStreetsGroupItemProps {
     matchedStreetsGroup: SharedStreetsMatchPath[],
+    matchedStreetsGroupFilteredByDirection: SharedStreetsMatchPath[],
     matchedStreetsGroupsGeometryIdPathMap: { [geomId: string]: { [direction: string] : SharedStreetsMatchPath} },
     matchedStreetsGroupDirections: { forward: boolean, backward: boolean },
     currentMatchedStreetsFeatures: Array<SharedStreetsMatchPath | SharedStreetsMatchPoint>,
@@ -30,10 +31,13 @@ export interface IRoadClosureFormStreetsGroupItemProps {
     geometryIdDirectionFilter: { [ geometryId: string] : { forward: boolean, backward: boolean } },
     deleteStreetSegment: (payload: any) => void,
     inputChanged: (e: any) => void,
-    toggleStreetSegmentDirection: (e: any) => void
+    toggleStreetSegmentDirection: (e: any) => void,
+    highlightMatchedStreetsGroup: (e: any) => void,
+    zoomHighlightMatchedStreetsGroup: (e: any) => void,
 };
 
 export interface IRoadClosureFormStreetsGroupItemState {
+    isHighlighted: boolean;
     isCollapsed: boolean;
     canToggleDirection: boolean;
     directionOptions: Array<{ forward: boolean, backward: boolean}>
@@ -51,10 +55,32 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
                 { forward: false, backward: true }
             ],
             isCollapsed: true,
+            isHighlighted: false,
         };
         this.handleToggleCollapsed = this.handleToggleCollapsed.bind(this);
         this.handleToggleDirection = this.handleToggleDirection.bind(this);
         this.handleDeleteGroup = this.handleDeleteGroup.bind(this);
+        this.handleMouseover = this.handleMouseover.bind(this);
+        this.handleMouseout = this.handleMouseout.bind(this);
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    public handleClick() {
+        this.props.zoomHighlightMatchedStreetsGroup(this.props.matchedStreetsGroup);
+    }
+
+    public handleMouseover () {
+        this.props.highlightMatchedStreetsGroup(this.props.matchedStreetsGroup);
+        this.setState({
+            isHighlighted: true
+        });
+    }
+    
+    public handleMouseout() {
+        // this.props.highlightMatchedStreetsGroup([]);
+        this.setState({
+            isHighlighted: false,
+        })
     }
 
     public handleDeleteGroup () {
@@ -122,22 +148,6 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
                 'arrow-left'
                 : 'arrow-right';
 
-        const matchedStreetsGroupFilteredByDirection = this.props.matchedStreetsGroup.filter((path: SharedStreetsMatchPath) => {
-            const directionFilter = this.props.geometryIdDirectionFilter[path.properties.geometryId];
-            if (directionFilter && directionFilter.forward) {
-                if (path.properties.direction === "forward") {
-                    return true;
-                } else { return false; }
-            }
-            else if (directionFilter && directionFilter.backward) {
-                if (path.properties.direction === "backward") {
-                    return true;
-                } else { return false; }
-            } 
-            else {
-                return false
-            }
-        });
 
         if (this.state.canToggleDirection && this.props.matchedStreetsGroup) {
             const filters = this.props.matchedStreetsGroup.map((path: SharedStreetsMatchPath) =>
@@ -153,10 +163,15 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
             }
         }
 
-        if (matchedStreetsGroupFilteredByDirection.length === 0) {
+        if (this.props.matchedStreetsGroupFilteredByDirection.length === 0) {
             return null; 
         }
         return <Card
+                className={this.state.isHighlighted ? 'SHST-Road-Closure-Form-Streets-Groups-Item-Card-Highlighted' : ''}
+                interactive={true}
+                onMouseEnter={this.handleMouseover}
+                onMouseLeave={this.handleMouseout}
+                onClick={this.handleClick}
                 elevation={1}>
                     <div className={"SHST-Road-Closure-Form-Streets-Groups-Item-Content"}>
                         <H5>{streetNames.filter((name) => !isEmpty(name)).join(", ")}</H5>
@@ -202,7 +217,7 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
                             deleteStreetSegment={this.props.deleteStreetSegment}
                             inputChanged={this.props.inputChanged}
                             currentMatchedStreetsFeatures={this.props.currentMatchedStreetsFeatures}
-                            matchedStreetsGroup={matchedStreetsGroupFilteredByDirection}
+                            matchedStreetsGroup={this.props.matchedStreetsGroupFilteredByDirection}
                             matchedStreetsGroupDirections={this.props.matchedStreetsGroupDirections}
                             matchedStreetsGroupsGeometryIdPathMap={this.props.matchedStreetsGroupsGeometryIdPathMap}
                             geometryIdDirectionFilter={this.props.geometryIdDirectionFilter}

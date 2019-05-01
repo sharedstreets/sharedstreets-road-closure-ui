@@ -21,6 +21,7 @@ const defaultState: IRoadClosureState = {
     allRoadClosuresUploadUrls: [],
     currentItem: new SharedStreetsMatchFeatureCollection(),
     currentLineId: '',
+    highlightedFeatureGroup: [],
     isEditingExistingClosure: false,
     isFetchingInput: false,
     isFetchingMatchedStreets: false,

@@ -22,8 +22,10 @@ export default connect<{}, {}, IRoadClosureFormProps>(
     {
         deleteStreetSegment: ACTIONS.DELETE_STREET_SEGMENT,
         hideRoadClosureOutput: ACTIONS.ROAD_CLOSURE_HIDE_OUTPUT,
+        highlightMatchedStreetsGroup: ACTIONS.HIGHLIGHT_MATCHED_STREETS_GROUP,
         inputChanged: ACTIONS.INPUT_CHANGED,
         toggleStreetSegmentDirection: ACTIONS.TOGGLE_DIRECTION_STREET_SEGMENT,
         viewRoadClosureOutput: ACTIONS.ROAD_CLOSURE_VIEW_OUTPUT,
+        zoomHighlightMatchedStreetsGroup: ACTIONS.ZOOM_HIGHLIGHT_MATCHED_STREETS_GROUP,
     },
 )(RoadClosureForm) as React.ComponentClass<{}>;

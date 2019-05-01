@@ -4,6 +4,7 @@ import {
 } from 'geojson';
 
 export interface ISharedStreetsMatchPathProperties {
+    color?: string;
     referenceId: string;
     geometryId: string;
     roadClass: string;

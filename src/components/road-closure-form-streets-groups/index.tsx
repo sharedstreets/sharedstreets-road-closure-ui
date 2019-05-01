@@ -2,6 +2,7 @@ import { Card, Spinner } from '@blueprintjs/core';
 import * as React from 'react';
 import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
 import { SharedStreetsMatchPoint } from 'src/models/SharedStreets/SharedStreetsMatchPoint';
+import { selectMatchedStreetsGroupFilteredByDirection } from 'src/selectors/road-closure-group-item';
 import RoadClosureFormStreetsGroupItem from '../road-closure-form-streets-groups-item';
 // import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
 
@@ -14,8 +15,10 @@ export interface IRoadClosureFormStreetsGroupsProps {
     streets: any,
     isFetchingMatchedStreets: boolean,
     deleteStreetSegment: (payload: any) => void,
+    highlightMatchedStreetsGroup: () => void,
     inputChanged: (e: any) => void,
     toggleStreetSegmentDirection: (e: any) => void,
+    zoomHighlightMatchedStreetsGroup: (e: any) => void,
 };
 
 class RoadClosureFormStreetsGroups extends React.Component<IRoadClosureFormStreetsGroupsProps, any> {
@@ -36,6 +39,7 @@ class RoadClosureFormStreetsGroups extends React.Component<IRoadClosureFormStree
                         deleteStreetSegment={this.props.deleteStreetSegment}
                         inputChanged={this.props.inputChanged}
                         matchedStreetsGroup={group}
+                        matchedStreetsGroupFilteredByDirection={selectMatchedStreetsGroupFilteredByDirection(group, this.props.geometryIdDirectionFilter)}
                         matchedStreetsGroupsGeometryIdPathMap={this.props.currentMatchedStreetsGroupsGeometryIdPathMap}
                         currentMatchedStreetsFeatures={this.props.currentMatchedStreetsFeatures}
                         matchedStreetsGroupDirections={this.props.currentMatchedStreetsGroupsDirections[index]}
@@ -43,6 +47,8 @@ class RoadClosureFormStreetsGroups extends React.Component<IRoadClosureFormStree
                         key={index}
                         geometryIdDirectionFilter={this.props.geometryIdDirectionFilter}
                         toggleStreetSegmentDirection={this.props.toggleStreetSegmentDirection}
+                        highlightMatchedStreetsGroup={this.props.highlightMatchedStreetsGroup}
+                        zoomHighlightMatchedStreetsGroup={this.props.zoomHighlightMatchedStreetsGroup}
                     />
                 })
             }

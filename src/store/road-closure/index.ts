@@ -115,6 +115,7 @@ export const ACTIONS = {
         'ROAD_CLOSURE/GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL_SUCCESS',
         'ROAD_CLOSURE/GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL_FAILURE'
     )<void, IGenerateSharedstreetsPublicDataUploadUrlSuccessResponse, Error>(),
+    HIGHLIGHT_MATCHED_STREETS_GROUP: createStandardAction('ROAD_CLOSURE/HIGHLIGHT_MATCHED_STREETS_GROUP')<SharedStreetsMatchPath[]>(),
     INPUT_CHANGED: createStandardAction('ROAD_CLOSURE/INPUT_CHANGED')<IRoadClosureFormInputChangedPayload>(),
     LOADED_ALL_ROAD_CLOSURES: createStandardAction('ROAD_CLOSURE/LOADED_ALL_ROAD_CLOSURES')<void>(),
     LOAD_ALL_ORGS: createStandardAction('ROAD_CLOSURE/LOAD_ALL_ORGS')<{ [name: string]: IRoadClosureOrgName }>(),
@@ -134,6 +135,7 @@ export const ACTIONS = {
     SET_ORG_NAME: createStandardAction('ROAD_CLOSURE/SET_ORG_NAME')<string>(),
     TOGGLE_DIRECTION_STREET_SEGMENT: createStandardAction('ROAD_CLOSURE/TOGGLE_DIRECTION_STREET_SEGMENT')<IRoadClosureStateItemToggleDirectionPayload>(),
     VIEWPORT_CHANGED: createStandardAction('ROAD_CLOSURE/VIEWPORT_CHANGED'),
+    ZOOM_HIGHLIGHT_MATCHED_STREETS_GROUP: createStandardAction('ROAD_CLOSURE/ZOOM_HIGHLIGHT_MATCHED_STREETS_GROUP')<SharedStreetsMatchPath[]>(),
 };
 
 // side effects
@@ -415,6 +417,7 @@ export interface IRoadClosureState {
     allRoadClosuresUploadUrls: IRoadClosureUploadUrls[],
     currentItem: SharedStreetsMatchFeatureCollection,
     currentLineId: string,
+    highlightedFeatureGroup: SharedStreetsMatchPath[],
     isEditingExistingClosure: boolean,
     isFetchingInput: boolean,
     isFetchingMatchedStreets: boolean,
@@ -437,6 +440,7 @@ const defaultState: IRoadClosureState = {
     allRoadClosuresUploadUrls: [],
     currentItem: new SharedStreetsMatchFeatureCollection(),
     currentLineId: '',
+    highlightedFeatureGroup: [],
     isEditingExistingClosure: false,
     isFetchingInput: false,
     isFetchingMatchedStreets: false,
@@ -500,6 +504,30 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 isSavingOutput: false,
             };
         
+        case "ROAD_CLOSURE/HIGHLIGHT_MATCHED_STREETS_GROUP":
+            updatedItem = Object.assign(Object.create(state.currentItem), state.currentItem);
+
+            updatedItem.features.forEach((path: SharedStreetsMatchPath) => {
+                if (action.payload.includes(path)) {
+                    path.properties.color = "#E35051";
+                } else {
+                    if (path.properties.color) {
+                        delete path.properties.color;
+                    }
+                }
+            });
+
+            return {
+                ...state,
+                currentItem: updatedItem,
+            };
+        
+        case "ROAD_CLOSURE/ZOOM_HIGHLIGHT_MATCHED_STREETS_GROUP":
+            return {
+                ...state,
+                highlightedFeatureGroup: action.payload,
+            }
+
         case "ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_METADATA_REQUEST":
             return {
                 ...state,
