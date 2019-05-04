@@ -803,16 +803,29 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
 
             updatedItem.features = updatedItem.features.filter((feature: SharedStreetsMatchPath | SharedStreetsMatchPoint) => {
                 if (feature instanceof SharedStreetsMatchPath) {
-                    return feature.properties.geometryId !== action.payload.geometryId;
+                    return feature.properties.referenceId !== action.payload.referenceId;
                 } else {
-                    return false;
+                    return true;
                 }
             })
 
-            const deletedStreetOutput = omit(updatedItem.properties.street, action.payload.geometryId);
-            const deletedGeometryIdDirectionFilter = omit(updatedItem.properties.geometryIdDirectionFilter, action.payload.geometryId);
-            updatedItem.properties.street = deletedStreetOutput;
-            updatedItem.properties.geometryIdDirectionFilter = deletedGeometryIdDirectionFilter;
+
+            // const updatedStreetForGeomId = updatedItem.properties.street[action.payload.geometryId];
+            if (updatedItem.properties.street[action.payload.geometryId].forward.referenceId === action.payload.referenceId) {
+                updatedItem.properties.street[action.payload.geometryId].forward = new RoadClosureFormStateStreet();
+                updatedItem.properties.geometryIdDirectionFilter[action.payload.geometryId].forward = false;
+            }
+            if (updatedItem.properties.street[action.payload.geometryId].backward.referenceId === action.payload.referenceId) {
+                updatedItem.properties.street[action.payload.geometryId].backward = new RoadClosureFormStateStreet();
+                updatedItem.properties.geometryIdDirectionFilter[action.payload.geometryId].backward = false;
+            }
+            if (isEmpty(updatedItem.properties.street[action.payload.geometryId].forward)
+                && isEmpty(updatedItem.properties.street[action.payload.geometryId].backward)) {
+                const deletedStreetOutput = omit(updatedItem.properties.street, action.payload.geometryId);
+                updatedItem.properties.street = deletedStreetOutput;
+                const deletedGeometryIdDirectionFilter = omit(updatedItem.properties.geometryIdDirectionFilter, action.payload.geometryId);
+                updatedItem.properties.geometryIdDirectionFilter = deletedGeometryIdDirectionFilter;
+            }
 
             return {
                 ...state,

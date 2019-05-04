@@ -89,11 +89,15 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
 
     public handleDeleteGroup () {
         forEach(this.props.matchedStreetsGroup, (feature: SharedStreetsMatchPath) => {
-            const directionFilter = this.props.geometryIdDirectionFilter[feature.properties.geometryId];
-            const street = this.props.streets[feature.properties.geometryId] && directionFilter.forward ?
-                            this.props.streets[feature.properties.geometryId].forward
-                            : this.props.streets[feature.properties.geometryId].backward;
-            this.props.deleteStreetSegment(street);
+            const street = this.props.streets[feature.properties.geometryId];
+            let segment = {};
+            if (street.forward.referenceId === feature.properties.referenceId) {
+                segment = street.forward;
+            }
+            if (street.backward.referenceId === feature.properties.referenceId) {
+                segment = street.backward;
+            }
+            this.props.deleteStreetSegment(segment);
         });
     }
 
