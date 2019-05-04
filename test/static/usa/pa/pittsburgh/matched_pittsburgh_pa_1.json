@@ -1,0 +1,263 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -79.992231333979,
+            40.44495971432584
+          ],
+          [
+            -79.9925441,
+            40.4447701
+          ],
+          [
+            -79.9926325,
+            40.4447142
+          ],
+          [
+            -79.9927275,
+            40.4446536
+          ],
+          [
+            -79.99278430000001,
+            40.4446175
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "215f555da096a5643a6598243dff294a",
+        "fromIntersectionId": "25a14db521db2d4811c62a466b513c05",
+        "toIntersectionId": "86af39a7d6865fe271d1ff24801dc813",
+        "fromStreetnames": [
+          "12th Street"
+        ],
+        "toStreetnames": [],
+        "roadClass": "Primary",
+        "direction": "backward",
+        "geometryId": "7f3a8b2294299f0d5dd18da1eb3cfeca",
+        "streetname": "Liberty Avenue",
+        "referenceLength": 103.16,
+        "section": [
+          42.74357513252691,
+          103.16
+        ],
+        "side": "unknown",
+        "score": null,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -79.99225275327366,
+                40.44498161584235
+              ],
+              [
+                -79.99330440861692,
+                40.44432500677914
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -79.99278430000001,
+            40.4446175
+          ],
+          [
+            -79.9929245,
+            40.444564
+          ],
+          [
+            -79.9930538,
+            40.4444838
+          ],
+          [
+            -79.99330126050788,
+            40.44432221375004
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "2eedb101b8c531ddc30624fc2b4ae898",
+        "fromIntersectionId": "86af39a7d6865fe271d1ff24801dc813",
+        "toIntersectionId": "642def30b2b28392f74b78216ae374c5",
+        "fromStreetnames": [],
+        "toStreetnames": [
+          "11th Street"
+        ],
+        "roadClass": "Primary",
+        "direction": "forward",
+        "geometryId": "d0b63a1ebf7038832f3966b31c192d8f",
+        "streetname": "Liberty Avenue",
+        "referenceLength": 73.22,
+        "section": [
+          0,
+          54.98043452287021
+        ],
+        "side": "unknown",
+        "score": null,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -79.99225275327366,
+                40.44498161584235
+              ],
+              [
+                -79.99330440861692,
+                40.44432500677914
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -79.99317961888367,
+            40.444272455595026
+          ],
+          [
+            -79.9928671,
+            40.4445141
+          ],
+          [
+            -79.99278430000001,
+            40.4446175
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "a72bc73591d717bb5df1bf1f1788a940",
+        "fromIntersectionId": "e2c39e024f04275e155b23dba229a0af",
+        "toIntersectionId": "86af39a7d6865fe271d1ff24801dc813",
+        "fromStreetnames": [
+          "11th Street"
+        ],
+        "toStreetnames": [],
+        "roadClass": "Primary",
+        "direction": "forward",
+        "geometryId": "618637d1d19970aaf7422f54fba287b3",
+        "streetname": "Liberty Avenue",
+        "referenceLength": 76.85,
+        "section": [
+          25.65351741135482,
+          76.85
+        ],
+        "side": "right",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -79.99317563449773,
+                40.444269472384576
+              ],
+              [
+                -79.99281506694713,
+                40.44456021076249
+              ],
+              [
+                -79.99224846080585,
+                40.44493261538892
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -79.99278430000001,
+            40.4446175
+          ],
+          [
+            -79.9927275,
+            40.4446536
+          ],
+          [
+            -79.9926325,
+            40.4447142
+          ],
+          [
+            -79.9925441,
+            40.4447701
+          ],
+          [
+            -79.99225916590709,
+            40.44494284130358
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "c54d19a795cfd342fb205e07713bf83f",
+        "fromIntersectionId": "86af39a7d6865fe271d1ff24801dc813",
+        "toIntersectionId": "25a14db521db2d4811c62a466b513c05",
+        "fromStreetnames": [],
+        "toStreetnames": [
+          "12th Street"
+        ],
+        "roadClass": "Primary",
+        "direction": "forward",
+        "geometryId": "7f3a8b2294299f0d5dd18da1eb3cfeca",
+        "streetname": "Liberty Avenue",
+        "referenceLength": 103.16,
+        "section": [
+          0,
+          57.30562127743305
+        ],
+        "side": "right",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -79.99317563449773,
+                40.444269472384576
+              ],
+              [
+                -79.99281506694713,
+                40.44456021076249
+              ],
+              [
+                -79.99224846080585,
+                40.44493261538892
+              ]
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "type": "ROAD_CLOSED",
+    "timezone": "America/New_York"
+  }
+}
