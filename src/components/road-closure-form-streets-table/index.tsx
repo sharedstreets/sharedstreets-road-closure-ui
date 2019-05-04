@@ -12,6 +12,7 @@ export interface IRoadClosureFormStreetsTableProps {
     geometryIdDirectionFilter: { [ geometryId: string] : { forward: boolean, backward: boolean } },
     streets: any,
     deleteStreetSegment: (payload: any) => void,
+    highlightMatchedStreet: (e: any) => void,
     inputChanged: (e: any) => void,
 };
 
@@ -45,6 +46,7 @@ class RoadClosureFormStreetsTable extends React.Component<IRoadClosureFormStreet
                             .filter((feature: SharedStreetsMatchPath) => feature.properties.geometryId === path.properties.geometryId) as SharedStreetsMatchPath[];
 
                         return <RoadClosureFormStreetsTableRow
+                            highlightMatchedStreet={this.props.highlightMatchedStreet}
                             currentFeature={currentFeature[0]}
                             inputChanged={this.props.inputChanged}
                             deleteStreetSegment={this.props.deleteStreetSegment}

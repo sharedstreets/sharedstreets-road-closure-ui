@@ -32,6 +32,7 @@ export interface IRoadClosureFormStreetsGroupItemProps {
     deleteStreetSegment: (payload: any) => void,
     inputChanged: (e: any) => void,
     toggleStreetSegmentDirection: (e: any) => void,
+    highlightMatchedStreet: (e: any) => void,
     highlightMatchedStreetsGroup: (e: any) => void,
     zoomHighlightMatchedStreetsGroup: (e: any) => void,
 };
@@ -226,6 +227,7 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
                             matchedStreetsGroupDirections={this.props.matchedStreetsGroupDirections}
                             matchedStreetsGroupsGeometryIdPathMap={this.props.matchedStreetsGroupsGeometryIdPathMap}
                             geometryIdDirectionFilter={this.props.geometryIdDirectionFilter}
+                            highlightMatchedStreet={this.props.highlightMatchedStreet}
                         />
                     </Collapse>
         </Card>
