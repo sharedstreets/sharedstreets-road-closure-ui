@@ -1,17 +1,26 @@
-// tslint:disable
+// import {
+//     forEach
+// } from 'lodash';
 import { RoadClosureOutputStateItem } from '../models/RoadClosureOutputStateItem';
 import { SharedStreetsMatchFeatureCollection } from '../models/SharedStreets/SharedStreetsMatchFeatureCollection';
 import { IRoadClosureState } from "../store/road-closure";
 import {
-    createOneWayStreet,
-    createOneWayStreetFromIntersection,
-    // createOneWayStreetToIntersection,
-    createTwoWayStreet,
-} from '../utils/street-builder';
-import {
     currentItemToGeojson,
-    groupPathsByContiguity,
+    getContiguousFeatureGroups,
+    // getContiguousFeatureGroupsDirections,
 } from './road-closure-geojson';
+
+
+import * as NEW_BRUNSWICK_NJ_1 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_1.json';
+import * as NEW_BRUNSWICK_NJ_2 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_2.json';
+import * as NEW_BRUNSWICK_NJ_3 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_3.json';
+import * as NEW_BRUNSWICK_NJ_4 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_4.json';
+import * as NEW_BRUNSWICK_NJ_5 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_5.json';
+import * as NEW_BRUNSWICK_NJ_6 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_6.json';
+import * as NEW_BRUNSWICK_NJ_7 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_7.json';
+import * as NEW_BRUNSWICK_NJ_8 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_8.json';
+import * as PITTSBURGH_PA_1 from '../../test/static/usa/pa/pittsburgh/matched_pittsburgh_pa_1.json';
+import * as PITTSBURGH_PA_2 from '../../test/static/usa/pa/pittsburgh/matched_pittsburgh_pa_2.json';
 
 
 const defaultState: IRoadClosureState = {
@@ -53,124 +62,162 @@ test("currentItemToGeojson - empty", () => {
     expect(receivedOutput).toEqual(expectedOutput);
 });
 
-test("currentItemToGeojson - one way street", () => {
-    const startingState = Object.assign({}, defaultState);    
-    const currentItem = new SharedStreetsMatchFeatureCollection();
-    const features = [];
-    const gdf = {};
-    const street = {};
-    const path = createOneWayStreet("forward");
-    Object.assign(gdf, {
-        [path.properties.geometryId]: {
-            backward: path.properties.direction === "backward",
-            forward: path.properties.direction === "forward"
-        }
-    });
-    
-    Object.assign(street, {
-        [path.properties.geometryId]: {
-            backward: path.properties.direction === "backward" ? path : {},
-            forward: path.properties.direction === "forward" ? path : {},
-        }
-    });
-    features.push(path);
-    currentItem.properties.geometryIdDirectionFilter = gdf;
-    currentItem.properties.street = street;
-    currentItem.addFeaturesFromGeojson(features);
-    startingState.currentItem = currentItem;
-    const receivedOutput = currentItemToGeojson(startingState);
-    const expectedOutput = {
-        features,
-        properties: {
-            type: "ROAD_CLOSED"
-        },
-        type: "FeatureCollection"
-    };
-    expect(receivedOutput).toEqual(expectedOutput);
-});
-
-test("currentItemToGeojson - two way street", () => {
-    const startingState = Object.assign({}, defaultState);    
-    const currentItem = new SharedStreetsMatchFeatureCollection();
-    const features = [];
-    const gdf = {};
-    const street = {};
-    const paths = createTwoWayStreet();
-    Object.assign(gdf, {
-        [paths.forward.properties.geometryId]: {
-            backward: true,
-            forward: true,
-        }
-    });
-    
-    Object.assign(street, {
-        [paths.backward.properties.geometryId]: {
-            backward: paths.backward,
-            forward: paths.forward,
-        }
-    });
-    features.push(paths.forward, paths.backward);
-    currentItem.properties.geometryIdDirectionFilter = gdf;
-    currentItem.properties.street = street;
-    currentItem.addFeaturesFromGeojson(features);
-    startingState.currentItem = currentItem;
-    const receivedOutput = currentItemToGeojson(startingState);
-    const expectedOutput = {
-        features,
-        properties: {
-            type: "ROAD_CLOSED"
-        },
-        type: "FeatureCollection"
-    };
-    // console.log(features);
-    expect(receivedOutput).toEqual(expectedOutput);
-});
-
-test("grouping paths - 2 disjoint 1 way streets -> ->", () => {
+test("grouping paths - 1 two-way street (2 intersections), 2 one-way streets - 4 groups (NEW_BRUNSWICK_NJ_1)", () => {
     const startingState = Object.assign({}, defaultState);
     const currentItem = new SharedStreetsMatchFeatureCollection();
-    const features = [];
-    const gdf = {};
-    const street = {};
-    // generate features
-    features.push(
-        createOneWayStreet("forward"),
-        createOneWayStreet("forward")
-    );
-    currentItem.properties.geometryIdDirectionFilter = gdf;
-    currentItem.properties.street = street;
-    currentItem.addFeaturesFromGeojson(features);
+    currentItem.addFeaturesFromGeojson(NEW_BRUNSWICK_NJ_1.features as any); 
     startingState.currentItem = currentItem;
-    const receivedOutput = groupPathsByContiguity(startingState, false);
-    const expectedOutput = [
-        [features[1],
-        features[0]],
-    ];
-    console.log(receivedOutput);
-    expect(receivedOutput).toEqual(expectedOutput);
+    const receivedOutput = getContiguousFeatureGroups(startingState);
+    expect(receivedOutput.length).toEqual(4);
 });
 
-test("grouping paths - 2 connected 1 way streets ->->", () => {
+test("grouping paths - 1 two-way street (2 intersections), 2 one-way streets - 4 groups (NEW_BRUNSWICK_NJ_2)", () => {
     const startingState = Object.assign({}, defaultState);
     const currentItem = new SharedStreetsMatchFeatureCollection();
-    const features = [];
-    const gdf = {};
-    const street = {};
-    // generate features
-    features.push(
-        createOneWayStreet("forward"),
-    );
-    features.push(
-        createOneWayStreetFromIntersection("forward", features[0].properties.toIntersectionId)
-    );
-    currentItem.properties.geometryIdDirectionFilter = gdf;
-    currentItem.properties.street = street;
-    currentItem.addFeaturesFromGeojson(features);
+    currentItem.addFeaturesFromGeojson(NEW_BRUNSWICK_NJ_2.features as any);    
     startingState.currentItem = currentItem;
-    const receivedOutput = groupPathsByContiguity(startingState, false);
-    const expectedOutput = [
-        [features[1], features[0]],
-    ];
-    console.log((receivedOutput));
-    expect(receivedOutput).toEqual(expectedOutput);
+    const receivedOutput = getContiguousFeatureGroups(startingState);
+    // (receivedOutput as SharedStreetsMatchPath[][]).forEach((g) => {
+    //     g.map((f) => {
+    //         console.log(f.properties.streetname, f.properties.direction)
+    //     })
+    // })
+    // console.log("------")
+    expect(receivedOutput.length).toEqual(4);
 });
+
+test("grouping paths - 1 two-way street (2 intersections) - 2 groups (NEW_BRUNSWICK_NJ_3)", () => {
+    const startingState = Object.assign({}, defaultState);
+    const currentItem = new SharedStreetsMatchFeatureCollection();
+    currentItem.addFeaturesFromGeojson(NEW_BRUNSWICK_NJ_3.features as any);    
+    startingState.currentItem = currentItem;
+    const receivedOutput = getContiguousFeatureGroups(startingState);
+    expect(receivedOutput.length).toEqual(2);
+});
+
+test("grouping paths - 2 one-way streets (1 intersections, 2 streetnames, same direction) - 2 groups", () => {
+    const startingState = Object.assign({}, defaultState);
+    const currentItem = new SharedStreetsMatchFeatureCollection();
+    currentItem.addFeaturesFromGeojson(NEW_BRUNSWICK_NJ_4.features as any);    
+    startingState.currentItem = currentItem;
+    const receivedOutput = getContiguousFeatureGroups(startingState);
+    // (receivedOutput as SharedStreetsMatchPath[][]).forEach((g) => {
+    //     g.map((f) => console.log(f.properties.streetname))
+    // })
+    expect(receivedOutput.length).toEqual(2);
+});
+
+test("grouping paths - 2 one-way streets (1 intersections, 2 streetnames, opposite direction) - 2 groups", () => {
+    const startingState = Object.assign({}, defaultState);
+    const currentItem = new SharedStreetsMatchFeatureCollection();
+    currentItem.addFeaturesFromGeojson(NEW_BRUNSWICK_NJ_5.features as any);    
+    startingState.currentItem = currentItem;
+    const receivedOutput = getContiguousFeatureGroups(startingState);
+    // (receivedOutput as SharedStreetsMatchPath[][]).forEach((g) => {
+    //     g.map((f) => {
+    //         console.log(f.properties.streetname, f.properties.direction)
+    //     })
+    // })
+    expect(receivedOutput.length).toEqual(2);
+});
+
+test("grouping paths - 1 one-way streets - entirely within two intersections - 1 groups", () => {
+    const startingState = Object.assign({}, defaultState);
+    const currentItem = new SharedStreetsMatchFeatureCollection();
+    currentItem.addFeaturesFromGeojson(NEW_BRUNSWICK_NJ_6.features as any);    
+    startingState.currentItem = currentItem;
+    const receivedOutput = getContiguousFeatureGroups(startingState);
+    // (receivedOutput as SharedStreetsMatchPath[][]).forEach((g) => {
+    //     g.map((f) => {
+    //         console.log(f.properties.streetname, f.properties.direction)
+    //     })
+    // })
+    expect(receivedOutput.length).toEqual(1);
+});
+
+test("grouping paths - 2 one-way streets - 1 intersection - same direction - 2 groups", () => {
+    const startingState = Object.assign({}, defaultState);
+    const currentItem = new SharedStreetsMatchFeatureCollection();
+    currentItem.addFeaturesFromGeojson(NEW_BRUNSWICK_NJ_7.features as any);    
+    startingState.currentItem = currentItem;
+    const receivedOutput = getContiguousFeatureGroups(startingState);
+    // (receivedOutput as SharedStreetsMatchPath[][]).forEach((g) => {
+    //     g.map((f) => {
+    //         console.log(f.properties.streetname, f.properties.direction)
+    //     })
+    // })
+    expect(receivedOutput.length).toEqual(2);
+});
+
+test("grouping paths - 2 two-way streets (fwd & back) - 1 intersection - 1 one-way (fwd) - 3 groups", () => {
+    const startingState = Object.assign({}, defaultState);
+    const currentItem = new SharedStreetsMatchFeatureCollection();
+    currentItem.addFeaturesFromGeojson(NEW_BRUNSWICK_NJ_8.features as any);    
+    startingState.currentItem = currentItem;
+    const receivedOutput = getContiguousFeatureGroups(startingState);
+    // (receivedOutput as SharedStreetsMatchPath[][]).forEach((g) => {
+    //     g.map((f) => {
+    //         console.log(f.properties.streetname, f.properties.direction)
+    //     })
+    // })
+    expect(receivedOutput.length).toEqual(3);
+});
+
+test("grouping paths - 1 two-way streets (fwd & back) - 1 intersection - 2 one-way (fwd, back) - 4 groups", () => {
+    const startingState = Object.assign({}, defaultState);
+    const currentItem = new SharedStreetsMatchFeatureCollection();
+    currentItem.addFeaturesFromGeojson(PITTSBURGH_PA_1.features as any);    
+    startingState.currentItem = currentItem;
+    const receivedOutput = getContiguousFeatureGroups(startingState);
+    // (receivedOutput as SharedStreetsMatchPath[][]).forEach((g) => {
+    //     g.map((f) => {
+    //         console.log(f.properties.streetname, f.properties.direction)
+    //     })
+    // })
+    expect(receivedOutput.length).toEqual(4);
+});
+
+test("grouping paths - 1 two-way streets (fwd & back) - 1 intersection - 2 one-way (fwd & back) - 1 groups - one direction?", () => {
+    const startingState = Object.assign({}, defaultState);
+    const currentItem = new SharedStreetsMatchFeatureCollection();
+    currentItem.addFeaturesFromGeojson(PITTSBURGH_PA_2.features as any);    
+    startingState.currentItem = currentItem;
+    const receivedOutput = getContiguousFeatureGroups(startingState);
+    // (receivedOutput as SharedStreetsMatchPath[][]).forEach((g) => {
+    //     g.map((f) => {
+    //         console.log(f.properties.streetname, f.properties.direction)
+    //     })
+    // })
+    expect(receivedOutput.length).toEqual(1);
+});
+
+// test.skip("new grouping", () => {
+//     const startingState = Object.assign({}, defaultState);
+//     const currentItem = new SharedStreetsMatchFeatureCollection();
+//     currentItem.addFeaturesFromGeojson(PITTSBURGH_PA_1.features as any);    
+//     startingState.currentItem = currentItem;
+//     const groups = getContiguousFeatureGroups(startingState);
+//     const expectedDirections: Array<{ forward: boolean, backward: boolean }> = [];
+//     groups.forEach((g) => {
+//         const groupDirections = {
+//             backward: false,
+//             forward: false,
+//         };
+//         console.log(g.map((f) => {
+//             if (f.properties.direction === "forward") {
+//                 groupDirections.forward = true;
+//             }
+//             if (f.properties.direction === "backward") {
+//                 groupDirections.backward = true;
+//             }
+//             return [f.properties.streetname, f.properties.direction]
+//         }));
+//         expectedDirections.push(groupDirections);
+//     });
+//     const groupsDirections = getContiguousFeatureGroupsDirections(startingState);
+//     console.log("directions", groupsDirections);
+//     // expect(groups.length).toBe(3);
+//     expect(groupsDirections).toEqual(expectedDirections);
+
+//     // expect(receivedOutput.length).toEqual(2);
+// })
