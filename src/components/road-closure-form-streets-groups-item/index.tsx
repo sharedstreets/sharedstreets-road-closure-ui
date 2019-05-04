@@ -40,7 +40,6 @@ export interface IRoadClosureFormStreetsGroupItemProps {
 export interface IRoadClosureFormStreetsGroupItemState {
     isHighlighted: boolean;
     isCollapsed: boolean;
-    canToggleDirection: boolean;
     directionOptions: Array<{ forward: boolean, backward: boolean}>
 }
 
@@ -48,8 +47,6 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
     public constructor(props: IRoadClosureFormStreetsGroupItemProps) {
         super(props);
         this.state = {
-            canToggleDirection: this.props.matchedStreetsGroupDirections.forward &&
-                this.props.matchedStreetsGroupDirections.backward,
             directionOptions: [
                 { forward: true, backward: true },
                 { forward: true, backward: false },
@@ -64,6 +61,12 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
         this.handleMouseover = this.handleMouseover.bind(this);
         this.handleMouseout = this.handleMouseout.bind(this);
         this.handleClick = this.handleClick.bind(this);
+    }
+
+    public canToggleDirection() {
+        return this.props.matchedStreetsGroupDirections && 
+        this.props.matchedStreetsGroupDirections.forward &&
+        this.props.matchedStreetsGroupDirections.backward;
     }
 
     public handleClick() {
@@ -143,28 +146,7 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
         const toStreet =  last(this.props.matchedStreetsGroup.filter((
             (feature: SharedStreetsMatchPath) => feature.properties.direction === fromStreet.properties.direction))) as SharedStreetsMatchPath;
 
-        let directionIcon: 'arrows-horizontal'|'arrow-left'|'arrow-right' = this.props.matchedStreetsGroupDirections.backward && this.props.matchedStreetsGroupDirections.forward ?
-            'arrows-horizontal'
-            : this.props.matchedStreetsGroupDirections.backward ?
-                'arrow-left'
-                : 'arrow-right';
-
-
-        if (this.state.canToggleDirection && this.props.matchedStreetsGroup) {
-            const filters = this.props.matchedStreetsGroup.map((path: SharedStreetsMatchPath) =>
-                this.props.geometryIdDirectionFilter[path.properties.geometryId]);
-            
-            const directionFilter = uniq(filters)[0];
-            if (directionFilter) {
-                directionIcon = directionFilter.backward && directionFilter.forward ?
-                    'arrows-horizontal'
-                    : directionFilter.backward ?
-                        'arrow-left'
-                        : 'arrow-right';
-            }
-        }
-
-        if (this.props.matchedStreetsGroupFilteredByDirection.length === 0) {
+        if (this.props.matchedStreetsGroup.length === 0) {
             return null; 
         }
         return <Card
@@ -183,8 +165,8 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
                             {" "}
                             <Button
                                 onClick={this.handleToggleDirection}
-                                disabled={!this.state.canToggleDirection}
-                                icon={directionIcon}
+                                disabled={true}
+                                icon={'arrow-right'}
                                 small={true}
                                 />
                             {" " + toStreet.properties.toStreetnames.filter((name) => !isEmpty(name)).join(",")}
@@ -223,7 +205,7 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
                             deleteStreetSegment={this.props.deleteStreetSegment}
                             inputChanged={this.props.inputChanged}
                             currentMatchedStreetsFeatures={this.props.currentMatchedStreetsFeatures}
-                            matchedStreetsGroup={this.props.matchedStreetsGroupFilteredByDirection}
+                            matchedStreetsGroup={this.props.matchedStreetsGroup}
                             matchedStreetsGroupDirections={this.props.matchedStreetsGroupDirections}
                             matchedStreetsGroupsGeometryIdPathMap={this.props.matchedStreetsGroupsGeometryIdPathMap}
                             geometryIdDirectionFilter={this.props.geometryIdDirectionFilter}

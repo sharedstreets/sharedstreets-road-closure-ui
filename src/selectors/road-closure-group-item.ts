@@ -6,7 +6,14 @@ export const selectMatchedStreetsGroupFilteredByDirection = (
 ) => {
     return matchedStreetsGroup.filter((path: SharedStreetsMatchPath) => {
         const directionFilter = geometryIdDirectionFilter[path.properties.geometryId];
-        if (directionFilter && directionFilter.forward) {
+        if (directionFilter && directionFilter.forward && directionFilter.backward) {
+            if (path.properties.direction === "forward" || path.properties.direction === "backward") {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        else if (directionFilter && directionFilter.forward) {
             if (path.properties.direction === "forward") {
                 return true;
             } else { return false; }
