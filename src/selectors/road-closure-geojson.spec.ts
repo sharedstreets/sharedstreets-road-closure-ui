@@ -12,6 +12,7 @@ import {
 
 
 import * as NEW_BRUNSWICK_NJ_1 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_1.json';
+import * as NEW_BRUNSWICK_NJ_10 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_10.json';
 import * as NEW_BRUNSWICK_NJ_2 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_2.json';
 import * as NEW_BRUNSWICK_NJ_3 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_3.json';
 import * as NEW_BRUNSWICK_NJ_4 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_4.json';
@@ -19,6 +20,7 @@ import * as NEW_BRUNSWICK_NJ_5 from '../../test/static/usa/nj/new-brunswick/matc
 import * as NEW_BRUNSWICK_NJ_6 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_6.json';
 import * as NEW_BRUNSWICK_NJ_7 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_7.json';
 import * as NEW_BRUNSWICK_NJ_8 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_8.json';
+// import * as NEW_BRUNSWICK_NJ_9 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_9.json';
 import * as PITTSBURGH_PA_1 from '../../test/static/usa/pa/pittsburgh/matched_pittsburgh_pa_1.json';
 import * as PITTSBURGH_PA_2 from '../../test/static/usa/pa/pittsburgh/matched_pittsburgh_pa_2.json';
 
@@ -191,33 +193,37 @@ test("grouping paths - 1 two-way streets (fwd & back) - 1 intersection - 2 one-w
     expect(receivedOutput.length).toEqual(1);
 });
 
-// test.skip("new grouping", () => {
-//     const startingState = Object.assign({}, defaultState);
-//     const currentItem = new SharedStreetsMatchFeatureCollection();
-//     currentItem.addFeaturesFromGeojson(PITTSBURGH_PA_1.features as any);    
-//     startingState.currentItem = currentItem;
-//     const groups = getContiguousFeatureGroups(startingState);
-//     const expectedDirections: Array<{ forward: boolean, backward: boolean }> = [];
-//     groups.forEach((g) => {
-//         const groupDirections = {
-//             backward: false,
-//             forward: false,
-//         };
-//         console.log(g.map((f) => {
-//             if (f.properties.direction === "forward") {
-//                 groupDirections.forward = true;
-//             }
-//             if (f.properties.direction === "backward") {
-//                 groupDirections.backward = true;
-//             }
-//             return [f.properties.streetname, f.properties.direction]
-//         }));
-//         expectedDirections.push(groupDirections);
-//     });
-//     const groupsDirections = getContiguousFeatureGroupsDirections(startingState);
-//     console.log("directions", groupsDirections);
-//     // expect(groups.length).toBe(3);
-//     expect(groupsDirections).toEqual(expectedDirections);
+test("grouping paths - 4 one-way streets - one streetname - one direction - 1 group", () => {
+    const startingState = Object.assign({}, defaultState);
+    const currentItem = new SharedStreetsMatchFeatureCollection();
+    currentItem.addFeaturesFromGeojson(NEW_BRUNSWICK_NJ_10.features as any);    
+    startingState.currentItem = currentItem;
+    const receivedOutput = getContiguousFeatureGroups(startingState);
+    // (receivedOutput as SharedStreetsMatchPath[][]).forEach((g) => {
+    //     g.map((f) => {
+    //         console.log(f.properties.streetname, f.properties.direction)
+    //     })
+    // })
+    expect(receivedOutput.length).toEqual(1);
+});
 
-//     // expect(receivedOutput.length).toEqual(2);
-// })
+test.skip("new grouping", () => {
+    const startingState = Object.assign({}, defaultState);
+    const currentItem = new SharedStreetsMatchFeatureCollection();
+    currentItem.addFeaturesFromGeojson(NEW_BRUNSWICK_NJ_10.features as any);    
+    startingState.currentItem = currentItem;
+    const groups = getContiguousFeatureGroups(startingState);
+    groups.forEach((g) => {
+        g.map((f) => {
+            // tslint:disable
+            // console.log(f.properties.streetname, f.properties.direction)
+            // console.log("\tto:",f.properties.toIntersectionId.substr(0,4), " from:",f.properties.fromIntersectionId.substr(0,4));
+            // console.log("\tto:",f.properties.toStreetnames, " from:", f.properties.fromStreetnames);
+            // tslint:enable
+        })
+    })
+    expect(groups.length).toBe(1);
+    // expect(groupsDirections).toEqual(expectedDirections);
+
+    // expect(receivedOutput.length).toEqual(2);
+})
