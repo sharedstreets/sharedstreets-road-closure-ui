@@ -81,6 +81,7 @@ export const getAdjacencyListFromState = (state: IRoadClosureState) => {
                     }
                 }
             });
+            output[feature.properties.referenceId] = uniq(output[feature.properties.referenceId]);
         }
     });
     return output;
@@ -131,10 +132,17 @@ export const groupPathsByContiguity = (state: IRoadClosureState) => {
 
     const depthFirstSearch = (refId: string) => {
         // for each adjacent to refId
+        // tslint:disable-next-line
+        // console.log("adjacents for,", refId);
+        // adjacencyList[refId].map((val) => {
+        //     // tslint:disable-next-line
+        //     console.log(val.substr(0,4));
+        // })
         adjacencyList[refId].forEach((adjacentRefId) => {
             const adjacentRefIdStackItem = refIdStack.find((val) => val.refId === adjacentRefId);
             if (adjacentRefIdStackItem && !adjacentRefIdStackItem.visited) {
                 adjacentRefIdStackItem.visited = true;
+                
                 // tslint:disable-next-line
                 // console.log(refIdStack.map((i) => [i.refId.substr(0,4), i.visited, referenceIdFeatureMap[i.refId].properties.streetname]));
                 // add to group
@@ -167,15 +175,6 @@ export const groupPathsByContiguity = (state: IRoadClosureState) => {
                 depthFirstSearch(adjacentRefId);
             }
         });
-
-        const combinedOutput = (forwardOutput.concat(backwardOutput));
-        if (!isEmpty(combinedOutput)) {
-            // tslint:disable-next-line
-            // console.log("group:", combinedOutput.map((o) => o.properties.streetname));
-            output.unshift(reverse(combinedOutput));
-        }
-        forwardOutput = [];
-        backwardOutput = [];
     }
 
     // outer loop of depth first search
@@ -215,6 +214,14 @@ export const groupPathsByContiguity = (state: IRoadClosureState) => {
             // console.log(currFeature.properties.streetname, ":", currFeature.properties.referenceId);
             // dfs
             depthFirstSearch(refIdItem.refId);
+            const combinedOutput = (forwardOutput.concat(backwardOutput));
+            if (!isEmpty(combinedOutput)) {
+                // tslint:disable-next-line
+                // console.log("group:", combinedOutput.map((o) => o.properties.streetname));
+                output.unshift(reverse(combinedOutput));
+            }
+            forwardOutput = [];
+            backwardOutput = [];
         }
     });
 
