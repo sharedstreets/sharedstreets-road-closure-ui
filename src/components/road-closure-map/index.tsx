@@ -19,7 +19,6 @@ import * as React from 'react';
 import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
 import { IRoadClosureState } from 'src/store/road-closure';
 import { v4 as uuid } from 'uuid';
-import BaseControl from '../base-map-control';
 import SharedStreetsMapDrawControl from '../sharedstreets-map-draw-control';
 import './road-closure-map.css';
 
@@ -109,19 +108,6 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
       new MapboxGeocoder({
         accessToken: mapboxToken
       }),
-      'top-left'
-    );
-
-    this.mapContainer.addControl(
-      new BaseControl('SHST-Road-Closure-Map-Line-Draw-Control',
-        SharedStreetsMapDrawControl,
-        {
-          onCancel: this.handleCancelDrawing,
-          onConfirm: this.handleConfirmDrawing,
-          onStart: this.handleStartDrawing,
-          onUndo: this.handleUndoLastDrawnPoint,
-        }
-      ),
       'top-left'
     );
 
@@ -402,6 +388,18 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
           margin: '0 auto',
           width: '100%',
         }} />
+        <SharedStreetsMapDrawControl
+          isFetchingMatchedStreets={this.props.roadClosure.isFetchingMatchedStreets}
+          numberOfPointsSelected={
+            this.state.selectedCoordinates[this.state.currentLineId] ? 
+            this.state.selectedCoordinates[this.state.currentLineId].length
+            : 0
+          }
+          onCancel={this.handleCancelDrawing}
+          onConfirm={this.handleConfirmDrawing}
+          onStart={this.handleStartDrawing}
+          onUndo={this.handleUndoLastDrawnPoint}
+        />
       </div>
     );
   }
