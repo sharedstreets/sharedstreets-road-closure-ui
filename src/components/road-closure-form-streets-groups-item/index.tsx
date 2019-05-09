@@ -14,17 +14,17 @@ import {
     uniq,
 } from 'lodash';
 import * as React from 'react';
-import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
-import { SharedStreetsMatchPoint } from 'src/models/SharedStreets/SharedStreetsMatchPoint';
+import { SharedStreetsMatchGeomPath } from 'src/models/SharedStreets/SharedStreetsMatchGeomPath';
+import { SharedStreetsMatchGeomPoint } from 'src/models/SharedStreets/SharedStreetsMatchGeomPoint';
 import RoadClosureFormStreetsTable from '../road-closure-form-streets-table';
 import './road-closure-form-streets-groups-item.css';
 
 export interface IRoadClosureFormStreetsGroupItemProps {
-    matchedStreetsGroup: SharedStreetsMatchPath[],
-    matchedStreetsGroupFilteredByDirection: SharedStreetsMatchPath[],
-    matchedStreetsGroupsGeometryIdPathMap: { [geomId: string]: { [direction: string] : SharedStreetsMatchPath} },
+    matchedStreetsGroup: SharedStreetsMatchGeomPath[],
+    matchedStreetsGroupFilteredByDirection: SharedStreetsMatchGeomPath[],
+    matchedStreetsGroupsGeometryIdPathMap: { [geomId: string]: { [direction: string] : SharedStreetsMatchGeomPath} },
     matchedStreetsGroupDirections: { forward: boolean, backward: boolean },
-    currentMatchedStreetsFeatures: Array<SharedStreetsMatchPath | SharedStreetsMatchPoint>,
+    currentMatchedStreetsFeatures: Array<SharedStreetsMatchGeomPath | SharedStreetsMatchGeomPoint>,
     key: number,
     index: number,
     streets: any,
@@ -88,7 +88,7 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
     }
 
     public handleDeleteGroup () {
-        forEach(this.props.matchedStreetsGroup, (feature: SharedStreetsMatchPath) => {
+        forEach(this.props.matchedStreetsGroup, (feature: SharedStreetsMatchGeomPath) => {
             const street = this.props.streets[feature.properties.geometryId];
             let segment = {};
             if (street.forward.referenceId === feature.properties.referenceId) {
@@ -108,7 +108,7 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
     }
 
     public handleToggleDirection() {
-        const filters = this.props.matchedStreetsGroup.map((path: SharedStreetsMatchPath) =>
+        const filters = this.props.matchedStreetsGroup.map((path: SharedStreetsMatchGeomPath) =>
                 this.props.geometryIdDirectionFilter[path.properties.geometryId]);
             
         const directionFilter = uniq(filters)[0];
@@ -126,7 +126,7 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
 
         this.props.toggleStreetSegmentDirection({
             direction: this.state.directionOptions[nextIndex],
-            geometryIds: this.props.matchedStreetsGroup.map((path: SharedStreetsMatchPath) => path.properties.geometryId),
+            geometryIds: this.props.matchedStreetsGroup.map((path: SharedStreetsMatchGeomPath) => path.properties.geometryId),
         });
         return;
     }
@@ -138,17 +138,17 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
         }
 
         const streetNames = uniq(this.props.matchedStreetsGroup.filter(
-            (feature: SharedStreetsMatchPath) => feature.properties.direction === keyDirection && feature.properties.streetname.trim() !== '').map(
-            (feature: SharedStreetsMatchPath) => {
+            (feature: SharedStreetsMatchGeomPath) => feature.properties.direction === keyDirection && feature.properties.streetname.trim() !== '').map(
+            (feature: SharedStreetsMatchGeomPath) => {
                 return feature.properties.streetname;
             })
         );
 
         const fromStreet = head(this.props.matchedStreetsGroup.filter((
-            (feature: SharedStreetsMatchPath) => feature.properties.direction === keyDirection))) as SharedStreetsMatchPath;
+            (feature: SharedStreetsMatchGeomPath) => feature.properties.direction === keyDirection))) as SharedStreetsMatchGeomPath;
         
         const toStreet =  last(this.props.matchedStreetsGroup.filter((
-            (feature: SharedStreetsMatchPath) => feature.properties.direction === fromStreet.properties.direction))) as SharedStreetsMatchPath;
+            (feature: SharedStreetsMatchGeomPath) => feature.properties.direction === fromStreet.properties.direction))) as SharedStreetsMatchGeomPath;
 
         if (this.props.matchedStreetsGroup.length === 0) {
             return null; 

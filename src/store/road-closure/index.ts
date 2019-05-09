@@ -15,9 +15,10 @@ import {
     IRoadClosureOutputFormatName,
     RoadClosureOutputStateItem,
 } from '../../models/RoadClosureOutputStateItem';
-import { SharedStreetsMatchFeatureCollection } from '../../models/SharedStreets/SharedStreetsMatchFeatureCollection';
-import { SharedStreetsMatchPath } from '../../models/SharedStreets/SharedStreetsMatchPath';
-import { SharedStreetsMatchPoint } from '../../models/SharedStreets/SharedStreetsMatchPoint';
+import { SharedStreetsMatchGeomFeatureCollection } from '../../models/SharedStreets/SharedStreetsMatchGeomFeatureCollection';
+import { SharedStreetsMatchGeomPath } from '../../models/SharedStreets/SharedStreetsMatchGeomPath';
+import { SharedStreetsMatchGeomPoint } from '../../models/SharedStreets/SharedStreetsMatchGeomPoint';
+import { SharedStreetsMatchPointFeatureCollection } from '../../models/SharedStreets/SharedStreetsMatchPointFeatureCollection';
 import { getFormattedJSONStringFromOutputItem } from '../../selectors/road-closure-output-item';
 import { generateUploadUrlsFromHash, IRoadClosureUploadUrls } from '../../utils/upload-url-generator';
 import { v4 } from '../../utils/uuid-regex';
@@ -26,18 +27,19 @@ import { RootState } from '../configureStore';
 
 
 
+
 // actions
 export type RoadClosureAction = ActionType<typeof ACTIONS>;
 export interface IFetchSharedstreetGeomsSuccessResponse {
     currentLineId: string,
-    matched: SharedStreetsMatchFeatureCollection,
+    matched: SharedStreetsMatchGeomFeatureCollection,
     invalid: GeoJSON.FeatureCollection,
     unmatched: GeoJSON.FeatureCollection
 }
 
 export interface IFetchSharedstreetGeomsSuccessResponse {
     currentLineId: string,
-    matched: SharedStreetsMatchFeatureCollection,
+    matched: SharedStreetsMatchGeomFeatureCollection,
     invalid: GeoJSON.FeatureCollection,
     unmatched: GeoJSON.FeatureCollection
 }
@@ -95,11 +97,12 @@ export const ACTIONS = {
         'ROAD_CLOSURE/FETCH_SHAREDSTREETS_MATCH_POINT_SUCCESS',
         'ROAD_CLOSURE/FETCH_SHAREDSTREETS_MATCH_POINT_FAILURE'
     )<void, any, Error>(),
+    FETCH_SHAREDSTREETS_MATCH_POINT_CANCEL: createStandardAction('ROAD_CLOSURE/FETCH_SHAREDSTREETS_MATCH_POINT_CANCEL')<void>(),
     FETCH_SHAREDSTREETS_PUBLIC_DATA: createAsyncAction(
         'ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_DATA_REQUEST',
         'ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_DATA_SUCCESS',
         'ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_DATA_FAILURE'
-    )<void, SharedStreetsMatchFeatureCollection, Error>(),
+    )<void, SharedStreetsMatchGeomFeatureCollection, Error>(),
     FETCH_SHAREDSTREETS_PUBLIC_METADATA: createAsyncAction(
         'ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_METADATA_REQUEST',
         'ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_METADATA_SUCCESS',
@@ -116,7 +119,7 @@ export const ACTIONS = {
         'ROAD_CLOSURE/GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL_FAILURE'
     )<void, IGenerateSharedstreetsPublicDataUploadUrlSuccessResponse, Error>(),
     HIGHLIGHT_MATCHED_STREET: createStandardAction('ROAD_CLOSURE/HIGHLIGHT_MATCHED_STREET')<RoadClosureFormStateStreet>(),
-    HIGHLIGHT_MATCHED_STREETS_GROUP: createStandardAction('ROAD_CLOSURE/HIGHLIGHT_MATCHED_STREETS_GROUP')<SharedStreetsMatchPath[]>(),
+    HIGHLIGHT_MATCHED_STREETS_GROUP: createStandardAction('ROAD_CLOSURE/HIGHLIGHT_MATCHED_STREETS_GROUP')<SharedStreetsMatchGeomPath[]>(),
     INPUT_CHANGED: createStandardAction('ROAD_CLOSURE/INPUT_CHANGED')<IRoadClosureFormInputChangedPayload>(),
     LOADED_ALL_ROAD_CLOSURES: createStandardAction('ROAD_CLOSURE/LOADED_ALL_ROAD_CLOSURES')<void>(),
     LOAD_ALL_ORGS: createStandardAction('ROAD_CLOSURE/LOAD_ALL_ORGS')<{ [name: string]: IRoadClosureOrgName }>(),
@@ -136,11 +139,15 @@ export const ACTIONS = {
     SET_ORG_NAME: createStandardAction('ROAD_CLOSURE/SET_ORG_NAME')<string>(),
     TOGGLE_DIRECTION_STREET_SEGMENT: createStandardAction('ROAD_CLOSURE/TOGGLE_DIRECTION_STREET_SEGMENT')<IRoadClosureStateItemToggleDirectionPayload>(),
     VIEWPORT_CHANGED: createStandardAction('ROAD_CLOSURE/VIEWPORT_CHANGED'),
-    ZOOM_HIGHLIGHT_MATCHED_STREETS_GROUP: createStandardAction('ROAD_CLOSURE/ZOOM_HIGHLIGHT_MATCHED_STREETS_GROUP')<SharedStreetsMatchPath[]>(),
+    ZOOM_HIGHLIGHT_MATCHED_STREETS_GROUP: createStandardAction('ROAD_CLOSURE/ZOOM_HIGHLIGHT_MATCHED_STREETS_GROUP')<SharedStreetsMatchGeomPath[]>(),
 };
 
 // side effects
 export const findMatchedPoint = (point: GeoJSON.Feature<GeoJSON.Point>, currentLineId: string) => (dispatch: Dispatch<any>, getState: any) => {
+    if (point.geometry.coordinates.length === 0) {
+        dispatch(ACTIONS.FETCH_SHAREDSTREETS_MATCH_POINT_CANCEL());
+        return;
+    }
     const endpoint = `match/point/${point.geometry.coordinates[0]},${point.geometry.coordinates[1]}`;
     const method = 'get';
     const queryParams = {
@@ -150,15 +157,22 @@ export const findMatchedPoint = (point: GeoJSON.Feature<GeoJSON.Point>, currentL
         ignoreDirection: false,
         includeIntersections: true,
         includeStreetnames: true,
-        maxCandidates: 2,
-        searchRadius: 25,
+        maxCandidates: 4,
+        searchRadius: 5,
         snapTopology: true,
     };
     const body = point;
 
     return dispatch(fetchAction({
         afterRequest: (data) => {
-            return Object.assign({}, data, {currentLineId});
+            const dataSnappedToSelectedPoint = Object.assign({}, data);
+            dataSnappedToSelectedPoint.features = dataSnappedToSelectedPoint.features.map((feature: any) => {
+                return {
+                    ...feature,
+                    geometry: point.geometry,
+                }
+            });
+            return Object.assign({}, {fc: dataSnappedToSelectedPoint}, {currentLineId});
         },
         body,
         endpoint,
@@ -413,14 +427,16 @@ export const saveRoadClosure = () => (dispatch: Dispatch<any>, getState: any) =>
 // reducer
 export interface IRoadClosureState {
     allOrgs: any,
-    allRoadClosureItems: SharedStreetsMatchFeatureCollection[],
+    allRoadClosureItems: SharedStreetsMatchGeomFeatureCollection[],
     allRoadClosureMetadata: any[],
     allRoadClosuresUploadUrls: IRoadClosureUploadUrls[],
-    currentItem: SharedStreetsMatchFeatureCollection,
+    currentItem: SharedStreetsMatchGeomFeatureCollection,
     currentLineId: string,
-    highlightedFeatureGroup: SharedStreetsMatchPath[],
+    currentPossibleDirections: SharedStreetsMatchPointFeatureCollection,
+    highlightedFeatureGroup: SharedStreetsMatchGeomPath[],
     isEditingExistingClosure: boolean,
     isFetchingInput: boolean,
+    isFetchingMatchedPoints: boolean,
     isFetchingMatchedStreets: boolean,
     isGeneratingUploadUrl: boolean,
     isLoadedInput: boolean,
@@ -439,11 +455,13 @@ const defaultState: IRoadClosureState = {
     allRoadClosureItems: [],
     allRoadClosureMetadata: [],
     allRoadClosuresUploadUrls: [],
-    currentItem: new SharedStreetsMatchFeatureCollection(),
+    currentItem: new SharedStreetsMatchGeomFeatureCollection(),
     currentLineId: '',
+    currentPossibleDirections: new SharedStreetsMatchPointFeatureCollection(),
     highlightedFeatureGroup: [],
     isEditingExistingClosure: false,
     isFetchingInput: false,
+    isFetchingMatchedPoints: false,
     isFetchingMatchedStreets: false,
     isGeneratingUploadUrl: false,
     isLoadedInput: false,
@@ -461,7 +479,7 @@ const defaultState: IRoadClosureState = {
 };
 
 export const roadClosureReducer = (state: IRoadClosureState = defaultState, action: RoadClosureAction) => {
-    let updatedItem: SharedStreetsMatchFeatureCollection;
+    let updatedItem: SharedStreetsMatchGeomFeatureCollection;
     switch (action.type) {
         case 'ROAD_CLOSURE/SET_ORG_NAME':
             return {
@@ -507,14 +525,14 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
 
         case "ROAD_CLOSURE/HIGHLIGHT_MATCHED_STREET":
             updatedItem = Object.assign(Object.create(state.currentItem), state.currentItem);
-            updatedItem.features.forEach((path: SharedStreetsMatchPath) => {
+            updatedItem.features.forEach((path: SharedStreetsMatchGeomPath) => {
                 if (path.properties.color) {
                     path.properties.color = '';
                 }
             });
 
             if (action.payload.referenceId) {
-                updatedItem.features.forEach((path: SharedStreetsMatchPath) => {
+                updatedItem.features.forEach((path: SharedStreetsMatchGeomPath) => {
                     if (action.payload.referenceId === path.properties.referenceId) {
                         path.properties.color = "#E35051";
                     }
@@ -529,13 +547,13 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
         
         case "ROAD_CLOSURE/HIGHLIGHT_MATCHED_STREETS_GROUP":
             updatedItem = Object.assign(Object.create(state.currentItem), state.currentItem);
-            updatedItem.features.forEach((path: SharedStreetsMatchPath) => {
+            updatedItem.features.forEach((path: SharedStreetsMatchGeomPath) => {
                 if (path.properties.color) {
                     path.properties.color = '';
                 }
             });
 
-            updatedItem.features.forEach((path: SharedStreetsMatchPath) => {
+            updatedItem.features.forEach((path: SharedStreetsMatchGeomPath) => {
                 action.payload.forEach((highlightPath) => {
                     if (highlightPath.properties.referenceId === path.properties.referenceId) {
                         path.properties.color = "#E35051";
@@ -566,13 +584,13 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             if (!action.payload || !action.payload.features) {
                 return state;
             }
-            const newStateItem = new SharedStreetsMatchFeatureCollection();
+            const newStateItem = new SharedStreetsMatchGeomFeatureCollection();
             newStateItem.properties = action.payload.properties;
             newStateItem.addFeaturesFromGeojson(action.payload.features);
             const newStateItemStreet = {};
             const newStateItemGeometryIdDirectionFilter = {};
-            forEach(newStateItem.features, (segment: SharedStreetsMatchPath|SharedStreetsMatchPoint, index: number) => {
-                if (segment instanceof SharedStreetsMatchPath) {
+            forEach(newStateItem.features, (segment: SharedStreetsMatchGeomPath|SharedStreetsMatchGeomPoint, index: number) => {
+                if (segment instanceof SharedStreetsMatchGeomPath) {
                     if (!newStateItemStreet[segment.properties.geometryId]) {
                         newStateItemStreet[segment.properties.geometryId] = {
                             backward: new RoadClosureFormStateStreet(),
@@ -644,8 +662,8 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             loadedStateItem.addFeaturesFromGeojson(action.payload.features);
             const loadedStateItemStreet = {};
             const loadedStateItemGeometryIdDirectionFilter = {};
-            forEach(loadedStateItem.features, (segment: SharedStreetsMatchPath|SharedStreetsMatchPoint, index: number) => {
-                if (segment instanceof SharedStreetsMatchPath) {
+            forEach(loadedStateItem.features, (segment: SharedStreetsMatchGeomPath|SharedStreetsMatchGeomPoint, index: number) => {
+                if (segment instanceof SharedStreetsMatchGeomPath) {
                     if (!loadedStateItemStreet[segment.properties.geometryId]) {
                         loadedStateItemStreet[segment.properties.geometryId] = {
                             backward: {},
@@ -733,11 +751,41 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 ...state,
                 isPuttingOutput: false,
             };
-        
+        case "ROAD_CLOSURE/FETCH_SHAREDSTREETS_MATCH_POINT_CANCEL":
+            return {
+                ...state,
+                currentPossibleDirections: new SharedStreetsMatchPointFeatureCollection(),
+                isFetchingMatchedPoints: false,
+            };
+            
+        case "ROAD_CLOSURE/FETCH_SHAREDSTREETS_MATCH_POINT_REQUEST":
+            return {
+                ...state,
+                currentPossibleDirections: new SharedStreetsMatchPointFeatureCollection(),
+                isFetchingMatchedPoints: true,
+            };
+
+        case "ROAD_CLOSURE/FETCH_SHAREDSTREETS_MATCH_POINT_FAILURE":
+            return {
+                ...state,
+                currentPossibleDirections: new SharedStreetsMatchPointFeatureCollection(),
+                isFetchingMatchedPoints: false,
+            };
+
+        case "ROAD_CLOSURE/FETCH_SHAREDSTREETS_MATCH_POINT_SUCCESS":
+            const newDirections = new SharedStreetsMatchPointFeatureCollection();
+            newDirections.addFeaturesFromGeoJSON(action.payload.fc);
+            return {
+                ...state,
+                currentPossibleDirections: newDirections,
+                isFetchingMatchedPoints: false,
+            }
+
         case "ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_REQUEST":
             return {
                 ...state,
                 currentLineId: '',
+                currentPossibleDirections: new SharedStreetsMatchPointFeatureCollection(),
                 isFetchingMatchedStreets: true,
             };
         case "ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS":
@@ -748,8 +796,8 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             // update street
             const output = {};
             const newGeometryIdDirectionFilter = {};
-            forEach(updatedItem.features, (segment: SharedStreetsMatchPath|SharedStreetsMatchPoint, index: number) => {
-                if (segment instanceof SharedStreetsMatchPath) {
+            forEach(updatedItem.features, (segment: SharedStreetsMatchGeomPath|SharedStreetsMatchGeomPoint, index: number) => {
+                if (segment instanceof SharedStreetsMatchGeomPath) {
                     if (!output[segment.properties.geometryId]) {
                         output[segment.properties.geometryId] = {
                             backward: {},
@@ -801,8 +849,8 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
         case "ROAD_CLOSURE/DELETE_STREET_SEGMENT":
             updatedItem = Object.assign(Object.create(state.currentItem), state.currentItem);
 
-            updatedItem.features = updatedItem.features.filter((feature: SharedStreetsMatchPath | SharedStreetsMatchPoint) => {
-                if (feature instanceof SharedStreetsMatchPath) {
+            updatedItem.features = updatedItem.features.filter((feature: SharedStreetsMatchGeomPath | SharedStreetsMatchGeomPoint) => {
+                if (feature instanceof SharedStreetsMatchGeomPath) {
                     return feature.properties.referenceId !== action.payload.referenceId;
                 } else {
                     return true;
@@ -885,7 +933,7 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
         case "ROAD_CLOSURE/RESET_ROAD_CLOSURE":
             return {
                 ...state,
-                currentItem: new SharedStreetsMatchFeatureCollection(),
+                currentItem: new SharedStreetsMatchGeomFeatureCollection(),
                 isEditingExistingClosure: false,
             };
             

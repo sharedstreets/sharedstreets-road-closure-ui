@@ -3,20 +3,20 @@ import {
     Point,
 } from 'geojson';
 
-export interface ISharedStreetsMatchPointProperties {
+export interface ISharedStreetsMatchGeomPointProperties {
     id: string;
 }
 
-export class SharedStreetsMatchPoint implements Feature {
+export class SharedStreetsMatchGeomPoint implements Feature {
     public type: "Feature" = "Feature";
     public geometry: Point;
-    public properties: ISharedStreetsMatchPointProperties;
+    public properties: ISharedStreetsMatchGeomPointProperties;
 
     /**
      * constructor
      */
     public constructor(feature: Feature) {
         this.geometry = feature.geometry as Point;
-        this.properties = feature.properties as ISharedStreetsMatchPointProperties;
+        this.properties = feature.properties as ISharedStreetsMatchGeomPointProperties;
     }
 }

@@ -3,7 +3,7 @@ import {
     LineString,
 } from 'geojson';
 
-export interface ISharedStreetsMatchPathProperties {
+export interface ISharedStreetsMatchGeomPathProperties {
     color?: string;
     referenceId: string;
     geometryId: string;
@@ -21,16 +21,16 @@ export interface ISharedStreetsMatchPathProperties {
     originalFeature: Feature;
 }
 
-export class SharedStreetsMatchPath implements Feature {
+export class SharedStreetsMatchGeomPath implements Feature {
     public type: "Feature" = "Feature";
     public geometry: LineString;
-    public properties: ISharedStreetsMatchPathProperties;
+    public properties: ISharedStreetsMatchGeomPathProperties;
 
     /**
      * constructor
      */
     public constructor(feature: Feature) {
         this.geometry = feature.geometry as LineString;
-        this.properties = feature.properties as ISharedStreetsMatchPathProperties;
+        this.properties = feature.properties as ISharedStreetsMatchGeomPathProperties;
     }
 }

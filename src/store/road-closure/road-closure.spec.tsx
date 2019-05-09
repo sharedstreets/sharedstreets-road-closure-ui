@@ -1,11 +1,12 @@
 import { RoadClosureFormStateItem } from '../../models/RoadClosureFormStateItem';
 import { RoadClosureFormStateStreet } from '../../models/RoadClosureFormStateStreet';
 import { RoadClosureOutputStateItem } from '../../models/RoadClosureOutputStateItem';
-import { SharedStreetsMatchFeatureCollection } from "../../models/SharedStreets/SharedStreetsMatchFeatureCollection";
+import { SharedStreetsMatchGeomFeatureCollection } from "../../models/SharedStreets/SharedStreetsMatchGeomFeatureCollection";
 import {
-    ISharedStreetsMatchPathProperties,
-    SharedStreetsMatchPath,
-} from '../../models/SharedStreets/SharedStreetsMatchPath';
+    ISharedStreetsMatchGeomPathProperties,
+    SharedStreetsMatchGeomPath,
+} from '../../models/SharedStreets/SharedStreetsMatchGeomPath';
+import { SharedStreetsMatchPointFeatureCollection } from '../../models/SharedStreets/SharedStreetsMatchPointFeatureCollection';
 import {
     ACTIONS as ROAD_CLOSURE_ACTIONS,
     IFetchSharedstreetGeomsSuccessResponse,
@@ -21,11 +22,13 @@ const defaultState: IRoadClosureState = {
     allRoadClosureItems: [],
     allRoadClosureMetadata: [],
     allRoadClosuresUploadUrls: [],
-    currentItem: new SharedStreetsMatchFeatureCollection(),
+    currentItem: new SharedStreetsMatchGeomFeatureCollection(),
     currentLineId: '',
+    currentPossibleDirections: new SharedStreetsMatchPointFeatureCollection(),
     highlightedFeatureGroup: [],
     isEditingExistingClosure: false,
     isFetchingInput: false,
+    isFetchingMatchedPoints: false,
     isFetchingMatchedStreets: false,
     isGeneratingUploadUrl: false,
     isLoadedInput: false,
@@ -54,7 +57,7 @@ test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_METADATA_SUCCESS - 0 items
 test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_METADATA_SUCCESS - 1 item in payload', () => {
     const startingState = Object.assign({}, defaultState);
 
-    const pathProperties: ISharedStreetsMatchPathProperties = {
+    const pathProperties: ISharedStreetsMatchGeomPathProperties = {
         direction: 'forward',
         fromIntersectionId: '',
         fromStreetnames: [''],
@@ -80,7 +83,7 @@ test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_METADATA_SUCCESS - 1 item 
         toIntersectionId: '',
         toStreetnames: ['']
     };
-    const path = new SharedStreetsMatchPath({
+    const path = new SharedStreetsMatchGeomPath({
         geometry: {
             coordinates: [
                 [1, 2],
@@ -107,7 +110,7 @@ test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_METADATA_SUCCESS - 1 item 
     forwardStreet.referenceId = 'b';
     forwardStreet.streetname = '';
 
-    const roadClosureItem = new SharedStreetsMatchFeatureCollection();
+    const roadClosureItem = new SharedStreetsMatchGeomFeatureCollection();
     roadClosureItem.features = [path];
     roadClosureItem.properties = {
         ...roadClosureItemProperties,
@@ -148,7 +151,7 @@ test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_DATA_SUCCESS', () => {
         isLoadedInput: false,
     });
 
-    const pathProperties: ISharedStreetsMatchPathProperties = {
+    const pathProperties: ISharedStreetsMatchGeomPathProperties = {
         direction: 'forward',
         fromIntersectionId: '',
         fromStreetnames: [''],
@@ -174,7 +177,7 @@ test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_DATA_SUCCESS', () => {
         toIntersectionId: '',
         toStreetnames: ['']
     };
-    const path = new SharedStreetsMatchPath({
+    const path = new SharedStreetsMatchGeomPath({
         geometry: {
             coordinates: [
                 [1, 2],
@@ -201,7 +204,7 @@ test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_DATA_SUCCESS', () => {
     forwardStreet.referenceId = 'b';
     forwardStreet.streetname = '';
 
-    const roadClosureItem = new SharedStreetsMatchFeatureCollection();
+    const roadClosureItem = new SharedStreetsMatchGeomFeatureCollection();
     roadClosureItem.features = [path];
     roadClosureItem.properties = {
         ...roadClosureItemProperties,
@@ -220,7 +223,7 @@ test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_DATA_SUCCESS', () => {
         isLoadedInput: true,
     });
 
-    const payload = new SharedStreetsMatchFeatureCollection();
+    const payload = new SharedStreetsMatchGeomFeatureCollection();
     payload.features = [path];
     payload.properties = roadClosureItemProperties;
 
@@ -256,7 +259,7 @@ test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS - 1 street & 1 direc
         isFetchingMatchedStreets: false,
     });
 
-    const properties: ISharedStreetsMatchPathProperties = {
+    const properties: ISharedStreetsMatchGeomPathProperties = {
         direction: 'forward',
         fromIntersectionId: '',
         fromStreetnames: [''],
@@ -282,7 +285,7 @@ test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS - 1 street & 1 direc
         toIntersectionId: '',
         toStreetnames: ['']
     };
-    const path = new SharedStreetsMatchPath({
+    const path = new SharedStreetsMatchGeomPath({
         geometry: {
             coordinates: [
                 [1, 2],
@@ -293,7 +296,7 @@ test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS - 1 street & 1 direc
         properties,
         type: "Feature",
     });
-    const matched = new SharedStreetsMatchFeatureCollection();
+    const matched = new SharedStreetsMatchGeomFeatureCollection();
     matched.features = [path];
 
     expectedState.currentItem = matched;
@@ -333,7 +336,7 @@ test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS - 1 street & 1 direc
 });
 
 test('ACTION: ROAD_CLOSURE/TOGGLE_DIRECTION_STREET_SEGMENT - geometryIds', () => {
-    const startingItem = new SharedStreetsMatchFeatureCollection();
+    const startingItem = new SharedStreetsMatchGeomFeatureCollection();
     startingItem.properties.geometryIdDirectionFilter = {
         "a": {
             "backward": false,
@@ -343,7 +346,7 @@ test('ACTION: ROAD_CLOSURE/TOGGLE_DIRECTION_STREET_SEGMENT - geometryIds', () =>
     const startingState = Object.assign({}, defaultState);
     startingState.currentItem = startingItem;
 
-    const expectedItem = Object.assign({}, new SharedStreetsMatchFeatureCollection());
+    const expectedItem = Object.assign({}, new SharedStreetsMatchGeomFeatureCollection());
     expectedItem.properties.geometryIdDirectionFilter = {
         "a": {
             "backward": true,
@@ -387,7 +390,7 @@ test('ACTION: ROAD_CLOSURE/INPUT_CHANGED - text', () => {
     forwardStreet.referenceId = 'b';
     forwardStreet.streetname = '';
 
-    const currentItem = new SharedStreetsMatchFeatureCollection();
+    const currentItem = new SharedStreetsMatchGeomFeatureCollection();
     currentItem.properties.description = 'updated description';
     currentItem.properties.geometryIdDirectionFilter = geometryIdDirectionFilter;
     currentItem.properties.street = {

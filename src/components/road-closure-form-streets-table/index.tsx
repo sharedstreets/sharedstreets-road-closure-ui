@@ -1,14 +1,14 @@
 import * as React from 'react';
 
-import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
-import { SharedStreetsMatchPoint } from 'src/models/SharedStreets/SharedStreetsMatchPoint';
+import { SharedStreetsMatchGeomPath } from 'src/models/SharedStreets/SharedStreetsMatchGeomPath';
+import { SharedStreetsMatchGeomPoint } from 'src/models/SharedStreets/SharedStreetsMatchGeomPoint';
 import RoadClosureFormStreetsTableRow from '../road-closure-form-streets-table-row';
 
 export interface IRoadClosureFormStreetsTableProps {
-    currentMatchedStreetsFeatures: Array<SharedStreetsMatchPath | SharedStreetsMatchPoint>,
-    matchedStreetsGroup: SharedStreetsMatchPath[],
+    currentMatchedStreetsFeatures: Array<SharedStreetsMatchGeomPath | SharedStreetsMatchGeomPoint>,
+    matchedStreetsGroup: SharedStreetsMatchGeomPath[],
     matchedStreetsGroupDirections: { forward: boolean, backward: boolean },
-    matchedStreetsGroupsGeometryIdPathMap: { [geomId: string]: { [direction: string] : SharedStreetsMatchPath} },
+    matchedStreetsGroupsGeometryIdPathMap: { [geomId: string]: { [direction: string] : SharedStreetsMatchGeomPath} },
     geometryIdDirectionFilter: { [ geometryId: string] : { forward: boolean, backward: boolean } },
     streets: any,
     deleteStreetSegment: (payload: any) => void,
@@ -33,7 +33,7 @@ class RoadClosureFormStreetsTable extends React.Component<IRoadClosureFormStreet
                 </tr>
             </thead>
             <tbody>
-                { this.props.matchedStreetsGroup.map((path: SharedStreetsMatchPath) => {
+                { this.props.matchedStreetsGroup.map((path: SharedStreetsMatchGeomPath) => {
                         if (!this.props.streets[path.properties.geometryId]) {
                             return;
                         }
@@ -45,10 +45,10 @@ class RoadClosureFormStreetsTable extends React.Component<IRoadClosureFormStreet
                         }
                             
 
-                        const currentFeature = this.props.currentMatchedStreetsFeatures.filter((feature) => feature instanceof SharedStreetsMatchPath)
-                            .filter((feature: SharedStreetsMatchPath) => feature.properties.geometryId === path.properties.geometryId
+                        const currentFeature = this.props.currentMatchedStreetsFeatures.filter((feature) => feature instanceof SharedStreetsMatchGeomPath)
+                            .filter((feature: SharedStreetsMatchGeomPath) => feature.properties.geometryId === path.properties.geometryId
                                                                         && feature.properties.referenceId === path.properties.referenceId
-                            ) as SharedStreetsMatchPath[];
+                            ) as SharedStreetsMatchGeomPath[];
 
                         return <RoadClosureFormStreetsTableRow
                             highlightMatchedStreet={this.props.highlightMatchedStreet}

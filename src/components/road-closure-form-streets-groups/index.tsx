@@ -1,16 +1,16 @@
 import { Card, Spinner } from '@blueprintjs/core';
 import * as React from 'react';
-import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
-import { SharedStreetsMatchPoint } from 'src/models/SharedStreets/SharedStreetsMatchPoint';
+import { SharedStreetsMatchGeomPath } from 'src/models/SharedStreets/SharedStreetsMatchGeomPath';
+import { SharedStreetsMatchGeomPoint } from 'src/models/SharedStreets/SharedStreetsMatchGeomPoint';
 import { selectMatchedStreetsGroupFilteredByDirection } from 'src/selectors/road-closure-group-item';
 import RoadClosureFormStreetsGroupItem from '../road-closure-form-streets-groups-item';
 // import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
 
 export interface IRoadClosureFormStreetsGroupsProps {
-    currentMatchedStreetsGroups: SharedStreetsMatchPath[][],
+    currentMatchedStreetsGroups: SharedStreetsMatchGeomPath[][],
     currentMatchedStreetsGroupsDirections: Array<{ forward: boolean, backward: boolean }>,
-    currentMatchedStreetsGroupsGeometryIdPathMap: { [geomId: string]: { [direction: string] : SharedStreetsMatchPath} },
-    currentMatchedStreetsFeatures: Array<SharedStreetsMatchPath | SharedStreetsMatchPoint>,
+    currentMatchedStreetsGroupsGeometryIdPathMap: { [geomId: string]: { [direction: string] : SharedStreetsMatchGeomPath} },
+    currentMatchedStreetsFeatures: Array<SharedStreetsMatchGeomPath | SharedStreetsMatchGeomPoint>,
     geometryIdDirectionFilter: { [ geometryId: string] : { forward: boolean, backward: boolean } },
     streets: any,
     isFetchingMatchedStreets: boolean,
@@ -30,7 +30,7 @@ class RoadClosureFormStreetsGroups extends React.Component<IRoadClosureFormStree
     public render() {
         return <div className="SHST-Streets-Card">
             {
-                this.props.currentMatchedStreetsGroups.map((group: SharedStreetsMatchPath[], index) => {
+                this.props.currentMatchedStreetsGroups.map((group: SharedStreetsMatchGeomPath[], index) => {
                     if (group.length === 0) {
                         return;
                     }

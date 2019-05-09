@@ -20,7 +20,7 @@ import {
 import * as moment from 'moment';
 import * as React from 'react';
 import RoadClosureOutputViewer from 'src/containers/road-closure-output-viewer';
-import { SharedStreetsMatchFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchFeatureCollection';
+import { SharedStreetsMatchGeomFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchGeomFeatureCollection';
 import { IRoadClosureState } from 'src/store/road-closure';
 import RoadClosureFormStreetsGroups from '../road-closure-form-streets-groups';
 
@@ -45,7 +45,7 @@ export interface IRoadClosureFormProps {
   currentRoadClosureGroups: any,
   currentRoadClosureGroupsDirection: any,
   currentRoadClosureGroupsGeometryIdPathMap: any,
-  currentRoadClosureItem: SharedStreetsMatchFeatureCollection,
+  currentRoadClosureItem: SharedStreetsMatchGeomFeatureCollection,
   streetnameToReferenceId: any,
   toggleStreetSegmentDirection: () => void,
   viewRoadClosureOutput: () => void,

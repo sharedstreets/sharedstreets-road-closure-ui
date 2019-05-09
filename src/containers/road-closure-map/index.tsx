@@ -14,6 +14,7 @@ import {
 
 const mapStateToProps = (state: RootState) => ({
     // currentRoadClosureGroups: getContiguousFeatureGroups(state.roadClosure),
+    currentPossibleDirections: state.roadClosure.currentPossibleDirections,
     currentRoadClosureItemOutput: currentRoadClosureItemOutput(state.roadClosure),
     directionIconPoints: getDirectionIconPoints(state.roadClosure),
     highlightedFeatureGroup: state.roadClosure.highlightedFeatureGroup,

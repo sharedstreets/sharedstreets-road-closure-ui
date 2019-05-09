@@ -7,13 +7,13 @@ import {
 } from 'lodash';
 import * as React from 'react';
 import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
-import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
+import { SharedStreetsMatchGeomPath } from 'src/models/SharedStreets/SharedStreetsMatchGeomPath';
 // import { SharedStreetsMatchPoint } from 'src/models/SharedStreets/SharedStreetsMatchPoint';
 import './road-closure-form-streets-table-row.css'
 
 export interface IRoadClosureFormStreetsTableRowProps {
     // matchedStreetsGroup: Array<SharedStreetsMatchPath|SharedStreetsMatchPoint>,
-    currentFeature: SharedStreetsMatchPath,
+    currentFeature: SharedStreetsMatchGeomPath,
     key: string,
     street: RoadClosureFormStateStreet
     deleteStreetSegment: (payload: any) => void,

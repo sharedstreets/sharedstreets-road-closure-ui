@@ -16,7 +16,8 @@ import * as mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import * as React from 'react';
 // import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
-import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
+import { SharedStreetsMatchGeomPath } from 'src/models/SharedStreets/SharedStreetsMatchGeomPath';
+import { SharedStreetsMatchPointFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchPointFeatureCollection';
 import { IRoadClosureState } from 'src/store/road-closure';
 import { v4 as uuid } from 'uuid';
 import SharedStreetsMapDrawControl from '../sharedstreets-map-draw-control';
@@ -39,9 +40,10 @@ export interface IRoadClosureMapProps {
   pointRemoved: () => void,
   pointSelected: (payload: any) => void,
   inputChanged: (payload: any) => void,
+  currentPossibleDirections: SharedStreetsMatchPointFeatureCollection,
   currentRoadClosureItemOutput: any,
   directionIconPoints: any,
-  highlightedFeatureGroup: SharedStreetsMatchPath[],
+  highlightedFeatureGroup: SharedStreetsMatchGeomPath[],
   roadBlockIconPoints: any,
   roadClosure: IRoadClosureState,
 };
@@ -134,6 +136,31 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
           "type": "line",
         });
 
+        this.mapContainer.addSource('possibleDirectionsPoints', {
+          data: this.props.currentPossibleDirections,
+          type: "geojson",
+        });
+        this.mapContainer.addLayer({
+          "id": "possibleDirections",
+          'layout': {
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true,
+            'icon-image': 'triangle-11',
+            'icon-offset': [0, -7],
+            'icon-rotate': {
+              'property': 'bearing',
+              'type': 'identity',
+            },
+            'icon-rotation-alignment': 'map',
+            'icon-size': 1.5,
+          },
+          // "paint": {
+          //   "icon-color": "red",
+          // },
+          "source": "possibleDirectionsPoints",
+          "type": "symbol",
+        });
+
         this.mapContainer.addSource('directionPoints', {
           data: this.props.roadClosure.currentItem,
           type: "geojson",
@@ -208,6 +235,10 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
     
     if (this.mapContainer.getLayer('direction')) {
       this.mapContainer.getSource('directionPoints').setData(this.props.directionIconPoints);
+    }
+        
+    if (this.mapContainer.getLayer('possibleDirections')) {
+      this.mapContainer.getSource('possibleDirectionsPoints').setData(this.props.currentPossibleDirections);
     }
 
     if (prevProps.roadClosure.currentLineId !== currentLineId) {
@@ -285,7 +316,10 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
     this.removeSelectedLine(this.state.currentLineId);
 
     const newSelectedCoordinates = omit(this.state.selectedCoordinates, this.state.currentLineId);
-
+    this.props.findMatchedPoint(
+      point([]),
+      this.state.currentLineId,
+    );
     this.setState({
       currentLineId: '',
       isDrawing: false,
@@ -304,12 +338,18 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
       this.mapContainer.removeSource(lastPointId);
     }
     newSelectedCoordinates[this.state.currentLineId].pop();
-
+    const lastSelectedPoint = newSelectedCoordinates[this.state.currentLineId][
+      newSelectedCoordinates[this.state.currentLineId].length-1
+    ];
+    this.props.findMatchedPoint(
+      point(lastSelectedPoint),
+      this.state.currentLineId,
+    );
 
     if (newSelectedCoordinates[this.state.currentLineId].length > 1) {
       const selectedLine = lineString(newSelectedCoordinates[this.state.currentLineId]);
       this.mapContainer.getSource(this.state.currentLineId).setData(selectedLine);
-    } else {
+    } else if (newSelectedCoordinates[this.state.currentLineId].length === 1) {
       this.removeSelectedLine(this.state.currentLineId);
     }
     
@@ -373,6 +413,9 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
           "type": "line",
         });
       }
+      // else if (newSelectedCoordinates[this.state.currentLineId].length > 0) {
+      //   this.mapContainer.setLayoutProperty('possibleDirections', 'visibility', 'visible');
+      // }
 
       this.setState({
         selectedCoordinates: newSelectedCoordinates
