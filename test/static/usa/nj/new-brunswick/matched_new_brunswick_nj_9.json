@@ -1,0 +1,3188 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45223768510891,
+            40.50354717853503
+          ],
+          [
+            -74.452015,
+            40.5033304
+          ],
+          [
+            -74.45190000000001,
+            40.5032231
+          ],
+          [
+            -74.4518506,
+            40.503177
+          ],
+          [
+            -74.45162380000001,
+            40.5029601
+          ],
+          [
+            -74.451561,
+            40.502900000000004
+          ],
+          [
+            -74.4515418,
+            40.5028803
+          ],
+          [
+            -74.45105020000001,
+            40.5023757
+          ],
+          [
+            -74.450995,
+            40.502319
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "8b71fd53eeaa00cf5280cee7ed452976",
+        "fromIntersectionId": "31832b21a8afaeae6294e148cf5fe58c",
+        "toIntersectionId": "2212e3eac9b969cc8ff97200abc6a8d5",
+        "fromStreetnames": [
+          "Senior Street"
+        ],
+        "toStreetnames": [
+          "Bartlett Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "backward",
+        "geometryId": "c14556542c0d0a11c30edcc0e45f2ce6",
+        "streetname": "College Avenue",
+        "referenceLength": 236.87,
+        "section": [
+          64.51147517517558,
+          236.87
+        ],
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45221052439446,
+                40.503563571055395
+              ],
+              [
+                -74.44952026230575,
+                40.50097109935203
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.450995,
+            40.502319
+          ],
+          [
+            -74.45093270000001,
+            40.5022591
+          ],
+          [
+            -74.4504611,
+            40.5018059
+          ],
+          [
+            -74.450404,
+            40.501751000000006
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "3d02c70f7b78229c5b7bd920ad179972",
+        "fromIntersectionId": "2212e3eac9b969cc8ff97200abc6a8d5",
+        "toIntersectionId": "a4c95583ff386049824bab5fdf7ba915",
+        "fromStreetnames": [
+          "Bartlett Street"
+        ],
+        "toStreetnames": [
+          "Stone Street",
+          "Bishop Place"
+        ],
+        "roadClass": "Residential",
+        "direction": "backward",
+        "geometryId": "86e015b50d4b7aa074a3912089616d2a",
+        "streetname": "College Avenue",
+        "section": [
+          0,
+          80.55
+        ],
+        "referenceLength": 80.55,
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45221052439446,
+                40.503563571055395
+              ],
+              [
+                -74.44952026230575,
+                40.50097109935203
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.450404,
+            40.501751000000006
+          ],
+          [
+            -74.450371,
+            40.501720000000006
+          ],
+          [
+            -74.4503488,
+            40.501699200000004
+          ],
+          [
+            -74.4498172,
+            40.5012027
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "f74dc767c56ed6d7a5ca424bd78458ed",
+        "fromIntersectionId": "a4c95583ff386049824bab5fdf7ba915",
+        "toIntersectionId": "4a43990cdc978ed26add3a439bd5101d",
+        "fromStreetnames": [
+          "Stone Street",
+          "Bishop Place"
+        ],
+        "toStreetnames": [
+          "Mine Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "backward",
+        "geometryId": "e9b06f45dac276bb352ce87af2d3cf72",
+        "streetname": "College Avenue",
+        "section": [
+          0,
+          78.62
+        ],
+        "referenceLength": 78.62,
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45221052439446,
+                40.503563571055395
+              ],
+              [
+                -74.44952026230575,
+                40.50097109935203
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.4498172,
+            40.5012027
+          ],
+          [
+            -74.4496797,
+            40.501064500000005
+          ],
+          [
+            -74.4495558139382,
+            40.50094890724123
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "c0bb62f28f005a04d0386c0975a5501e",
+        "fromIntersectionId": "4a43990cdc978ed26add3a439bd5101d",
+        "toIntersectionId": "8e95c5da004dd75cc2b9f243e4f9a270",
+        "fromStreetnames": [
+          "Mine Street"
+        ],
+        "toStreetnames": [
+          "Seminary Place"
+        ],
+        "roadClass": "Residential",
+        "direction": "backward",
+        "geometryId": "92ffaade4fcc0bdd24c8b388f6e15246",
+        "streetname": "College Avenue",
+        "referenceLength": 68.47,
+        "section": [
+          0,
+          35.85046463637933
+        ],
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45221052439446,
+                40.503563571055395
+              ],
+              [
+                -74.44952026230575,
+                40.50097109935203
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.4540352713636,
+            40.50022835477536
+          ],
+          [
+            -74.4542172,
+            40.500403500000004
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "326dd30b2c3cbc59a55d1ce9f4b68d3b",
+        "fromIntersectionId": "6aceb0eeeb7358ccae41271d5dbcd811",
+        "toIntersectionId": "4539079b3a707a685dfb87b98ca22689",
+        "fromStreetnames": [
+          "Stone Street"
+        ],
+        "toStreetnames": [
+          "Bartlett Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "forward",
+        "geometryId": "6db57e68ebeb420de683f72c326f0f72",
+        "streetname": "Wyckoff Street",
+        "referenceLength": 77.22,
+        "section": [
+          52.39303768372945,
+          77.22
+        ],
+        "side": "left",
+        "score": 15.892147588816666,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45419619000297,
+                40.5001317094125
+              ],
+              [
+                -74.45703158596913,
+                40.502955946457604
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.4542172,
+            40.500403500000004
+          ],
+          [
+            -74.454775,
+            40.500955000000005
+          ],
+          [
+            -74.4553637,
+            40.5015252
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "2b464d8b5ef15f0b9ab4b650d35b1c07",
+        "fromIntersectionId": "4539079b3a707a685dfb87b98ca22689",
+        "toIntersectionId": "04a7c780e5c2f18a7202575ad4981caf",
+        "fromStreetnames": [
+          "Bartlett Street"
+        ],
+        "toStreetnames": [
+          "Ray Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "forward",
+        "geometryId": "aee1995a3530bbb405feb5d15708960a",
+        "streetname": "Wyckoff Street",
+        "section": [
+          0,
+          157.99
+        ],
+        "referenceLength": 157.99,
+        "side": "left",
+        "score": 15.892147588816666,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45419619000297,
+                40.5001317094125
+              ],
+              [
+                -74.45703158596913,
+                40.502955946457604
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.4553637,
+            40.5015252
+          ],
+          [
+            -74.4554165,
+            40.5015766
+          ],
+          [
+            -74.4559414,
+            40.5020891
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "6e4f9b835c0d8ce48594e59e4953e167",
+        "fromIntersectionId": "04a7c780e5c2f18a7202575ad4981caf",
+        "toIntersectionId": "46e92212e9ef73e854ff896173d28235",
+        "fromStreetnames": [
+          "Ray Street"
+        ],
+        "toStreetnames": [
+          "Senior Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "forward",
+        "geometryId": "d86167fe3d4067035b70fa078f82e945",
+        "streetname": "Wyckoff Street",
+        "section": [
+          0,
+          79.49
+        ],
+        "referenceLength": 79.49,
+        "side": "left",
+        "score": 15.892147588816666,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45419619000297,
+                40.5001317094125
+              ],
+              [
+                -74.45703158596913,
+                40.502955946457604
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.4559414,
+            40.5020891
+          ],
+          [
+            -74.45652100000001,
+            40.502652000000005
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "10a01f74414d506179f8bdc5c2f5467e",
+        "fromIntersectionId": "46e92212e9ef73e854ff896173d28235",
+        "toIntersectionId": "a469138cb2119675f848656e2c170600",
+        "fromStreetnames": [
+          "Senior Street"
+        ],
+        "toStreetnames": [
+          "Richardson Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "forward",
+        "geometryId": "4f2986dedb77180e2418a1913dc59335",
+        "streetname": "Wyckoff Street",
+        "section": [
+          0,
+          79.5
+        ],
+        "referenceLength": 79.5,
+        "side": "left",
+        "score": 15.892147588816666,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45419619000297,
+                40.5001317094125
+              ],
+              [
+                -74.45703158596913,
+                40.502955946457604
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45652100000001,
+            40.502652000000005
+          ],
+          [
+            -74.45690900722315,
+            40.50302890269
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "9ba67a097d203eb36e904079fafc31fa",
+        "fromIntersectionId": "a469138cb2119675f848656e2c170600",
+        "toIntersectionId": "2ce5b9099a6740e0c3b045892e8bdac4",
+        "fromStreetnames": [
+          "Richardson Street"
+        ],
+        "toStreetnames": [
+          "Huntington Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "forward",
+        "geometryId": "acde3da3798710d6eed7b6cf48dabc9d",
+        "streetname": "Wyckoff Street",
+        "referenceLength": 76.69,
+        "section": [
+          0,
+          53.22269110871038
+        ],
+        "side": "left",
+        "score": 15.892147588816666,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45419619000297,
+                40.5001317094125
+              ],
+              [
+                -74.45703158596913,
+                40.502955946457604
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.455349,
+            40.496697000000005
+          ],
+          [
+            -74.455152,
+            40.496757
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "78e2aad9c3b2e503f30e84304e5614cf",
+        "fromIntersectionId": "0c252023220a581e06d8e50cf54f88e7",
+        "toIntersectionId": "af6af93442dde73ae064722a7b549019",
+        "fromStreetnames": [
+          "Robinson Street"
+        ],
+        "toStreetnames": [
+          "Harvey Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "backward",
+        "geometryId": "5a7b014b22ff2c2c3f4a60db4d26c847",
+        "streetname": "Hamilton Street",
+        "section": [
+          0,
+          17.98
+        ],
+        "referenceLength": 17.98,
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45700496214738,
+                40.49614931198127
+              ],
+              [
+                -74.45022920757282,
+                40.49810873037981
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.455152,
+            40.496757
+          ],
+          [
+            -74.454381,
+            40.496993
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "c3a50128338daa57c323cd093b570118",
+        "fromIntersectionId": "af6af93442dde73ae064722a7b549019",
+        "toIntersectionId": "fde5a799e439c1c36ee7d38e26b3191f",
+        "fromStreetnames": [
+          "Harvey Street"
+        ],
+        "toStreetnames": [
+          "Hartwell Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "backward",
+        "geometryId": "340fe8fc08a4912677d5ba97c795b4cc",
+        "streetname": "Hamilton Street",
+        "section": [
+          0,
+          70.42
+        ],
+        "referenceLength": 70.42,
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45700496214738,
+                40.49614931198127
+              ],
+              [
+                -74.45022920757282,
+                40.49810873037981
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.454381,
+            40.496993
+          ],
+          [
+            -74.454311,
+            40.497015000000005
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "1a5169b67d112f2b6191a53739b629d0",
+        "fromIntersectionId": "fde5a799e439c1c36ee7d38e26b3191f",
+        "toIntersectionId": "5c9537e515dadfdb6ac07a5166504b3c",
+        "fromStreetnames": [
+          "Hartwell Street"
+        ],
+        "toStreetnames": [
+          "Plum Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "backward",
+        "geometryId": "c80832ff26bfa0749c7577e23fb1f809",
+        "streetname": "Hamilton Street",
+        "section": [
+          0,
+          6.42
+        ],
+        "referenceLength": 6.42,
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45700496214738,
+                40.49614931198127
+              ],
+              [
+                -74.45022920757282,
+                40.49810873037981
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.454311,
+            40.497015000000005
+          ],
+          [
+            -74.45338000000001,
+            40.497302000000005
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "6866addfc819c36f3e8017b5f505c9fb",
+        "fromIntersectionId": "5c9537e515dadfdb6ac07a5166504b3c",
+        "toIntersectionId": "7231c3d178142764258b0a20c96a0a05",
+        "fromStreetnames": [
+          "Plum Street"
+        ],
+        "toStreetnames": [
+          "High Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "backward",
+        "geometryId": "476c32496e5b2cc7e76edd3c7bcde3ae",
+        "streetname": "Hamilton Street",
+        "section": [
+          0,
+          85.11
+        ],
+        "referenceLength": 85.11,
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45700496214738,
+                40.49614931198127
+              ],
+              [
+                -74.45022920757282,
+                40.49810873037981
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45338000000001,
+            40.497302000000005
+          ],
+          [
+            -74.452476,
+            40.497581000000004
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "0731c727ff26d51708aafe7444a4e0e3",
+        "fromIntersectionId": "7231c3d178142764258b0a20c96a0a05",
+        "toIntersectionId": "86594d923c63a4bd44bf293dd613b382",
+        "fromStreetnames": [
+          "High Street"
+        ],
+        "toStreetnames": [
+          "Division Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "backward",
+        "geometryId": "f05f0705401426e5bc902ff1b5dbbeae",
+        "streetname": "Hamilton Street",
+        "section": [
+          0,
+          82.66
+        ],
+        "referenceLength": 82.66,
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45700496214738,
+                40.49614931198127
+              ],
+              [
+                -74.45022920757282,
+                40.49810873037981
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.452476,
+            40.497581000000004
+          ],
+          [
+            -74.452072,
+            40.497706
+          ],
+          [
+            -74.451598,
+            40.497849
+          ],
+          [
+            -74.45125900000001,
+            40.497947
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "89cb7dca0afc62bbd733ccf3ee5b882e",
+        "fromIntersectionId": "86594d923c63a4bd44bf293dd613b382",
+        "toIntersectionId": "3a70384cf5b5eed8bed114b379c16e05",
+        "fromStreetnames": [
+          "Division Street"
+        ],
+        "toStreetnames": [
+          "Guilden Street",
+          "Hardenbergh Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "backward",
+        "geometryId": "c9d3321199c800dcca7b9e6eea1bbd33",
+        "streetname": "Hamilton Street",
+        "section": [
+          0,
+          110.89
+        ],
+        "referenceLength": 110.89,
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45700496214738,
+                40.49614931198127
+              ],
+              [
+                -74.45022920757282,
+                40.49810873037981
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45125900000001,
+            40.497947
+          ],
+          [
+            -74.450883,
+            40.498056000000005
+          ],
+          [
+            -74.45028369458805,
+            40.49822582303541
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "35d924b7514ba6ddb9709a2c14e6fdfd",
+        "fromIntersectionId": "3a70384cf5b5eed8bed114b379c16e05",
+        "toIntersectionId": "723702ddc931483dcbb389f937f52ac9",
+        "fromStreetnames": [
+          "Guilden Street",
+          "Hardenbergh Street"
+        ],
+        "toStreetnames": [
+          "Easton Avenue"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "backward",
+        "geometryId": "00a60e6ac39c958584e0ab98571e611b",
+        "streetname": "Hamilton Street",
+        "referenceLength": 109.98,
+        "section": [
+          0,
+          88.10371690146837
+        ],
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45700496214738,
+                40.49614931198127
+              ],
+              [
+                -74.45022920757282,
+                40.49810873037981
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45058772864657,
+            40.49813967048381
+          ],
+          [
+            -74.450883,
+            40.498056000000005
+          ],
+          [
+            -74.45125900000001,
+            40.497947
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "5eb53158caf95d83e38d083fa6801a18",
+        "fromIntersectionId": "723702ddc931483dcbb389f937f52ac9",
+        "toIntersectionId": "3a70384cf5b5eed8bed114b379c16e05",
+        "fromStreetnames": [
+          "Easton Avenue"
+        ],
+        "toStreetnames": [
+          "Guilden Street",
+          "Hardenbergh Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "00a60e6ac39c958584e0ab98571e611b",
+        "streetname": "Hamilton Street",
+        "referenceLength": 109.98,
+        "section": [
+          49.08169130352976,
+          109.98
+        ],
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45063479851953,
+                40.49823572775071
+              ],
+              [
+                -74.45671866266085,
+                40.49636702796133
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45125900000001,
+            40.497947
+          ],
+          [
+            -74.451598,
+            40.497849
+          ],
+          [
+            -74.452072,
+            40.497706
+          ],
+          [
+            -74.452476,
+            40.497581000000004
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "8ac369c2a875408e0c12136b8c7f5da8",
+        "fromIntersectionId": "3a70384cf5b5eed8bed114b379c16e05",
+        "toIntersectionId": "86594d923c63a4bd44bf293dd613b382",
+        "fromStreetnames": [
+          "Guilden Street",
+          "Hardenbergh Street"
+        ],
+        "toStreetnames": [
+          "Division Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "c9d3321199c800dcca7b9e6eea1bbd33",
+        "streetname": "Hamilton Street",
+        "section": [
+          0,
+          110.89
+        ],
+        "referenceLength": 110.89,
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45063479851953,
+                40.49823572775071
+              ],
+              [
+                -74.45671866266085,
+                40.49636702796133
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.452476,
+            40.497581000000004
+          ],
+          [
+            -74.45338000000001,
+            40.497302000000005
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "8ddb9ffadcd5f86f9c7a08cbb8ff5446",
+        "fromIntersectionId": "86594d923c63a4bd44bf293dd613b382",
+        "toIntersectionId": "7231c3d178142764258b0a20c96a0a05",
+        "fromStreetnames": [
+          "Division Street"
+        ],
+        "toStreetnames": [
+          "High Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "f05f0705401426e5bc902ff1b5dbbeae",
+        "streetname": "Hamilton Street",
+        "section": [
+          0,
+          82.66
+        ],
+        "referenceLength": 82.66,
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45063479851953,
+                40.49823572775071
+              ],
+              [
+                -74.45671866266085,
+                40.49636702796133
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45338000000001,
+            40.497302000000005
+          ],
+          [
+            -74.454311,
+            40.497015000000005
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "822f33679860abd2c25fdb387a4b306b",
+        "fromIntersectionId": "7231c3d178142764258b0a20c96a0a05",
+        "toIntersectionId": "5c9537e515dadfdb6ac07a5166504b3c",
+        "fromStreetnames": [
+          "High Street"
+        ],
+        "toStreetnames": [
+          "Plum Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "476c32496e5b2cc7e76edd3c7bcde3ae",
+        "streetname": "Hamilton Street",
+        "section": [
+          0,
+          85.11
+        ],
+        "referenceLength": 85.11,
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45063479851953,
+                40.49823572775071
+              ],
+              [
+                -74.45671866266085,
+                40.49636702796133
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.454311,
+            40.497015000000005
+          ],
+          [
+            -74.454381,
+            40.496993
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "e307cdbb3da94550c82d14831bd74507",
+        "fromIntersectionId": "5c9537e515dadfdb6ac07a5166504b3c",
+        "toIntersectionId": "fde5a799e439c1c36ee7d38e26b3191f",
+        "fromStreetnames": [
+          "Plum Street"
+        ],
+        "toStreetnames": [
+          "Hartwell Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "c80832ff26bfa0749c7577e23fb1f809",
+        "streetname": "Hamilton Street",
+        "section": [
+          0,
+          6.42
+        ],
+        "referenceLength": 6.42,
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45063479851953,
+                40.49823572775071
+              ],
+              [
+                -74.45671866266085,
+                40.49636702796133
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.454381,
+            40.496993
+          ],
+          [
+            -74.455152,
+            40.496757
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "f0a35354a86b589f7aadbed7b433952a",
+        "fromIntersectionId": "fde5a799e439c1c36ee7d38e26b3191f",
+        "toIntersectionId": "af6af93442dde73ae064722a7b549019",
+        "fromStreetnames": [
+          "Hartwell Street"
+        ],
+        "toStreetnames": [
+          "Harvey Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "340fe8fc08a4912677d5ba97c795b4cc",
+        "streetname": "Hamilton Street",
+        "section": [
+          0,
+          70.42
+        ],
+        "referenceLength": 70.42,
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45063479851953,
+                40.49823572775071
+              ],
+              [
+                -74.45671866266085,
+                40.49636702796133
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.455152,
+            40.496757
+          ],
+          [
+            -74.455349,
+            40.496697000000005
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "86f47d5f5d5e7050deb90b8ad60a31d3",
+        "fromIntersectionId": "af6af93442dde73ae064722a7b549019",
+        "toIntersectionId": "0c252023220a581e06d8e50cf54f88e7",
+        "fromStreetnames": [
+          "Harvey Street"
+        ],
+        "toStreetnames": [
+          "Robinson Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "5a7b014b22ff2c2c3f4a60db4d26c847",
+        "streetname": "Hamilton Street",
+        "section": [
+          0,
+          17.98
+        ],
+        "referenceLength": 17.98,
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45063479851953,
+                40.49823572775071
+              ],
+              [
+                -74.45671866266085,
+                40.49636702796133
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.455349,
+            40.496697000000005
+          ],
+          [
+            -74.45612,
+            40.496459
+          ],
+          [
+            -74.456338,
+            40.496378
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "20f3d412246cd43fbb3003ee06d0cd62",
+        "fromIntersectionId": "0c252023220a581e06d8e50cf54f88e7",
+        "toIntersectionId": "d005f7e465b8b46a90f7df63e93dfae3",
+        "fromStreetnames": [
+          "Robinson Street"
+        ],
+        "toStreetnames": [
+          "Louis Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "334a95f02d7063fb78456f86b6f43e66",
+        "streetname": "Hamilton Street",
+        "section": [
+          0,
+          91.05
+        ],
+        "referenceLength": 91.05,
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45063479851953,
+                40.49823572775071
+              ],
+              [
+                -74.45671866266085,
+                40.49636702796133
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.456338,
+            40.496378
+          ],
+          [
+            -74.456451,
+            40.496336
+          ],
+          [
+            -74.45666270677327,
+            40.49626730474526
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "e724d9e7e2e01883639ca44cb75bcd48",
+        "fromIntersectionId": "d005f7e465b8b46a90f7df63e93dfae3",
+        "toIntersectionId": "462adb861ac48ba8d5f2cf968f7a9aca",
+        "fromStreetnames": [
+          "Louis Street"
+        ],
+        "toStreetnames": [
+          "Dix Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "e7d1608babf0047c5199459e15af1d1a",
+        "streetname": "Hamilton Street",
+        "referenceLength": 105.75,
+        "section": [
+          0,
+          30.098401317369117
+        ],
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45063479851953,
+                40.49823572775071
+              ],
+              [
+                -74.45671866266085,
+                40.49636702796133
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.459289,
+            40.501877
+          ],
+          [
+            -74.45910380000001,
+            40.501982000000005
+          ],
+          [
+            -74.45708,
+            40.503195000000005
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "297616b6524fe221afd568a6acc457d4",
+        "fromIntersectionId": "4cc2a7f26c971cb1e0e796a3d13c6bfd",
+        "toIntersectionId": "2ce5b9099a6740e0c3b045892e8bdac4",
+        "fromStreetnames": [
+          "Easton Avenue"
+        ],
+        "toStreetnames": [
+          "Wyckoff Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "backward",
+        "geometryId": "172e54eeb53af8550b088e23bfe587af",
+        "streetname": "Huntington Street",
+        "section": [
+          0,
+          237.66
+        ],
+        "referenceLength": 237.66,
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45633630158814,
+                40.50082437864319
+              ],
+              [
+                -74.45389773631307,
+                40.502358421420126
+              ],
+              [
+                -74.45716874354314,
+                40.50363924579432
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45708,
+            40.503195000000005
+          ],
+          [
+            -74.45739909799926,
+            40.50349982898969
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "7573f224e17a906fe644f03b007faad7",
+        "fromIntersectionId": "2ce5b9099a6740e0c3b045892e8bdac4",
+        "toIntersectionId": "0e003eae3e04e7ad7c3c4a03c784e179",
+        "fromStreetnames": [
+          "Huntington Street"
+        ],
+        "toStreetnames": [],
+        "roadClass": "Residential",
+        "direction": "forward",
+        "geometryId": "826207fa23bfca7133339925ccc262dc",
+        "streetname": "Wyckoff Street",
+        "referenceLength": 79.06,
+        "section": [
+          0,
+          43.32200265550216
+        ],
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45633630158814,
+                40.50082437864319
+              ],
+              [
+                -74.45389773631307,
+                40.502358421420126
+              ],
+              [
+                -74.45716874354314,
+                40.50363924579432
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45355681744915,
+            40.49991121549478
+          ],
+          [
+            -74.452567,
+            40.500463
+          ],
+          [
+            -74.452073,
+            40.500747000000004
+          ],
+          [
+            -74.45205100000001,
+            40.50076
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "6fa701f114bb58bb51bb9bc6e756c641",
+        "fromIntersectionId": "6aceb0eeeb7358ccae41271d5dbcd811",
+        "toIntersectionId": "ee1b7b2fca01afd6b603eb565135409e",
+        "fromStreetnames": [
+          "Wyckoff Street"
+        ],
+        "toStreetnames": [
+          "Sicard Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "backward",
+        "geometryId": "dbcb6077deada9de48c56494e6f79ade",
+        "streetname": "Stone Street",
+        "referenceLength": 168.58,
+        "section": [
+          9.895240868308292,
+          168.58
+        ],
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45353537922503,
+                40.499886063337584
+              ],
+              [
+                -74.45100867304667,
+                40.50138289341655
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45205100000001,
+            40.50076
+          ],
+          [
+            -74.451997,
+            40.500792000000004
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "78899d1e65ac3c0fa26a9bb119e8c7f6",
+        "fromIntersectionId": "ee1b7b2fca01afd6b603eb565135409e",
+        "toIntersectionId": "96dc49379c3df1f6dac19555026e5556",
+        "fromStreetnames": [
+          "Sicard Street"
+        ],
+        "toStreetnames": [
+          "Prosper Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "backward",
+        "geometryId": "fee4f03cbc303fc2775fb08040d5c308",
+        "streetname": "Stone Street",
+        "section": [
+          0,
+          5.79
+        ],
+        "referenceLength": 5.79,
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45353537922503,
+                40.499886063337584
+              ],
+              [
+                -74.45100867304667,
+                40.50138289341655
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.451997,
+            40.500792000000004
+          ],
+          [
+            -74.45100966464712,
+            40.501386395468614
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "9508d77304222ec2715186877705594a",
+        "fromIntersectionId": "96dc49379c3df1f6dac19555026e5556",
+        "toIntersectionId": "a4c95583ff386049824bab5fdf7ba915",
+        "fromStreetnames": [
+          "Prosper Street"
+        ],
+        "toStreetnames": [
+          "College Avenue",
+          "Bishop Place"
+        ],
+        "roadClass": "Residential",
+        "direction": "backward",
+        "geometryId": "9fde6e00b8d77b0dc71966d8038b83cb",
+        "streetname": "Stone Street",
+        "referenceLength": 171.97,
+        "section": [
+          0,
+          106.47774096417227
+        ],
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45353537922503,
+                40.499886063337584
+              ],
+              [
+                -74.45100867304667,
+                40.50138289341655
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.4511174048502,
+            40.501321534649485
+          ],
+          [
+            -74.451997,
+            40.500792000000004
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "35ffad510bce5e8aa94d56beb046cf44",
+        "fromIntersectionId": "a4c95583ff386049824bab5fdf7ba915",
+        "toIntersectionId": "96dc49379c3df1f6dac19555026e5556",
+        "fromStreetnames": [
+          "College Avenue",
+          "Bishop Place"
+        ],
+        "toStreetnames": [
+          "Prosper Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "forward",
+        "geometryId": "9fde6e00b8d77b0dc71966d8038b83cb",
+        "streetname": "Stone Street",
+        "referenceLength": 171.97,
+        "section": [
+          76.93451192442376,
+          171.97
+        ],
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45120454174125,
+                40.50140523391789
+              ],
+              [
+                -74.45354517266283,
+                40.500139260824994
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.451997,
+            40.500792000000004
+          ],
+          [
+            -74.45205100000001,
+            40.50076
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "208c4acdbe8242bdde8999e3a1b898a3",
+        "fromIntersectionId": "96dc49379c3df1f6dac19555026e5556",
+        "toIntersectionId": "ee1b7b2fca01afd6b603eb565135409e",
+        "fromStreetnames": [
+          "Prosper Street"
+        ],
+        "toStreetnames": [
+          "Sicard Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "forward",
+        "geometryId": "fee4f03cbc303fc2775fb08040d5c308",
+        "streetname": "Stone Street",
+        "section": [
+          0,
+          5.79
+        ],
+        "referenceLength": 5.79,
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45120454174125,
+                40.50140523391789
+              ],
+              [
+                -74.45354517266283,
+                40.500139260824994
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45205100000001,
+            40.50076
+          ],
+          [
+            -74.452073,
+            40.500747000000004
+          ],
+          [
+            -74.452567,
+            40.500463
+          ],
+          [
+            -74.45340624725624,
+            40.499995153616844
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "433798930a039774b5f492878bfbd524",
+        "fromIntersectionId": "ee1b7b2fca01afd6b603eb565135409e",
+        "toIntersectionId": "6aceb0eeeb7358ccae41271d5dbcd811",
+        "fromStreetnames": [
+          "Sicard Street"
+        ],
+        "toStreetnames": [
+          "Wyckoff Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "forward",
+        "geometryId": "dbcb6077deada9de48c56494e6f79ade",
+        "streetname": "Stone Street",
+        "referenceLength": 168.58,
+        "section": [
+          0,
+          142.70635399460716
+        ],
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45120454174125,
+                40.50140523391789
+              ],
+              [
+                -74.45354517266283,
+                40.500139260824994
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45238871336733,
+            40.50110222404188
+          ],
+          [
+            -74.45262770000001,
+            40.5013444
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "38139095695fb29094668acccf90c936",
+        "fromIntersectionId": "ee1b7b2fca01afd6b603eb565135409e",
+        "toIntersectionId": "553e313e50c9051d311ecc4566c55399",
+        "fromStreetnames": [
+          "Stone Street"
+        ],
+        "toStreetnames": [
+          "Bartlett Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "forward",
+        "geometryId": "8e6dfb6cbb68fccf290680be7fea2e28",
+        "streetname": "Sicard Street",
+        "referenceLength": 81.25,
+        "section": [
+          47.57555592726671,
+          81.25
+        ],
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45230140644313,
+                40.50115204120877
+              ],
+              [
+                -74.45411319188325,
+                40.503006283310185
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45262770000001,
+            40.5013444
+          ],
+          [
+            -74.45320790000001,
+            40.501905900000004
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "6871594a57f6b4c82c92d02b838b254a",
+        "fromIntersectionId": "553e313e50c9051d311ecc4566c55399",
+        "toIntersectionId": "fe4f9008799d809b92aa86ffc567d439",
+        "fromStreetnames": [
+          "Bartlett Street"
+        ],
+        "toStreetnames": [
+          "Morrell Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "forward",
+        "geometryId": "f6c5a430a32107ba9257436ccc1cc0ff",
+        "streetname": "Sicard Street",
+        "section": [
+          0,
+          79.41
+        ],
+        "referenceLength": 79.41,
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45230140644313,
+                40.50115204120877
+              ],
+              [
+                -74.45411319188325,
+                40.503006283310185
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45320790000001,
+            40.501905900000004
+          ],
+          [
+            -74.453789,
+            40.50247
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "2c902ae59bb45cd203a978d1c76b4d4d",
+        "fromIntersectionId": "fe4f9008799d809b92aa86ffc567d439",
+        "toIntersectionId": "a20dd9aa86ef1798ad23f0395963bbd8",
+        "fromStreetnames": [
+          "Morrell Street"
+        ],
+        "toStreetnames": [
+          "Ray Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "forward",
+        "geometryId": "e82ed2ac159d2fc64a7777ca78b70e1c",
+        "streetname": "Sicard Street",
+        "section": [
+          0,
+          79.69
+        ],
+        "referenceLength": 79.69,
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45230140644313,
+                40.50115204120877
+              ],
+              [
+                -74.45411319188325,
+                40.503006283310185
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.453789,
+            40.50247
+          ],
+          [
+            -74.45424940530394,
+            40.502926926303985
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "461fbe5f7c513aae17695baa5cd511d4",
+        "fromIntersectionId": "a20dd9aa86ef1798ad23f0395963bbd8",
+        "toIntersectionId": "09869d00d3f3a4870f85c637093c735b",
+        "fromStreetnames": [
+          "Ray Street"
+        ],
+        "toStreetnames": [
+          "Senior Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "forward",
+        "geometryId": "93ac9dd4d2d5227253af1998f1d8b6ed",
+        "streetname": "Sicard Street",
+        "referenceLength": 79.1,
+        "section": [
+          0,
+          64.00609945144004
+        ],
+        "side": "unknown",
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45230140644313,
+                40.50115204120877
+              ],
+              [
+                -74.45411319188325,
+                40.503006283310185
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45424643226467,
+            40.50292397575597
+          ],
+          [
+            -74.453789,
+            40.50247
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "10a5d2e061a5ce1660da5b2c73ade298",
+        "fromIntersectionId": "09869d00d3f3a4870f85c637093c735b",
+        "toIntersectionId": "a20dd9aa86ef1798ad23f0395963bbd8",
+        "fromStreetnames": [
+          "Senior Street"
+        ],
+        "toStreetnames": [
+          "Ray Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "backward",
+        "geometryId": "93ac9dd4d2d5227253af1998f1d8b6ed",
+        "streetname": "Sicard Street",
+        "referenceLength": 79.1,
+        "section": [
+          15.496248968128455,
+          79.1
+        ],
+        "side": "unknown",
+        "score": 10.506799848377351,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45434823431673,
+                40.5028647967666
+              ],
+              [
+                -74.45239934078427,
+                40.500973316371386
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.453789,
+            40.50247
+          ],
+          [
+            -74.45320790000001,
+            40.501905900000004
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "13c1421d50138aa69730592a4a77df0e",
+        "fromIntersectionId": "a20dd9aa86ef1798ad23f0395963bbd8",
+        "toIntersectionId": "fe4f9008799d809b92aa86ffc567d439",
+        "fromStreetnames": [
+          "Ray Street"
+        ],
+        "toStreetnames": [
+          "Morrell Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "backward",
+        "geometryId": "e82ed2ac159d2fc64a7777ca78b70e1c",
+        "streetname": "Sicard Street",
+        "section": [
+          0,
+          79.69
+        ],
+        "referenceLength": 79.69,
+        "side": "unknown",
+        "score": 10.506799848377351,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45434823431673,
+                40.5028647967666
+              ],
+              [
+                -74.45239934078427,
+                40.500973316371386
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45320790000001,
+            40.501905900000004
+          ],
+          [
+            -74.45262770000001,
+            40.5013444
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "2e60caef23fbee942b9f29e1e299f59d",
+        "fromIntersectionId": "fe4f9008799d809b92aa86ffc567d439",
+        "toIntersectionId": "553e313e50c9051d311ecc4566c55399",
+        "fromStreetnames": [
+          "Morrell Street"
+        ],
+        "toStreetnames": [
+          "Bartlett Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "backward",
+        "geometryId": "f6c5a430a32107ba9257436ccc1cc0ff",
+        "streetname": "Sicard Street",
+        "section": [
+          0,
+          79.41
+        ],
+        "referenceLength": 79.41,
+        "side": "unknown",
+        "score": 10.506799848377351,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45434823431673,
+                40.5028647967666
+              ],
+              [
+                -74.45239934078427,
+                40.500973316371386
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45262770000001,
+            40.5013444
+          ],
+          [
+            -74.45231110357058,
+            40.50102357804452
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "1d0a99eab37a56c458e9c5ecdadb1412",
+        "fromIntersectionId": "553e313e50c9051d311ecc4566c55399",
+        "toIntersectionId": "ee1b7b2fca01afd6b603eb565135409e",
+        "fromStreetnames": [
+          "Bartlett Street"
+        ],
+        "toStreetnames": [
+          "Stone Street"
+        ],
+        "roadClass": "Residential",
+        "direction": "backward",
+        "geometryId": "8e6dfb6cbb68fccf290680be7fea2e28",
+        "streetname": "Sicard Street",
+        "referenceLength": 81.25,
+        "section": [
+          0,
+          44.60035945847045
+        ],
+        "side": "unknown",
+        "score": 10.506799848377351,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45434823431673,
+                40.5028647967666
+              ],
+              [
+                -74.45239934078427,
+                40.500973316371386
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45766400000001,
+            40.501243
+          ],
+          [
+            -74.45841,
+            40.501534
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "8fde78daef1427ea2bfaa8c3aa9745ef",
+        "fromIntersectionId": "7319057ee0dd726c90ec9714c30b74af",
+        "toIntersectionId": "c98796c949934b0d7f3a1d8b37b5b77f",
+        "fromStreetnames": [
+          "Wirt Street"
+        ],
+        "toStreetnames": [
+          "Richardson Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "476f76662abff98e384af6878c93a86f",
+        "streetname": "Easton Avenue",
+        "section": [
+          0,
+          71.01
+        ],
+        "referenceLength": 71.01,
+        "side": "unknown",
+        "score": 1.5197502721662346,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45657458016052,
+                40.50080224141982
+              ],
+              [
+                -74.45926395865835,
+                40.50186422611375
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45654696593962,
+            40.500806879123814
+          ],
+          [
+            -74.457479,
+            40.501171
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "85ad8a19c3a77f825e4e3919511b6ab7",
+        "fromIntersectionId": "2c39a17680b16903f04a5656e4668cdd",
+        "toIntersectionId": "1d027ff93ebf1502005ba1c96c69963c",
+        "fromStreetnames": [
+          "Courtland Street",
+          "Ray Street"
+        ],
+        "toStreetnames": [
+          "Senior Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "14e28b39c5e52fb8119789783f10392e",
+        "streetname": "Easton Avenue",
+        "referenceLength": 91.89,
+        "section": [
+          3.1337216974063904,
+          91.89
+        ],
+        "side": "unknown",
+        "score": 2.729147529508226,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45653943822977,
+                40.50081802855502
+              ],
+              [
+                -74.45914823777547,
+                40.50185208872128
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.457479,
+            40.501171
+          ],
+          [
+            -74.45766400000001,
+            40.501243
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "dd1df2a3a7c7ce8e3f7e3de8065553bb",
+        "fromIntersectionId": "1d027ff93ebf1502005ba1c96c69963c",
+        "toIntersectionId": "7319057ee0dd726c90ec9714c30b74af",
+        "fromStreetnames": [
+          "Senior Street"
+        ],
+        "toStreetnames": [
+          "Wirt Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "9391c7e06b954793304b6485408e396c",
+        "streetname": "Easton Avenue",
+        "section": [
+          0,
+          17.6
+        ],
+        "referenceLength": 17.6,
+        "side": "unknown",
+        "score": 2.729147529508226,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45653943822977,
+                40.50081802855502
+              ],
+              [
+                -74.45914823777547,
+                40.50185208872128
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45766400000001,
+            40.501243
+          ],
+          [
+            -74.45841,
+            40.501534
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "8fde78daef1427ea2bfaa8c3aa9745ef",
+        "fromIntersectionId": "7319057ee0dd726c90ec9714c30b74af",
+        "toIntersectionId": "c98796c949934b0d7f3a1d8b37b5b77f",
+        "fromStreetnames": [
+          "Wirt Street"
+        ],
+        "toStreetnames": [
+          "Richardson Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "476f76662abff98e384af6878c93a86f",
+        "streetname": "Easton Avenue",
+        "section": [
+          0,
+          71.01
+        ],
+        "referenceLength": 71.01,
+        "side": "unknown",
+        "score": 2.729147529508226,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45653943822977,
+                40.50081802855502
+              ],
+              [
+                -74.45914823777547,
+                40.50185208872128
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45841,
+            40.501534
+          ],
+          [
+            -74.45916426968654,
+            40.501828328835714
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "8ea926a8a55112f480dbe5c0800192e0",
+        "fromIntersectionId": "c98796c949934b0d7f3a1d8b37b5b77f",
+        "toIntersectionId": "4cc2a7f26c971cb1e0e796a3d13c6bfd",
+        "fromStreetnames": [
+          "Richardson Street"
+        ],
+        "toStreetnames": [
+          "Huntington Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "4a0148400fe827219bf2c48bc450b066",
+        "streetname": "Easton Avenue",
+        "referenceLength": 83.68,
+        "section": [
+          0,
+          71.68193409215928
+        ],
+        "side": "unknown",
+        "score": 2.729147529508226,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45653943822977,
+                40.50081802855502
+              ],
+              [
+                -74.45914823777547,
+                40.50185208872128
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45651768953428,
+            40.50079544142691
+          ],
+          [
+            -74.457479,
+            40.501171
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "85ad8a19c3a77f825e4e3919511b6ab7",
+        "fromIntersectionId": "2c39a17680b16903f04a5656e4668cdd",
+        "toIntersectionId": "1d027ff93ebf1502005ba1c96c69963c",
+        "fromStreetnames": [
+          "Courtland Street",
+          "Ray Street"
+        ],
+        "toStreetnames": [
+          "Senior Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "14e28b39c5e52fb8119789783f10392e",
+        "streetname": "Easton Avenue",
+        "referenceLength": 91.89,
+        "section": [
+          0.3507248922664909,
+          91.89
+        ],
+        "side": "unknown",
+        "score": 4.047292901328053,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45650243398113,
+                40.50081802855502
+              ],
+              [
+                -74.45920374415421,
+                40.50188726055745
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.457479,
+            40.501171
+          ],
+          [
+            -74.45766400000001,
+            40.501243
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "dd1df2a3a7c7ce8e3f7e3de8065553bb",
+        "fromIntersectionId": "1d027ff93ebf1502005ba1c96c69963c",
+        "toIntersectionId": "7319057ee0dd726c90ec9714c30b74af",
+        "fromStreetnames": [
+          "Senior Street"
+        ],
+        "toStreetnames": [
+          "Wirt Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "9391c7e06b954793304b6485408e396c",
+        "streetname": "Easton Avenue",
+        "section": [
+          0,
+          17.6
+        ],
+        "referenceLength": 17.6,
+        "side": "unknown",
+        "score": 4.047292901328053,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45650243398113,
+                40.50081802855502
+              ],
+              [
+                -74.45920374415421,
+                40.50188726055745
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45766400000001,
+            40.501243
+          ],
+          [
+            -74.45841,
+            40.501534
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "8fde78daef1427ea2bfaa8c3aa9745ef",
+        "fromIntersectionId": "7319057ee0dd726c90ec9714c30b74af",
+        "toIntersectionId": "c98796c949934b0d7f3a1d8b37b5b77f",
+        "fromStreetnames": [
+          "Wirt Street"
+        ],
+        "toStreetnames": [
+          "Richardson Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "476f76662abff98e384af6878c93a86f",
+        "streetname": "Easton Avenue",
+        "section": [
+          0,
+          71.01
+        ],
+        "referenceLength": 71.01,
+        "side": "unknown",
+        "score": 4.047292901328053,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45650243398113,
+                40.50081802855502
+              ],
+              [
+                -74.45920374415421,
+                40.50188726055745
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45841,
+            40.501534
+          ],
+          [
+            -74.45922699420518,
+            40.501852804670484
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "8ea926a8a55112f480dbe5c0800192e0",
+        "fromIntersectionId": "c98796c949934b0d7f3a1d8b37b5b77f",
+        "toIntersectionId": "4cc2a7f26c971cb1e0e796a3d13c6bfd",
+        "fromStreetnames": [
+          "Richardson Street"
+        ],
+        "toStreetnames": [
+          "Huntington Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "4a0148400fe827219bf2c48bc450b066",
+        "streetname": "Easton Avenue",
+        "referenceLength": 83.68,
+        "section": [
+          0,
+          77.64292327378254
+        ],
+        "side": "unknown",
+        "score": 4.047292901328053,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45650243398113,
+                40.50081802855502
+              ],
+              [
+                -74.45920374415421,
+                40.50188726055745
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45650116693999,
+            40.50078899205165
+          ],
+          [
+            -74.456514,
+            40.500794
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "5ab3d88bebeabf2396ebac7c59cb1995",
+        "fromIntersectionId": "59da32c94f0e6aab89d1d6a2bd930bb3",
+        "toIntersectionId": "2c39a17680b16903f04a5656e4668cdd",
+        "fromStreetnames": [
+          "Morrell Street"
+        ],
+        "toStreetnames": [
+          "Courtland Street",
+          "Ray Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "7cdabc60475fd472d6ee60d8215c0472",
+        "streetname": "Easton Avenue",
+        "referenceLength": 85.87,
+        "section": [
+          84.50416120751868,
+          85.87
+        ],
+        "side": "unknown",
+        "score": 4.390090899214792,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45648961375804,
+                40.500806117327585
+              ],
+              [
+                -74.45868763088814,
+                40.50169337943191
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.456514,
+            40.500794
+          ],
+          [
+            -74.457479,
+            40.501171
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "85ad8a19c3a77f825e4e3919511b6ab7",
+        "fromIntersectionId": "2c39a17680b16903f04a5656e4668cdd",
+        "toIntersectionId": "1d027ff93ebf1502005ba1c96c69963c",
+        "fromStreetnames": [
+          "Courtland Street",
+          "Ray Street"
+        ],
+        "toStreetnames": [
+          "Senior Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "14e28b39c5e52fb8119789783f10392e",
+        "streetname": "Easton Avenue",
+        "section": [
+          0,
+          91.89
+        ],
+        "referenceLength": 91.89,
+        "side": "unknown",
+        "score": 4.390090899214792,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45648961375804,
+                40.500806117327585
+              ],
+              [
+                -74.45868763088814,
+                40.50169337943191
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.457479,
+            40.501171
+          ],
+          [
+            -74.45766400000001,
+            40.501243
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "dd1df2a3a7c7ce8e3f7e3de8065553bb",
+        "fromIntersectionId": "1d027ff93ebf1502005ba1c96c69963c",
+        "toIntersectionId": "7319057ee0dd726c90ec9714c30b74af",
+        "fromStreetnames": [
+          "Senior Street"
+        ],
+        "toStreetnames": [
+          "Wirt Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "9391c7e06b954793304b6485408e396c",
+        "streetname": "Easton Avenue",
+        "section": [
+          0,
+          17.6
+        ],
+        "referenceLength": 17.6,
+        "side": "unknown",
+        "score": 4.390090899214792,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45648961375804,
+                40.500806117327585
+              ],
+              [
+                -74.45868763088814,
+                40.50169337943191
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45766400000001,
+            40.501243
+          ],
+          [
+            -74.45841,
+            40.501534
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "8fde78daef1427ea2bfaa8c3aa9745ef",
+        "fromIntersectionId": "7319057ee0dd726c90ec9714c30b74af",
+        "toIntersectionId": "c98796c949934b0d7f3a1d8b37b5b77f",
+        "fromStreetnames": [
+          "Wirt Street"
+        ],
+        "toStreetnames": [
+          "Richardson Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "476f76662abff98e384af6878c93a86f",
+        "streetname": "Easton Avenue",
+        "section": [
+          0,
+          71.01
+        ],
+        "referenceLength": 71.01,
+        "side": "unknown",
+        "score": 4.390090899214792,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45648961375804,
+                40.500806117327585
+              ],
+              [
+                -74.45868763088814,
+                40.50169337943191
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45841,
+            40.501534
+          ],
+          [
+            -74.45871489661255,
+            40.50165297673544
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "8ea926a8a55112f480dbe5c0800192e0",
+        "fromIntersectionId": "c98796c949934b0d7f3a1d8b37b5b77f",
+        "toIntersectionId": "4cc2a7f26c971cb1e0e796a3d13c6bfd",
+        "fromStreetnames": [
+          "Richardson Street"
+        ],
+        "toStreetnames": [
+          "Huntington Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "4a0148400fe827219bf2c48bc450b066",
+        "streetname": "Easton Avenue",
+        "referenceLength": 83.68,
+        "section": [
+          0,
+          28.9758907297297
+        ],
+        "side": "unknown",
+        "score": 4.390090899214792,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45648961375804,
+                40.500806117327585
+              ],
+              [
+                -74.45868763088814,
+                40.50169337943191
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    }
+  ],
+  "properties": {
+    "type": "ROAD_CLOSED",
+    "timezone": "America/New_York",
+    "startTime": "Sun Apr 14 2019 00:00:00",
+    "endTime": "Sun Apr 14 2019 00:00:00",
+    "description": "Half Marathon",
+    "reference": "NBDOT",
+    "subtype": "ROAD_CLOSED_EVENT"
+  }
+}

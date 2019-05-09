@@ -1,0 +1,72 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.44592663376005,
+              40.49954766860297
+            ],
+            [
+              -74.44622000000001,
+              40.499456
+            ],
+            [
+              -74.44659800000001,
+              40.4993429
+            ],
+            [
+              -74.44707480821081,
+              40.499200236618464
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "1226d33b5412a78216bc640bcc7d381d",
+          "fromIntersectionId": "d1470fba0a2c3659f7032695e60a2e57",
+          "toIntersectionId": "ae4f35edba0f31b0d8ba58a1a9854b9a",
+          "fromStreetnames": [
+            "George Street",
+            "Johnson Drive"
+          ],
+          "toStreetnames": [
+            "College Avenue"
+          ],
+          "roadClass": "Tertiary",
+          "direction": "forward",
+          "geometryId": "51c77911a66c5a95869c13e056233508",
+          "streetname": "Hamilton Street",
+          "referenceLength": 226.85,
+          "section": [
+            69.0012634200261,
+            173.49078130820038
+          ],
+          "side": "unknown",
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.44592370377053,
+                  40.49954225077897
+                ],
+                [
+                  -74.44707118063718,
+                  40.499193228184225
+                ]
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "properties": {
+      "type": "ROAD_CLOSED",
+      "timezone": "America/New_York"
+    }
+  }

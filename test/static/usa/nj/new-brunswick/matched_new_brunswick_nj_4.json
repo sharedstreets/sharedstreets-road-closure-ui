@@ -1,0 +1,257 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.44424321428264,
+              40.493121260323214
+            ],
+            [
+              -74.44411410000001,
+              40.4932351
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "e89309cf3d4feb70976f029797e497f4",
+          "fromIntersectionId": "54c6c24e422174b2723242dba5e132b9",
+          "toIntersectionId": "b29bb9df6abbbc949949ed6da1b9742d",
+          "fromStreetnames": [
+            "New Street"
+          ],
+          "toStreetnames": [
+            ""
+          ],
+          "roadClass": "Tertiary",
+          "direction": "backward",
+          "geometryId": "8ddaedf2b2c89550c79e4b40f7d1b981",
+          "streetname": "Livingston Avenue",
+          "referenceLength": 113.62,
+          "section": [
+            96.87964240245344,
+            113.62
+          ],
+          "side": "unknown",
+          "score": 1.971716073198174,
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.4442611861492,
+                  40.49313276596499
+                ],
+                [
+                  -74.44365953054236,
+                  40.49364750700644
+                ],
+                [
+                  -74.4429826679871,
+                  40.49375808049038
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.44411410000001,
+              40.4932351
+            ],
+            [
+              -74.4438456191512,
+              40.49350948042808
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "b1c9b67a664df72b74ab0d0003d60fce",
+          "fromIntersectionId": "b29bb9df6abbbc949949ed6da1b9742d",
+          "toIntersectionId": "e50a2a8486fb160f33b25e34168ce593",
+          "fromStreetnames": [
+            ""
+          ],
+          "toStreetnames": [
+            ""
+          ],
+          "roadClass": "Tertiary",
+          "direction": "backward",
+          "geometryId": "a52e29ddb23d6a23f95e78faa474f7ef",
+          "streetname": "Livingston Avenue",
+          "section": [
+            0,
+            38.03
+          ],
+          "referenceLength": 38.03,
+          "side": "unknown",
+          "score": 1.971716073198174,
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.4442611861492,
+                  40.49313276596499
+                ],
+                [
+                  -74.44365953054236,
+                  40.49364750700644
+                ],
+                [
+                  -74.4429826679871,
+                  40.49375808049038
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.4438456,
+              40.4935095
+            ],
+            [
+              -74.44375240000001,
+              40.4936048
+            ],
+            [
+              -74.4436854,
+              40.493645900000004
+            ],
+            [
+              -74.4435771,
+              40.4936583
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "cf3c72e40d3e6b798992a886035d3b9c",
+          "fromIntersectionId": "e50a2a8486fb160f33b25e34168ce593",
+          "toIntersectionId": "2bf6b385b4ca4572d5905c75485b09af",
+          "fromStreetnames": [
+            ""
+          ],
+          "toStreetnames": [
+            "George Street",
+            "Liberty Street"
+          ],
+          "roadClass": "Tertiary",
+          "direction": "backward",
+          "geometryId": "7e1f2b450e7f4859b3ed37a94e1ec4ba",
+          "streetname": "Livingston Avenue",
+          "section": [
+            0,
+            29.78
+          ],
+          "referenceLength": 29.78,
+          "side": "unknown",
+          "score": 1.971716073198174,
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.4442611861492,
+                  40.49313276596499
+                ],
+                [
+                  -74.44365953054236,
+                  40.49364750700644
+                ],
+                [
+                  -74.4429826679871,
+                  40.49375808049038
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.4435771,
+              40.4936583
+            ],
+            [
+              -74.4434689,
+              40.4936674
+            ],
+            [
+              -74.44298336655447,
+              40.493760192285635
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "330a9bdcc9a038428d01904f0ac0f509",
+          "fromIntersectionId": "2bf6b385b4ca4572d5905c75485b09af",
+          "toIntersectionId": "716c241a766df514d060955ae1c68516",
+          "fromStreetnames": [
+            "Livingston Avenue",
+            "George Street"
+          ],
+          "toStreetnames": [],
+          "roadClass": "Residential",
+          "direction": "forward",
+          "geometryId": "50340a5abfb742b8491c94de310e71bf",
+          "streetname": "Liberty Street",
+          "referenceLength": 127.9,
+          "section": [
+            0,
+            51.53933272449095
+          ],
+          "side": "unknown",
+          "score": 1.971716073198174,
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.4442611861492,
+                  40.49313276596499
+                ],
+                [
+                  -74.44365953054236,
+                  40.49364750700644
+                ],
+                [
+                  -74.4429826679871,
+                  40.49375808049038
+                ]
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "properties": {
+      "type": "ROAD_CLOSED",
+      "timezone": "America/New_York"
+    }
+  }

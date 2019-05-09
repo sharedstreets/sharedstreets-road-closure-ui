@@ -1,0 +1,878 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.45228832243596,
+              40.5035964724856
+            ],
+            [
+              -74.452015,
+              40.5033304
+            ],
+            [
+              -74.45190000000001,
+              40.5032231
+            ],
+            [
+              -74.4518506,
+              40.503177
+            ],
+            [
+              -74.45162380000001,
+              40.5029601
+            ],
+            [
+              -74.451561,
+              40.502900000000004
+            ],
+            [
+              -74.4515418,
+              40.5028803
+            ],
+            [
+              -74.45105020000001,
+              40.5023757
+            ],
+            [
+              -74.450995,
+              40.502319
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "8b71fd53eeaa00cf5280cee7ed452976",
+          "fromIntersectionId": "31832b21a8afaeae6294e148cf5fe58c",
+          "toIntersectionId": "2212e3eac9b969cc8ff97200abc6a8d5",
+          "fromStreetnames": [
+            "Senior Street"
+          ],
+          "toStreetnames": [
+            "Bartlett Street"
+          ],
+          "roadClass": "Residential",
+          "direction": "backward",
+          "geometryId": "c14556542c0d0a11c30edcc0e45f2ce6",
+          "streetname": "College Avenue",
+          "referenceLength": 236.87,
+          "section": [
+            57.55634514763696,
+            236.87
+          ],
+          "side": "unknown",
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.45226572532461,
+                  40.50361015402072
+                ],
+                [
+                  -74.44958057850174,
+                  40.500969514008375
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.450995,
+              40.502319
+            ],
+            [
+              -74.45093270000001,
+              40.5022591
+            ],
+            [
+              -74.4504611,
+              40.5018059
+            ],
+            [
+              -74.450404,
+              40.501751000000006
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "3d02c70f7b78229c5b7bd920ad179972",
+          "fromIntersectionId": "2212e3eac9b969cc8ff97200abc6a8d5",
+          "toIntersectionId": "a4c95583ff386049824bab5fdf7ba915",
+          "fromStreetnames": [
+            "Bartlett Street"
+          ],
+          "toStreetnames": [
+            "Stone Street",
+            "Bishop Place"
+          ],
+          "roadClass": "Residential",
+          "direction": "backward",
+          "geometryId": "86e015b50d4b7aa074a3912089616d2a",
+          "streetname": "College Avenue",
+          "section": [
+            0,
+            80.55
+          ],
+          "referenceLength": 80.55,
+          "side": "unknown",
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.45226572532461,
+                  40.50361015402072
+                ],
+                [
+                  -74.44958057850174,
+                  40.500969514008375
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.450404,
+              40.501751000000006
+            ],
+            [
+              -74.450371,
+              40.501720000000006
+            ],
+            [
+              -74.4503488,
+              40.501699200000004
+            ],
+            [
+              -74.4498172,
+              40.5012027
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "f74dc767c56ed6d7a5ca424bd78458ed",
+          "fromIntersectionId": "a4c95583ff386049824bab5fdf7ba915",
+          "toIntersectionId": "4a43990cdc978ed26add3a439bd5101d",
+          "fromStreetnames": [
+            "Stone Street",
+            "Bishop Place"
+          ],
+          "toStreetnames": [
+            "Mine Street"
+          ],
+          "roadClass": "Residential",
+          "direction": "backward",
+          "geometryId": "e9b06f45dac276bb352ce87af2d3cf72",
+          "streetname": "College Avenue",
+          "section": [
+            0,
+            78.62
+          ],
+          "referenceLength": 78.62,
+          "side": "unknown",
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.45226572532461,
+                  40.50361015402072
+                ],
+                [
+                  -74.44958057850174,
+                  40.500969514008375
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.4498172,
+              40.5012027
+            ],
+            [
+              -74.4503488,
+              40.501699200000004
+            ],
+            [
+              -74.450371,
+              40.501720000000006
+            ],
+            [
+              -74.450404,
+              40.501751000000006
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "7464274b25a65ee06e4bc8930decd0b8",
+          "fromIntersectionId": "4a43990cdc978ed26add3a439bd5101d",
+          "toIntersectionId": "a4c95583ff386049824bab5fdf7ba915",
+          "fromStreetnames": [
+            "Mine Street"
+          ],
+          "toStreetnames": [
+            "Stone Street",
+            "Bishop Place"
+          ],
+          "roadClass": "Residential",
+          "direction": "forward",
+          "geometryId": "e9b06f45dac276bb352ce87af2d3cf72",
+          "streetname": "College Avenue",
+          "section": [
+            0,
+            78.62
+          ],
+          "referenceLength": 78.62,
+          "side": "unknown",
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.45226572532461,
+                  40.50361015402072
+                ],
+                [
+                  -74.44958057850174,
+                  40.500969514008375
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.450404,
+              40.501751000000006
+            ],
+            [
+              -74.4504611,
+              40.5018059
+            ],
+            [
+              -74.45093270000001,
+              40.5022591
+            ],
+            [
+              -74.450995,
+              40.502319
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "267ea7e70c3b189828d7082fa85f7bca",
+          "fromIntersectionId": "a4c95583ff386049824bab5fdf7ba915",
+          "toIntersectionId": "2212e3eac9b969cc8ff97200abc6a8d5",
+          "fromStreetnames": [
+            "Stone Street",
+            "Bishop Place"
+          ],
+          "toStreetnames": [
+            "Bartlett Street"
+          ],
+          "roadClass": "Residential",
+          "direction": "forward",
+          "geometryId": "86e015b50d4b7aa074a3912089616d2a",
+          "streetname": "College Avenue",
+          "section": [
+            0,
+            80.55
+          ],
+          "referenceLength": 80.55,
+          "side": "unknown",
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.45226572532461,
+                  40.50361015402072
+                ],
+                [
+                  -74.44958057850174,
+                  40.500969514008375
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.450995,
+              40.502319
+            ],
+            [
+              -74.45105020000001,
+              40.5023757
+            ],
+            [
+              -74.4515418,
+              40.5028803
+            ],
+            [
+              -74.451561,
+              40.502900000000004
+            ],
+            [
+              -74.45162380000001,
+              40.5029601
+            ],
+            [
+              -74.4518506,
+              40.503177
+            ],
+            [
+              -74.45190000000001,
+              40.5032231
+            ],
+            [
+              -74.452015,
+              40.5033304
+            ],
+            [
+              -74.45228848761379,
+              40.503596633281205
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "161c08750678f823fa4b0792805c82c8",
+          "fromIntersectionId": "2212e3eac9b969cc8ff97200abc6a8d5",
+          "toIntersectionId": "31832b21a8afaeae6294e148cf5fe58c",
+          "fromStreetnames": [
+            "Bartlett Street"
+          ],
+          "toStreetnames": [
+            "Senior Street"
+          ],
+          "roadClass": "Residential",
+          "direction": "forward",
+          "geometryId": "c14556542c0d0a11c30edcc0e45f2ce6",
+          "streetname": "College Avenue",
+          "referenceLength": 236.87,
+          "section": [
+            0,
+            179.31365485236304
+          ],
+          "side": "unknown",
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.45226572532461,
+                  40.50361015402072
+                ],
+                [
+                  -74.44958057850174,
+                  40.500969514008375
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.45489018613392,
+              40.503570558064425
+            ],
+            [
+              -74.4543579,
+              40.5030346
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "267021aa6d45ca69eebe32e20edc1728",
+          "fromIntersectionId": "393ddbe9e0047e9694d556bcaad4c30f",
+          "toIntersectionId": "09869d00d3f3a4870f85c637093c735b",
+          "fromStreetnames": [
+            "Richardson Street"
+          ],
+          "toStreetnames": [
+            "Senior Street"
+          ],
+          "roadClass": "Residential",
+          "direction": "backward",
+          "geometryId": "86d5ebf178c5dd323888d14e35ac648c",
+          "streetname": "Sicard Street",
+          "referenceLength": 79.33,
+          "section": [
+            4.645836800952935,
+            79.33
+          ],
+          "side": "unknown",
+          "score": 3.059322032085515,
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.45489811397003,
+                  40.50356606018411
+                ],
+                [
+                  -74.45203554826483,
+                  40.50074061121427
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.4543579,
+              40.5030346
+            ],
+            [
+              -74.453789,
+              40.50247
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "10a5d2e061a5ce1660da5b2c73ade298",
+          "fromIntersectionId": "09869d00d3f3a4870f85c637093c735b",
+          "toIntersectionId": "a20dd9aa86ef1798ad23f0395963bbd8",
+          "fromStreetnames": [
+            "Senior Street"
+          ],
+          "toStreetnames": [
+            "Ray Street"
+          ],
+          "roadClass": "Residential",
+          "direction": "backward",
+          "geometryId": "93ac9dd4d2d5227253af1998f1d8b6ed",
+          "streetname": "Sicard Street",
+          "section": [
+            0,
+            79.1
+          ],
+          "referenceLength": 79.1,
+          "side": "unknown",
+          "score": 3.059322032085515,
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.45489811397003,
+                  40.50356606018411
+                ],
+                [
+                  -74.45203554826483,
+                  40.50074061121427
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.453789,
+              40.50247
+            ],
+            [
+              -74.45320790000001,
+              40.501905900000004
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "13c1421d50138aa69730592a4a77df0e",
+          "fromIntersectionId": "a20dd9aa86ef1798ad23f0395963bbd8",
+          "toIntersectionId": "fe4f9008799d809b92aa86ffc567d439",
+          "fromStreetnames": [
+            "Ray Street"
+          ],
+          "toStreetnames": [
+            "Morrell Street"
+          ],
+          "roadClass": "Residential",
+          "direction": "backward",
+          "geometryId": "e82ed2ac159d2fc64a7777ca78b70e1c",
+          "streetname": "Sicard Street",
+          "section": [
+            0,
+            79.69
+          ],
+          "referenceLength": 79.69,
+          "side": "unknown",
+          "score": 3.059322032085515,
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.45489811397003,
+                  40.50356606018411
+                ],
+                [
+                  -74.45203554826483,
+                  40.50074061121427
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.45320790000001,
+              40.501905900000004
+            ],
+            [
+              -74.45262770000001,
+              40.5013444
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "2e60caef23fbee942b9f29e1e299f59d",
+          "fromIntersectionId": "fe4f9008799d809b92aa86ffc567d439",
+          "toIntersectionId": "553e313e50c9051d311ecc4566c55399",
+          "fromStreetnames": [
+            "Morrell Street"
+          ],
+          "toStreetnames": [
+            "Bartlett Street"
+          ],
+          "roadClass": "Residential",
+          "direction": "backward",
+          "geometryId": "f6c5a430a32107ba9257436ccc1cc0ff",
+          "streetname": "Sicard Street",
+          "section": [
+            0,
+            79.41
+          ],
+          "referenceLength": 79.41,
+          "side": "unknown",
+          "score": 3.059322032085515,
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.45489811397003,
+                  40.50356606018411
+                ],
+                [
+                  -74.45203554826483,
+                  40.50074061121427
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.45597524347404,
+              40.502121968682204
+            ],
+            [
+              -74.4559414,
+              40.5020891
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "ae376d10ac09d4a7b3c54a4ca345d971",
+          "fromIntersectionId": "a469138cb2119675f848656e2c170600",
+          "toIntersectionId": "46e92212e9ef73e854ff896173d28235",
+          "fromStreetnames": [
+            "Richardson Street"
+          ],
+          "toStreetnames": [
+            "Senior Street"
+          ],
+          "roadClass": "Residential",
+          "direction": "backward",
+          "geometryId": "4f2986dedb77180e2418a1913dc59335",
+          "streetname": "Wyckoff Street",
+          "referenceLength": 79.5,
+          "section": [
+            74.85197005839642,
+            79.5
+          ],
+          "side": "unknown",
+          "score": 1.961720521645254,
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.45595781377399,
+                  40.5021324213173
+                ],
+                [
+                  -74.45425128421928,
+                  40.50045805977172
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.4559414,
+              40.5020891
+            ],
+            [
+              -74.4554165,
+              40.5015766
+            ],
+            [
+              -74.4553637,
+              40.5015252
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "36f59b57e80a9d6467b34c7276178852",
+          "fromIntersectionId": "46e92212e9ef73e854ff896173d28235",
+          "toIntersectionId": "04a7c780e5c2f18a7202575ad4981caf",
+          "fromStreetnames": [
+            "Senior Street"
+          ],
+          "toStreetnames": [
+            "Ray Street"
+          ],
+          "roadClass": "Residential",
+          "direction": "backward",
+          "geometryId": "d86167fe3d4067035b70fa078f82e945",
+          "streetname": "Wyckoff Street",
+          "section": [
+            0,
+            79.49
+          ],
+          "referenceLength": 79.49,
+          "side": "unknown",
+          "score": 1.961720521645254,
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.45595781377399,
+                  40.5021324213173
+                ],
+                [
+                  -74.45425128421928,
+                  40.50045805977172
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.4553637,
+              40.5015252
+            ],
+            [
+              -74.454775,
+              40.500955000000005
+            ],
+            [
+              -74.45426439978723,
+              40.50045016715039
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "963e1f58d93d2e2984359555386eb2c6",
+          "fromIntersectionId": "04a7c780e5c2f18a7202575ad4981caf",
+          "toIntersectionId": "4539079b3a707a685dfb87b98ca22689",
+          "fromStreetnames": [
+            "Ray Street"
+          ],
+          "toStreetnames": [
+            "Bartlett Street"
+          ],
+          "roadClass": "Residential",
+          "direction": "backward",
+          "geometryId": "aee1995a3530bbb405feb5d15708960a",
+          "streetname": "Wyckoff Street",
+          "referenceLength": 157.99,
+          "section": [
+            0,
+            151.42442017679414
+          ],
+          "side": "unknown",
+          "score": 1.961720521645254,
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.45595781377399,
+                  40.5021324213173
+                ],
+                [
+                  -74.45425128421928,
+                  40.50045805977172
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.45257500295394,
+              40.50129099989367
+            ],
+            [
+              -74.45206948491663,
+              40.500778731926495
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "1d0a99eab37a56c458e9c5ecdadb1412",
+          "fromIntersectionId": "553e313e50c9051d311ecc4566c55399",
+          "toIntersectionId": "ee1b7b2fca01afd6b603eb565135409e",
+          "fromStreetnames": [
+            "Bartlett Street"
+          ],
+          "toStreetnames": [
+            "Stone Street"
+          ],
+          "roadClass": "Residential",
+          "direction": "backward",
+          "geometryId": "8e6dfb6cbb68fccf290680be7fea2e28",
+          "streetname": "Sicard Street",
+          "referenceLength": 81.25,
+          "section": [
+            7.423639717136297,
+            78.63855031261558
+          ],
+          "side": "unknown",
+          "score": 3.3806464052615377,
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.45261356635874,
+                  40.50126908386039
+                ],
+                [
+                  -74.45209059762561,
+                  40.50076677332589
+                ]
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "properties": {
+      "type": "ROAD_CLOSED",
+      "timezone": "America/New_York",
+      "startTime": "Sun Apr 14 2019 00:00:00",
+      "endTime": "Sun Apr 14 2019 00:00:00",
+      "description": "Half Marathon",
+      "reference": "NBDOT",
+      "subtype": "ROAD_CLOSED_EVENT"
+    }
+  }

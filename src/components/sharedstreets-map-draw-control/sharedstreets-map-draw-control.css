@@ -1,3 +1,25 @@
 .SHST-Map-Draw-Control-Button {
-    margin-top: 5px;
+    margin: 10px;
+    position: absolute;
+    top: 90px;
+}
+.SHST-Map-Draw-Control-Button.bp3-button.bp3-loading {
+    margin: 10px;
+    position: absolute;
+    top: 90px;
+}
+.SHST-Map-Draw-Control-Confirm-Button {
+    margin: 10px;
+    position: absolute;
+    top: 130px;
+}
+.SHST-Map-Draw-Control-Cancel-Button {
+    margin: 10px;
+    position: absolute;
+    top: 170px;
+}
+.SHST-Map-Draw-Control-Undo-Button {
+    margin: 10px;
+    position: absolute;
+    top: 210px;
 }

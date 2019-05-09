@@ -1,8 +1,11 @@
+.SHST-Road-Closure-Form-Streets-Groups-Item-Card-Highlighted {
+    outline: 2px solid #E35051;
+}
 .SHST-Road-Closure-Form-Streets-Groups-Item-Content {
     display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    padding-bottom: 20px;
+    flex-direction: row;
+    justify-content: space-between;
+    /* padding-bottom: 20px; */
 }
 .SHST-Road-Closure-Form-Streets-Groups-Item-Content > span {
     flex: 1;

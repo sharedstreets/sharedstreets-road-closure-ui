@@ -17,3 +17,10 @@
     border-radius: 10px;
     background-color: red;
 }
+
+.SHST-Map-Roadblock-Marker {
+    background-image: url('/roadblock.png');
+    background-size: cover;
+    width: 64px;
+    height: 64px;
+}

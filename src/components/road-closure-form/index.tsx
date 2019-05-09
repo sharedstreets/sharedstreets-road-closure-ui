@@ -36,6 +36,8 @@ export interface IRoadClosureFormProps {
   addNewSelection: () => void,
   deleteStreetSegment: (payload: any) => void,
   deselectRoadClosure: () => void,
+  highlightMatchedStreet: () => void,
+  highlightMatchedStreetsGroup: () => void,
   nextSelection: () => void,
   previousSelection: () => void,
   inputChanged: (payload: any) => void,
@@ -47,6 +49,7 @@ export interface IRoadClosureFormProps {
   streetnameToReferenceId: any,
   toggleStreetSegmentDirection: () => void,
   viewRoadClosureOutput: () => void,
+  zoomHighlightMatchedStreetsGroup: (e: any) => void,
 };
 class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
   constructor(props: IRoadClosureFormProps) {
@@ -217,11 +220,14 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                 currentMatchedStreetsGroupsGeometryIdPathMap={this.props.currentRoadClosureGroupsGeometryIdPathMap}
                 currentMatchedStreetsGroupsDirections={this.props.currentRoadClosureGroupsDirection}
                 geometryIdDirectionFilter={this.props.currentRoadClosureItem.properties.geometryIdDirectionFilter}
+                highlightMatchedStreet={this.props.highlightMatchedStreet}
+                highlightMatchedStreetsGroup={this.props.highlightMatchedStreetsGroup}
                 deleteStreetSegment={this.props.deleteStreetSegment}
                 inputChanged={this.props.inputChanged}
                 toggleStreetSegmentDirection={this.props.toggleStreetSegmentDirection}
                 streets={this.props.currentRoadClosureItem.properties.street}
                 isFetchingMatchedStreets={this.props.roadClosure.isFetchingMatchedStreets}
+                zoomHighlightMatchedStreetsGroup={this.props.zoomHighlightMatchedStreetsGroup}
               />
             }
             <FormGroup

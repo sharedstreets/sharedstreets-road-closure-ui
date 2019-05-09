@@ -10,8 +10,13 @@
     "@mapbox/mapbox-gl-draw": "^1.1.1",
     "@mapbox/mapbox-gl-geocoder": "^3.1.0",
     "@mapbox/timespace": "^2.0.4",
+    "@turf/bbox": "^6.0.1",
+    "@turf/bearing": "^6.0.1",
     "@turf/helpers": "^6.1.4",
     "@turf/invariant": "^6.1.2",
+    "@turf/meta": "^6.0.2",
+    "@turf/midpoint": "^5.1.5",
+    "@turf/random": "^6.0.2",
     "@types/geojson": "^7946.0.4",
     "@types/isomorphic-fetch": "^0.0.34",
     "@types/lodash": "^4.14.118",
@@ -54,6 +59,7 @@
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
+    "test:debug": "react-scripts-ts --inspect-brk test --runInBand --no-cache",
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {

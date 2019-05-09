@@ -1,0 +1,430 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.45228832243596,
+              40.5035964724856
+            ],
+            [
+              -74.452015,
+              40.5033304
+            ],
+            [
+              -74.45190000000001,
+              40.5032231
+            ],
+            [
+              -74.4518506,
+              40.503177
+            ],
+            [
+              -74.45162380000001,
+              40.5029601
+            ],
+            [
+              -74.451561,
+              40.502900000000004
+            ],
+            [
+              -74.4515418,
+              40.5028803
+            ],
+            [
+              -74.45105020000001,
+              40.5023757
+            ],
+            [
+              -74.450995,
+              40.502319
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "8b71fd53eeaa00cf5280cee7ed452976",
+          "fromIntersectionId": "31832b21a8afaeae6294e148cf5fe58c",
+          "toIntersectionId": "2212e3eac9b969cc8ff97200abc6a8d5",
+          "fromStreetnames": [
+            "Senior Street"
+          ],
+          "toStreetnames": [
+            "Bartlett Street"
+          ],
+          "roadClass": "Residential",
+          "direction": "backward",
+          "geometryId": "c14556542c0d0a11c30edcc0e45f2ce6",
+          "streetname": "College Avenue",
+          "referenceLength": 236.87,
+          "section": [
+            57.55634514763696,
+            236.87
+          ],
+          "side": "unknown",
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.45226572532461,
+                  40.50361015402072
+                ],
+                [
+                  -74.44958057850174,
+                  40.500969514008375
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.450995,
+              40.502319
+            ],
+            [
+              -74.45093270000001,
+              40.5022591
+            ],
+            [
+              -74.4504611,
+              40.5018059
+            ],
+            [
+              -74.450404,
+              40.501751000000006
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "3d02c70f7b78229c5b7bd920ad179972",
+          "fromIntersectionId": "2212e3eac9b969cc8ff97200abc6a8d5",
+          "toIntersectionId": "a4c95583ff386049824bab5fdf7ba915",
+          "fromStreetnames": [
+            "Bartlett Street"
+          ],
+          "toStreetnames": [
+            "Stone Street",
+            "Bishop Place"
+          ],
+          "roadClass": "Residential",
+          "direction": "backward",
+          "geometryId": "86e015b50d4b7aa074a3912089616d2a",
+          "streetname": "College Avenue",
+          "section": [
+            0,
+            80.55
+          ],
+          "referenceLength": 80.55,
+          "side": "unknown",
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.45226572532461,
+                  40.50361015402072
+                ],
+                [
+                  -74.44958057850174,
+                  40.500969514008375
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.450404,
+              40.501751000000006
+            ],
+            [
+              -74.450371,
+              40.501720000000006
+            ],
+            [
+              -74.4503488,
+              40.501699200000004
+            ],
+            [
+              -74.4498172,
+              40.5012027
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "f74dc767c56ed6d7a5ca424bd78458ed",
+          "fromIntersectionId": "a4c95583ff386049824bab5fdf7ba915",
+          "toIntersectionId": "4a43990cdc978ed26add3a439bd5101d",
+          "fromStreetnames": [
+            "Stone Street",
+            "Bishop Place"
+          ],
+          "toStreetnames": [
+            "Mine Street"
+          ],
+          "roadClass": "Residential",
+          "direction": "backward",
+          "geometryId": "e9b06f45dac276bb352ce87af2d3cf72",
+          "streetname": "College Avenue",
+          "section": [
+            0,
+            78.62
+          ],
+          "referenceLength": 78.62,
+          "side": "unknown",
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.45226572532461,
+                  40.50361015402072
+                ],
+                [
+                  -74.44958057850174,
+                  40.500969514008375
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.4498172,
+              40.5012027
+            ],
+            [
+              -74.4503488,
+              40.501699200000004
+            ],
+            [
+              -74.450371,
+              40.501720000000006
+            ],
+            [
+              -74.450404,
+              40.501751000000006
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "7464274b25a65ee06e4bc8930decd0b8",
+          "fromIntersectionId": "4a43990cdc978ed26add3a439bd5101d",
+          "toIntersectionId": "a4c95583ff386049824bab5fdf7ba915",
+          "fromStreetnames": [
+            "Mine Street"
+          ],
+          "toStreetnames": [
+            "Stone Street",
+            "Bishop Place"
+          ],
+          "roadClass": "Residential",
+          "direction": "forward",
+          "geometryId": "e9b06f45dac276bb352ce87af2d3cf72",
+          "streetname": "College Avenue",
+          "section": [
+            0,
+            78.62
+          ],
+          "referenceLength": 78.62,
+          "side": "unknown",
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.45226572532461,
+                  40.50361015402072
+                ],
+                [
+                  -74.44958057850174,
+                  40.500969514008375
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.450404,
+              40.501751000000006
+            ],
+            [
+              -74.4504611,
+              40.5018059
+            ],
+            [
+              -74.45093270000001,
+              40.5022591
+            ],
+            [
+              -74.450995,
+              40.502319
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "267ea7e70c3b189828d7082fa85f7bca",
+          "fromIntersectionId": "a4c95583ff386049824bab5fdf7ba915",
+          "toIntersectionId": "2212e3eac9b969cc8ff97200abc6a8d5",
+          "fromStreetnames": [
+            "Stone Street",
+            "Bishop Place"
+          ],
+          "toStreetnames": [
+            "Bartlett Street"
+          ],
+          "roadClass": "Residential",
+          "direction": "forward",
+          "geometryId": "86e015b50d4b7aa074a3912089616d2a",
+          "streetname": "College Avenue",
+          "section": [
+            0,
+            80.55
+          ],
+          "referenceLength": 80.55,
+          "side": "unknown",
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.45226572532461,
+                  40.50361015402072
+                ],
+                [
+                  -74.44958057850174,
+                  40.500969514008375
+                ]
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -74.450995,
+              40.502319
+            ],
+            [
+              -74.45105020000001,
+              40.5023757
+            ],
+            [
+              -74.4515418,
+              40.5028803
+            ],
+            [
+              -74.451561,
+              40.502900000000004
+            ],
+            [
+              -74.45162380000001,
+              40.5029601
+            ],
+            [
+              -74.4518506,
+              40.503177
+            ],
+            [
+              -74.45190000000001,
+              40.5032231
+            ],
+            [
+              -74.452015,
+              40.5033304
+            ],
+            [
+              -74.45228848761379,
+              40.503596633281205
+            ]
+          ]
+        },
+        "properties": {
+          "referenceId": "161c08750678f823fa4b0792805c82c8",
+          "fromIntersectionId": "2212e3eac9b969cc8ff97200abc6a8d5",
+          "toIntersectionId": "31832b21a8afaeae6294e148cf5fe58c",
+          "fromStreetnames": [
+            "Bartlett Street"
+          ],
+          "toStreetnames": [
+            "Senior Street"
+          ],
+          "roadClass": "Residential",
+          "direction": "forward",
+          "geometryId": "c14556542c0d0a11c30edcc0e45f2ce6",
+          "streetname": "College Avenue",
+          "referenceLength": 236.87,
+          "section": [
+            0,
+            179.31365485236304
+          ],
+          "side": "unknown",
+          "originalFeature": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  -74.45226572532461,
+                  40.50361015402072
+                ],
+                [
+                  -74.44958057850174,
+                  40.500969514008375
+                ]
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "properties": {
+      "type": "ROAD_CLOSED",
+      "timezone": "America/New_York",
+      "startTime": "Sun Apr 14 2019 00:00:00",
+      "endTime": "Sun Apr 14 2019 00:00:00",
+      "description": "Half Marathon",
+      "reference": "NBDOT",
+      "subtype": "ROAD_CLOSED_EVENT"
+    }
+  }

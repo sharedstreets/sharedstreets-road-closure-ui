@@ -1,0 +1,290 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45777971518076,
+            40.5012881387071
+          ],
+          [
+            -74.45841,
+            40.501534
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "8fde78daef1427ea2bfaa8c3aa9745ef",
+        "fromIntersectionId": "7319057ee0dd726c90ec9714c30b74af",
+        "toIntersectionId": "c98796c949934b0d7f3a1d8b37b5b77f",
+        "fromStreetnames": [
+          "Wirt Street"
+        ],
+        "toStreetnames": [
+          "Richardson Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "476f76662abff98e384af6878c93a86f",
+        "streetname": "Easton Avenue",
+        "referenceLength": 71.01,
+        "section": [
+          10.996255302863116,
+          71.01
+        ],
+        "side": "unknown",
+        "score": 2.244343212679598,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45776944175142,
+                40.50130337014701
+              ],
+              [
+                -74.45887437533948,
+                40.50169321334897
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45841,
+            40.501534
+          ],
+          [
+            -74.45886262440892,
+            40.50171062262616
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "8ea926a8a55112f480dbe5c0800192e0",
+        "fromIntersectionId": "c98796c949934b0d7f3a1d8b37b5b77f",
+        "toIntersectionId": "4cc2a7f26c971cb1e0e796a3d13c6bfd",
+        "fromStreetnames": [
+          "Richardson Street"
+        ],
+        "toStreetnames": [
+          "Huntington Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "4a0148400fe827219bf2c48bc450b066",
+        "streetname": "Easton Avenue",
+        "referenceLength": 83.68,
+        "section": [
+          0,
+          43.01518483221072
+        ],
+        "side": "unknown",
+        "score": 2.244343212679598,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45776944175142,
+                40.50130337014701
+              ],
+              [
+                -74.45887437533948,
+                40.50169321334897
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45676330770246,
+            40.50089139910634
+          ],
+          [
+            -74.457479,
+            40.501171
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "85ad8a19c3a77f825e4e3919511b6ab7",
+        "fromIntersectionId": "2c39a17680b16903f04a5656e4668cdd",
+        "toIntersectionId": "1d027ff93ebf1502005ba1c96c69963c",
+        "fromStreetnames": [
+          "Courtland Street",
+          "Ray Street"
+        ],
+        "toStreetnames": [
+          "Senior Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "14e28b39c5e52fb8119789783f10392e",
+        "streetname": "Easton Avenue",
+        "referenceLength": 91.89,
+        "section": [
+          23.699005123982943,
+          91.89
+        ],
+        "side": "unknown",
+        "score": null,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45675290285877,
+                40.50090680317737
+              ],
+              [
+                -74.45787551538068,
+                40.50130337014701
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.457479,
+            40.501171
+          ],
+          [
+            -74.45766400000001,
+            40.501243
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "dd1df2a3a7c7ce8e3f7e3de8065553bb",
+        "fromIntersectionId": "1d027ff93ebf1502005ba1c96c69963c",
+        "toIntersectionId": "7319057ee0dd726c90ec9714c30b74af",
+        "fromStreetnames": [
+          "Senior Street"
+        ],
+        "toStreetnames": [
+          "Wirt Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "9391c7e06b954793304b6485408e396c",
+        "streetname": "Easton Avenue",
+        "section": [
+          0,
+          17.6
+        ],
+        "referenceLength": 17.6,
+        "side": "unknown",
+        "score": null,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45675290285877,
+                40.50090680317737
+              ],
+              [
+                -74.45787551538068,
+                40.50130337014701
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.45766400000001,
+            40.501243
+          ],
+          [
+            -74.45786368960427,
+            40.5013208957241
+          ]
+        ]
+      },
+      "properties": {
+        "referenceId": "8fde78daef1427ea2bfaa8c3aa9745ef",
+        "fromIntersectionId": "7319057ee0dd726c90ec9714c30b74af",
+        "toIntersectionId": "c98796c949934b0d7f3a1d8b37b5b77f",
+        "fromStreetnames": [
+          "Wirt Street"
+        ],
+        "toStreetnames": [
+          "Richardson Street"
+        ],
+        "roadClass": "Tertiary",
+        "direction": "forward",
+        "geometryId": "476f76662abff98e384af6878c93a86f",
+        "streetname": "Easton Avenue",
+        "referenceLength": 71.01,
+        "section": [
+          0,
+          18.976220603423933
+        ],
+        "side": "unknown",
+        "score": null,
+        "originalFeature": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -74.45675290285877,
+                40.50090680317737
+              ],
+              [
+                -74.45787551538068,
+                40.50130337014701
+              ]
+            ]
+          }
+        },
+        "color": ""
+      }
+    }
+  ],
+  "properties": {
+    "type": "ROAD_CLOSED",
+    "timezone": "America/New_York"
+  }
+}
