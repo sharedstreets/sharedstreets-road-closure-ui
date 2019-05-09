@@ -70,6 +70,7 @@ class SharedStreetsMapDrawControl extends React.Component<ISharedStreetsMapDrawC
                 className={"SHST-Map-Draw-Control-Confirm-Button"}
                 intent={'success'}
                 icon={"tick"}
+                text={"Search for match"}
                 onClick={this.handleConfirmDrawing}
               />
               <Button
@@ -77,6 +78,7 @@ class SharedStreetsMapDrawControl extends React.Component<ISharedStreetsMapDrawC
                 className={"SHST-Map-Draw-Control-Cancel-Button"}              
                 intent={'danger'}
                 icon={"cross"}
+                text={"Cancel"}
                 onClick={this.handleCancelDrawing}
               />
               <Button
@@ -85,6 +87,7 @@ class SharedStreetsMapDrawControl extends React.Component<ISharedStreetsMapDrawC
                 className={"SHST-Map-Draw-Control-Undo-Button"}
                 intent={"primary"}
                 icon={"undo"}
+                text={"Undo"}
                 onClick={this.handleUndoLastDrawing}
               />
             </React.Fragment>
