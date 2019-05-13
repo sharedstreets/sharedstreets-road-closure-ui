@@ -23,7 +23,7 @@ const getRequestURLBuilder = (endpoint: string, queryParams: {}) => {
 }
 
 // TODO -  add requestUrl optional param, use to override getRequestURLBuilder
-const apiService = (endpoint: string, method: string, queryParams: {} = { authKey: '' }, payload: {}, headers: {}, requestUrl: string, mode: string = '') => {
+const apiService = (endpoint: string, method: string, queryParams: {} = { authKey: '' }, payload: {}, headers: {}, requestUrl: string, mode: string = '', signal: AbortSignal) => {
     if (isEmpty(requestUrl)) {
         requestUrl = getRequestURLBuilder(endpoint, queryParams);
     }
@@ -31,7 +31,11 @@ const apiService = (endpoint: string, method: string, queryParams: {} = { authKe
         body: JSON.stringify(payload),
         headers: new Headers(headers),
         method,
+        signal,
     };
+    if (!signal) {
+        fetchOptions = omit(fetchOptions, ["signal"]);
+    }
 
     if (method === "get") {
         fetchOptions = omit(fetchOptions, ["body"]);

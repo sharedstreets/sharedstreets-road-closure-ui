@@ -143,10 +143,16 @@ export const ACTIONS = {
 };
 
 // side effects
+export let findMatchedPointAbortController = new AbortController();
 export const findMatchedPoint = (point: GeoJSON.Feature<GeoJSON.Point>, currentLineId: string) => (dispatch: Dispatch<any>, getState: any) => {
     if (point.geometry.coordinates.length === 0) {
         dispatch(ACTIONS.FETCH_SHAREDSTREETS_MATCH_POINT_CANCEL());
         return;
+    }
+    const state = getState() as RootState;
+    if (state.roadClosure.isFetchingMatchedPoints) {
+        findMatchedPointAbortController.abort();
+        findMatchedPointAbortController = new AbortController();
     }
     const endpoint = `match/point/${point.geometry.coordinates[0]},${point.geometry.coordinates[1]}`;
     const method = 'get';
@@ -176,10 +182,12 @@ export const findMatchedPoint = (point: GeoJSON.Feature<GeoJSON.Point>, currentL
         },
         body,
         endpoint,
+        failure: 'ROAD_CLOSURE/FETCH_SHAREDSTREETS_MATCH_POINT_FAILURE',
         method,
         params: queryParams,
         requested: 'ROAD_CLOSURE/FETCH_SHAREDSTREETS_MATCH_POINT_SUCCESS',
         requesting: 'ROAD_CLOSURE/FETCH_SHAREDSTREETS_MATCH_POINT_REQUEST',
+        signal: findMatchedPointAbortController.signal
     }));
 }; 
 export const findMatchedStreet = (linestring: IRoadClosureMapboxDrawLineString, currentLineId: string) => (dispatch: Dispatch<any>, getState: any) => {
@@ -757,7 +765,7 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 currentPossibleDirections: new SharedStreetsMatchPointFeatureCollection(),
                 isFetchingMatchedPoints: false,
             };
-            
+
         case "ROAD_CLOSURE/FETCH_SHAREDSTREETS_MATCH_POINT_REQUEST":
             return {
                 ...state,
