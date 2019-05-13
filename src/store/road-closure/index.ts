@@ -164,7 +164,7 @@ export const findMatchedPoint = (point: GeoJSON.Feature<GeoJSON.Point>, currentL
         includeIntersections: true,
         includeStreetnames: true,
         maxCandidates: 4,
-        searchRadius: 5,
+        searchRadius: 10,
         snapTopology: true,
     };
     const body = point;
