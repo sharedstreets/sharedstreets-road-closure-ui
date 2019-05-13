@@ -5,11 +5,13 @@ export const fetchAction = ({
     requesting = '',
     requested = '',
     endpoint = '',
+    failure = '',
     method = 'get',
     body = {},
     params = {},
     headers = {},
     requestUrl = '',
+    signal = new AbortController().signal,
     mode = '',
     // fn = (...args: any[]) => Promise.resolve(new Response()),
     // fnParams = [] as any[],
@@ -21,7 +23,7 @@ export const fetchAction = ({
         });
     }
     // return fn(...fnParams)
-    return apiService(endpoint, method, params, body, headers, requestUrl, mode)
+    return apiService(endpoint, method, params, body, headers, requestUrl, mode, signal)
     .then(async (response: any) => {
         let text;
         try {
@@ -36,5 +38,10 @@ export const fetchAction = ({
         error: false,
         payload: afterRequest(data),
         type: requested,
+    }))
+    .catch((err) => dispatch({
+        error: true,
+        payload: err,
+        type: failure,
     }));
 }; 

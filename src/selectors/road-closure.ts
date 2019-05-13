@@ -7,7 +7,7 @@ import {
 import {
     RoadClosureWazeIncidentsItem,
 } from '../models/RoadClosureWazeIncidentsItem';
-import { SharedStreetsMatchPath } from '../models/SharedStreets/SharedStreetsMatchPath';
+import { SharedStreetsMatchGeomPath } from '../models/SharedStreets/SharedStreetsMatchGeomPath';
 import { IRoadClosureState } from '../store/road-closure';
 import { currentItemToGeojson } from './road-closure-geojson';
 
@@ -35,8 +35,8 @@ export function currentRoadClosureItemToWaze(state: IRoadClosureState){
     const currentItem = currentRoadClosureItemSelector(state);
     const incidents: RoadClosureWazeIncidentsItem[] = [];
     if (currentItem) {
-        forEach(currentItem.features, (segment: SharedStreetsMatchPath|SharedStreetsMatchPath, index) => {
-            if (segment instanceof SharedStreetsMatchPath) {
+        forEach(currentItem.features, (segment: SharedStreetsMatchGeomPath|SharedStreetsMatchGeomPath, index) => {
+            if (segment instanceof SharedStreetsMatchGeomPath) {
                 if (currentItem.properties.geometryIdDirectionFilter[segment.properties.geometryId].forward && 
                     currentItem.properties.geometryIdDirectionFilter[segment.properties.geometryId].backward) {
                         // if both, use forward reference

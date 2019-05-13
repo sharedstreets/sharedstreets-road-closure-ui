@@ -8,9 +8,9 @@ import {
     RoadClosureFormStateItem
 } from './RoadClosureFormStateItem';
 import {
-    ISharedStreetsMatchPathProperties,
-    SharedStreetsMatchPath,
-} from './SharedStreets/SharedStreetsMatchPath';
+    ISharedStreetsMatchGeomPathProperties,
+    SharedStreetsMatchGeomPath,
+} from './SharedStreets/SharedStreetsMatchGeomPath';
 
 export class RoadClosureWazeIncidentsItem {
     public id: string;
@@ -39,7 +39,7 @@ export class RoadClosureWazeIncidentsItem {
     public starttime: string;
     public endtime: string;
 
-    public constructor(matchedStreetSegment: SharedStreetsMatchPath, form: RoadClosureFormStateItem, bothDirections: boolean) {
+    public constructor(matchedStreetSegment: SharedStreetsMatchGeomPath, form: RoadClosureFormStateItem, bothDirections: boolean) {
         this.creationtime = moment().format();
         if (form.timezone) {
             this.starttime = form.startTime ? moment.tz(form.startTime, form.timezone).format() : '';
@@ -62,7 +62,7 @@ export class RoadClosureWazeIncidentsItem {
     }
     
 
-    private setStreetname(matchedStreetSegmentProperties: ISharedStreetsMatchPathProperties, streetObj: IStreetsByGeometryId) : string {
+    private setStreetname(matchedStreetSegmentProperties: ISharedStreetsMatchGeomPathProperties, streetObj: IStreetsByGeometryId) : string {
         let output = '';
         if (streetObj[matchedStreetSegmentProperties.geometryId].forward) {
             output = streetObj[matchedStreetSegmentProperties.geometryId].forward.streetname;

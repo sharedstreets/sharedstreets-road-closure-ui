@@ -1,10 +1,10 @@
-import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
+import { SharedStreetsMatchGeomPath } from 'src/models/SharedStreets/SharedStreetsMatchGeomPath';
 
 export const selectMatchedStreetsGroupFilteredByDirection = (
-    matchedStreetsGroup: SharedStreetsMatchPath[],
+    matchedStreetsGroup: SharedStreetsMatchGeomPath[],
     geometryIdDirectionFilter: { [ geometryId: string] : { forward: boolean, backward: boolean } },
 ) => {
-    return matchedStreetsGroup.filter((path: SharedStreetsMatchPath) => {
+    return matchedStreetsGroup.filter((path: SharedStreetsMatchGeomPath) => {
         const directionFilter = geometryIdDirectionFilter[path.properties.geometryId];
         if (directionFilter && directionFilter.forward && directionFilter.backward) {
             if (path.properties.direction === "forward" || path.properties.direction === "backward") {

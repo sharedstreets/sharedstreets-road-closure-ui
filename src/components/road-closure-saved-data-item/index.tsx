@@ -9,14 +9,14 @@ import {
 } from '@blueprintjs/core';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { SharedStreetsMatchFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchFeatureCollection';
+import { SharedStreetsMatchGeomFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchGeomFeatureCollection';
 import { IRoadClosureUploadUrls } from 'src/utils/upload-url-generator';
 import './road-closure-saved-data-item.css';
 
 
 export interface IRoadClosureSavedDataItemProps {
     key: string,
-    item: SharedStreetsMatchFeatureCollection,
+    item: SharedStreetsMatchGeomFeatureCollection,
     metadata: any,
     uploadUrls: IRoadClosureUploadUrls,
 };

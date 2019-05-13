@@ -2,14 +2,14 @@ import {
     Spinner,
 } from '@blueprintjs/core';
 import * as React from 'react';
-import { SharedStreetsMatchFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchFeatureCollection';
+import { SharedStreetsMatchGeomFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchGeomFeatureCollection';
 import { IRoadClosureUploadUrls } from 'src/utils/upload-url-generator';
 import RoadClosureSavedDataItem from '../road-closure-saved-data-item';
 import './road-closure-saved-data-viewer.css';
 
 
 export interface IRoadClosureSavedDataViewerProps {
-    allRoadClosureItems: SharedStreetsMatchFeatureCollection[],
+    allRoadClosureItems: SharedStreetsMatchGeomFeatureCollection[],
     allRoadClosureMetadata: any[],
     allRoadClosuresUploadUrls: IRoadClosureUploadUrls[],
     isLoadingAllRoadClosures: boolean,

@@ -1,7 +1,7 @@
 import {
-    ISharedStreetsMatchPathProperties,
-    SharedStreetsMatchPath,
-} from '../models/SharedStreets/SharedStreetsMatchPath';
+    ISharedStreetsMatchGeomPathProperties,
+    SharedStreetsMatchGeomPath,
+} from '../models/SharedStreets/SharedStreetsMatchGeomPath';
 
 import { randomPoint } from '@turf/random';
 
@@ -71,14 +71,14 @@ import { lineString } from '@turf/helpers';
 
 // }
 
-export const createOneWayStreet = (direction: string) : SharedStreetsMatchPath => {
+export const createOneWayStreet = (direction: string) : SharedStreetsMatchGeomPath => {
     const points = randomPoint(2);
     const geometryId = uuid();
     const referenceId = uuid();
     const fromIntersectionId = uuid();
     const toIntersectionId = uuid();
 
-    const pathProperties: ISharedStreetsMatchPathProperties = {
+    const pathProperties: ISharedStreetsMatchGeomPathProperties = {
         direction,
         fromIntersectionId,
         fromStreetnames: ['street-'+referenceId],
@@ -101,14 +101,14 @@ export const createOneWayStreet = (direction: string) : SharedStreetsMatchPath =
         toIntersectionId,
         toStreetnames: ['street-'+toIntersectionId]
     };
-    const path = new SharedStreetsMatchPath(
+    const path = new SharedStreetsMatchGeomPath(
         lineString(coordAll(points), pathProperties)
     );
 
     return path;
 }
 
-export const createTwoWayStreet = () : { forward: SharedStreetsMatchPath, backward: SharedStreetsMatchPath} => {
+export const createTwoWayStreet = () : { forward: SharedStreetsMatchGeomPath, backward: SharedStreetsMatchGeomPath} => {
     const points = randomPoint(2);
     const geometryId = uuid();
     const fromIntersectionId = uuid();
@@ -116,7 +116,7 @@ export const createTwoWayStreet = () : { forward: SharedStreetsMatchPath, backwa
     
     const forwardReferenceId = uuid();
 
-    const forwardPathProperties: ISharedStreetsMatchPathProperties = {
+    const forwardPathProperties: ISharedStreetsMatchGeomPathProperties = {
         direction: "forward",
         fromIntersectionId,
         fromStreetnames: ['street-'+forwardReferenceId],
@@ -139,13 +139,13 @@ export const createTwoWayStreet = () : { forward: SharedStreetsMatchPath, backwa
         toIntersectionId,
         toStreetnames: ['street-'+toIntersectionId]
     };
-    const forwardPath = new SharedStreetsMatchPath(
+    const forwardPath = new SharedStreetsMatchGeomPath(
         lineString(coordAll(points), forwardPathProperties)
     );
 
     const backwardReferenceId = uuid();
     
-    const backwardPathProperties: ISharedStreetsMatchPathProperties = {
+    const backwardPathProperties: ISharedStreetsMatchGeomPathProperties = {
         direction: "backward",
         fromIntersectionId: toIntersectionId,
         fromStreetnames: ['street-'+backwardReferenceId],
@@ -168,7 +168,7 @@ export const createTwoWayStreet = () : { forward: SharedStreetsMatchPath, backwa
         toIntersectionId: fromIntersectionId,
         toStreetnames: ['street-'+toIntersectionId]
     };
-    const backwardPath = new SharedStreetsMatchPath(
+    const backwardPath = new SharedStreetsMatchGeomPath(
         lineString(coordAll(points), backwardPathProperties)
     );
 
@@ -178,7 +178,7 @@ export const createTwoWayStreet = () : { forward: SharedStreetsMatchPath, backwa
     }
 }
 
-export const createTwoWayStreetFromIntersection = (intersectionId: string) : { forward: SharedStreetsMatchPath, backward: SharedStreetsMatchPath} => {
+export const createTwoWayStreetFromIntersection = (intersectionId: string) : { forward: SharedStreetsMatchGeomPath, backward: SharedStreetsMatchGeomPath} => {
     const points = randomPoint(2);
     const geometryId = uuid();
     const fromIntersectionId = intersectionId;
@@ -186,7 +186,7 @@ export const createTwoWayStreetFromIntersection = (intersectionId: string) : { f
     
     const forwardReferenceId = uuid();
 
-    const forwardPathProperties: ISharedStreetsMatchPathProperties = {
+    const forwardPathProperties: ISharedStreetsMatchGeomPathProperties = {
         direction: "forward",
         fromIntersectionId,
         fromStreetnames: ['street-'+forwardReferenceId],
@@ -209,13 +209,13 @@ export const createTwoWayStreetFromIntersection = (intersectionId: string) : { f
         toIntersectionId,
         toStreetnames: ['street-'+toIntersectionId]
     };
-    const forwardPath = new SharedStreetsMatchPath(
+    const forwardPath = new SharedStreetsMatchGeomPath(
         lineString(coordAll(points), forwardPathProperties)
     );
 
     const backwardReferenceId = uuid();
     
-    const backwardPathProperties: ISharedStreetsMatchPathProperties = {
+    const backwardPathProperties: ISharedStreetsMatchGeomPathProperties = {
         direction: "backward",
         fromIntersectionId: toIntersectionId,
         fromStreetnames: ['street-'+backwardReferenceId],
@@ -238,7 +238,7 @@ export const createTwoWayStreetFromIntersection = (intersectionId: string) : { f
         toIntersectionId: fromIntersectionId,
         toStreetnames: ['street-'+toIntersectionId]
     };
-    const backwardPath = new SharedStreetsMatchPath(
+    const backwardPath = new SharedStreetsMatchGeomPath(
         lineString(coordAll(points), backwardPathProperties)
     );
 
@@ -248,7 +248,7 @@ export const createTwoWayStreetFromIntersection = (intersectionId: string) : { f
     }
 }
 
-export const createTwoWayStreetToIntersection = (intersectionId: string) : { forward: SharedStreetsMatchPath, backward: SharedStreetsMatchPath} => {
+export const createTwoWayStreetToIntersection = (intersectionId: string) : { forward: SharedStreetsMatchGeomPath, backward: SharedStreetsMatchGeomPath} => {
     const points = randomPoint(2);
     const geometryId = uuid();
     const fromIntersectionId = uuid();
@@ -256,7 +256,7 @@ export const createTwoWayStreetToIntersection = (intersectionId: string) : { for
     
     const forwardReferenceId = uuid();
 
-    const forwardPathProperties: ISharedStreetsMatchPathProperties = {
+    const forwardPathProperties: ISharedStreetsMatchGeomPathProperties = {
         direction: "forward",
         fromIntersectionId,
         fromStreetnames: ['street-'+forwardReferenceId],
@@ -279,13 +279,13 @@ export const createTwoWayStreetToIntersection = (intersectionId: string) : { for
         toIntersectionId,
         toStreetnames: ['street-'+toIntersectionId]
     };
-    const forwardPath = new SharedStreetsMatchPath(
+    const forwardPath = new SharedStreetsMatchGeomPath(
         lineString(coordAll(points), forwardPathProperties)
     );
 
     const backwardReferenceId = uuid();
     
-    const backwardPathProperties: ISharedStreetsMatchPathProperties = {
+    const backwardPathProperties: ISharedStreetsMatchGeomPathProperties = {
         direction: "backward",
         fromIntersectionId: toIntersectionId,
         fromStreetnames: ['street-'+backwardReferenceId],
@@ -308,7 +308,7 @@ export const createTwoWayStreetToIntersection = (intersectionId: string) : { for
         toIntersectionId: fromIntersectionId,
         toStreetnames: ['street-'+toIntersectionId]
     };
-    const backwardPath = new SharedStreetsMatchPath(
+    const backwardPath = new SharedStreetsMatchGeomPath(
         lineString(coordAll(points), backwardPathProperties)
     );
 
@@ -318,14 +318,14 @@ export const createTwoWayStreetToIntersection = (intersectionId: string) : { for
     }
 }
 
-export const createOneWayStreetFromIntersection = (direction: string, intersectionId: string) : SharedStreetsMatchPath => {
+export const createOneWayStreetFromIntersection = (direction: string, intersectionId: string) : SharedStreetsMatchGeomPath => {
     const points = randomPoint(2);
     const geometryId = uuid();
     const referenceId = uuid();
     const toIntersectionId = uuid();
     const fromIntersectionId = intersectionId;
 
-    const pathProperties: ISharedStreetsMatchPathProperties = {
+    const pathProperties: ISharedStreetsMatchGeomPathProperties = {
         direction,
         fromIntersectionId,
         fromStreetnames: ['street-'+referenceId],
@@ -348,21 +348,21 @@ export const createOneWayStreetFromIntersection = (direction: string, intersecti
         toIntersectionId,
         toStreetnames: ['street-'+toIntersectionId]
     };
-    const path = new SharedStreetsMatchPath(
+    const path = new SharedStreetsMatchGeomPath(
         lineString(coordAll(points), pathProperties)
     );
 
     return path;
 }
 
-export const createOneWayStreetToIntersection = (direction: string, intersectionId: string) : SharedStreetsMatchPath => {
+export const createOneWayStreetToIntersection = (direction: string, intersectionId: string) : SharedStreetsMatchGeomPath => {
     const points = randomPoint(2);
     const geometryId = uuid();
     const referenceId = uuid();
     const toIntersectionId = intersectionId;
     const fromIntersectionId = uuid();
 
-    const pathProperties: ISharedStreetsMatchPathProperties = {
+    const pathProperties: ISharedStreetsMatchGeomPathProperties = {
         direction,
         fromIntersectionId,
         fromStreetnames: ['street-'+referenceId],
@@ -385,7 +385,7 @@ export const createOneWayStreetToIntersection = (direction: string, intersection
         toIntersectionId,
         toStreetnames: ['street-'+toIntersectionId]
     };
-    const path = new SharedStreetsMatchPath(
+    const path = new SharedStreetsMatchGeomPath(
         lineString(coordAll(points), pathProperties)
     );
 

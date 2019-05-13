@@ -6,17 +6,17 @@ import {
     reverse,
     uniq,
 } from 'lodash';
-import { SharedStreetsMatchPath } from '../models/SharedStreets/SharedStreetsMatchPath';
+import { SharedStreetsMatchGeomPath } from '../models/SharedStreets/SharedStreetsMatchGeomPath';
 import { IRoadClosureState } from '../store/road-closure';
 
 export const currentItemToGeojson = (state: IRoadClosureState) => {
     return {
         ...state.currentItem,
-        features: state.currentItem.features.filter((feature) => feature instanceof SharedStreetsMatchPath)
-                .filter((path: SharedStreetsMatchPath) => {
+        features: state.currentItem.features.filter((feature) => feature instanceof SharedStreetsMatchGeomPath)
+                .filter((path: SharedStreetsMatchGeomPath) => {
                     return state.currentItem.properties.geometryIdDirectionFilter[path.properties.geometryId][path.properties.direction]
                 })
-                .map((path: SharedStreetsMatchPath) => {
+                .map((path: SharedStreetsMatchGeomPath) => {
                     path.properties.streetname = state.currentItem.properties.street[path.properties.geometryId][path.properties.direction].streetname;
                     return omit(path, ['color']);
                 }),
@@ -25,9 +25,9 @@ export const currentItemToGeojson = (state: IRoadClosureState) => {
 }
 
 export const getReferenceIdFeatureMap = (state: IRoadClosureState) => {
-    const referenceIdFeatureMap: { [refId: string]: SharedStreetsMatchPath } = {};
+    const referenceIdFeatureMap: { [refId: string]: SharedStreetsMatchGeomPath } = {};
     state.currentItem.features.map((feature) => {
-        if (feature instanceof SharedStreetsMatchPath) {
+        if (feature instanceof SharedStreetsMatchGeomPath) {
             referenceIdFeatureMap[feature.properties.referenceId] = feature;
         }
     });
@@ -35,9 +35,9 @@ export const getReferenceIdFeatureMap = (state: IRoadClosureState) => {
 };
 
 export const getGeometryIdPathMap = (state: IRoadClosureState) => {
-    const geometryIdPathMap: { [geomId: string]: { [direction: string] : SharedStreetsMatchPath} } = {};
+    const geometryIdPathMap: { [geomId: string]: { [direction: string] : SharedStreetsMatchGeomPath} } = {};
     state.currentItem.features.map((feature) => {
-        if (feature instanceof SharedStreetsMatchPath) {
+        if (feature instanceof SharedStreetsMatchGeomPath) {
             if (!geometryIdPathMap[feature.properties.geometryId]) {
                 geometryIdPathMap[feature.properties.geometryId] = {};
             }   
@@ -47,7 +47,7 @@ export const getGeometryIdPathMap = (state: IRoadClosureState) => {
     return geometryIdPathMap;
 };
 
-export const arePathsAdjacent = (thisPath: SharedStreetsMatchPath, thatPath: SharedStreetsMatchPath) => {
+export const arePathsAdjacent = (thisPath: SharedStreetsMatchGeomPath, thatPath: SharedStreetsMatchGeomPath) => {
     // returns true if thisPath and thatPath are adjacent, as defined by:
     //     - don't have different streetname values 
     //     - don't have the same geometry ID (to avoid 2-ways)
@@ -72,10 +72,10 @@ export const getAdjacencyListFromState = (state: IRoadClosureState) => {
         [refId: string]: string[]
     } = {};
     state.currentItem.features.forEach((feature) => {
-        if (feature instanceof SharedStreetsMatchPath) {
+        if (feature instanceof SharedStreetsMatchGeomPath) {
             output[feature.properties.referenceId] = [];
             state.currentItem.features.forEach((innerFeature) => {
-                if (innerFeature instanceof SharedStreetsMatchPath) {
+                if (innerFeature instanceof SharedStreetsMatchGeomPath) {
                     if (arePathsAdjacent(feature, innerFeature)) {
                         output[feature.properties.referenceId].push(innerFeature.properties.referenceId);
                     }
@@ -88,7 +88,7 @@ export const getAdjacencyListFromState = (state: IRoadClosureState) => {
 }
 
 export const groupPathsByContiguitySplitByIntersection = (state: IRoadClosureState) => {
-    const output: SharedStreetsMatchPath[][] = [];
+    const output: SharedStreetsMatchGeomPath[][] = [];
     const groups = groupPathsByContiguity(state);
     groups.forEach((group) => {
         const intersections = {};
@@ -118,9 +118,9 @@ export const groupPathsByContiguitySplitByIntersection = (state: IRoadClosureSta
 
 
 export const groupPathsByContiguity = (state: IRoadClosureState) => {
-    const output: SharedStreetsMatchPath[][] = [];
-    let forwardOutput: SharedStreetsMatchPath[] = [];
-    let backwardOutput: SharedStreetsMatchPath[] = [];
+    const output: SharedStreetsMatchGeomPath[][] = [];
+    let forwardOutput: SharedStreetsMatchGeomPath[] = [];
+    let backwardOutput: SharedStreetsMatchGeomPath[] = [];
     const referenceIdFeatureMap = getReferenceIdFeatureMap(state);
     const refIdStack = Object.keys(referenceIdFeatureMap).map((refId, index) => {
         return {
@@ -238,8 +238,8 @@ export const getContiguousFeatureGroupsDirections = (state: IRoadClosureState) =
     const output: Array<{ forward: boolean, backward: boolean }> = [];
     const groups = getContiguousFeatureGroups(state);
     groups.forEach((group) => {
-        const directions = uniq(group.filter((feature) => feature instanceof SharedStreetsMatchPath)
-                    .map((feature: SharedStreetsMatchPath) => feature.properties.direction));
+        const directions = uniq(group.filter((feature) => feature instanceof SharedStreetsMatchGeomPath)
+                    .map((feature: SharedStreetsMatchGeomPath) => feature.properties.direction));
                     
         output.push({
             backward: directions.indexOf("backward") >= 0 ? true : false,
