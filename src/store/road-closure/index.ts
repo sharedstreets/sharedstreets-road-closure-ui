@@ -926,6 +926,7 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 ...state,
                 currentItem: updatedItem,
                 currentLineId: action.payload.currentLineId,
+                currentPossibleDirections: new SharedStreetsMatchPointFeatureCollection(),
                 isFetchingMatchedStreets: false,
             };
 
