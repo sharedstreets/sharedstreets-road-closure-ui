@@ -37,6 +37,10 @@ const defaultState: IRoadClosureState = {
     isPuttingOutput: false,
     isSavingOutput: false,
     isShowingRoadClosureOutputViewer: false,
+    message: {
+        intent: "none",
+        text: ""
+    },
     orgName: '',
     output: new RoadClosureOutputStateItem(),
     uploadUrls: {

@@ -3,6 +3,7 @@ import RoadClosureHeaderMenu, { IRoadClosureHeaderMenuProps } from 'src/componen
 import { RootState } from 'src/store/configureStore';
 import {
     ACTIONS,
+    addFile,
     loadRoadClosure
 } from '../../store/road-closure';
 
@@ -24,6 +25,7 @@ const mapStateToProps = (state: RootState, ownProps: IRoadClosureHeaderMenuConta
 export default connect<{}, {}, IRoadClosureHeaderMenuProps>(
     mapStateToProps,
     {
+        addFile,
         clearRoadClosure: ACTIONS.RESET_ROAD_CLOSURE,
         loadRoadClosure,
     },

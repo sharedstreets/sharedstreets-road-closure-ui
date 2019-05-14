@@ -21,20 +21,24 @@ export interface IRoadClosureHeaderMenuProps {
     geojsonUploadUrl: string,
     edit?: boolean,
     explore?: boolean,
+    addFile: (e: File) => void,
     clearRoadClosure: () => void,
     loadRoadClosure: (url: string) => void,
 }
 export interface IRoadClosureHeaderMenuState {
     url: string,
     copyButtonText: string,
+    fileName: string,
 }
 
 class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps, IRoadClosureHeaderMenuState> {
+    public fileInputRef = React.createRef<HTMLInputElement>();
     private urlInput: any;
     
     public constructor(props: IRoadClosureHeaderMenuProps) {
         super(props);
         this.urlInput = React.createRef();
+        this.handleFileAdded = this.handleFileAdded.bind(this);
         this.handleSetInputRef = this.handleSetInputRef.bind(this);
         this.handleUpdateURL = this.handleUpdateURL.bind(this);
         this.handleClickCopy = this.handleClickCopy.bind(this);
@@ -43,6 +47,7 @@ class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps,
         this.handleClickLoadUrl = this.handleClickLoadUrl.bind(this);
         this.state = {
             copyButtonText: 'Copy',
+            fileName: '',
             url: ''
         };
     }
@@ -55,6 +60,21 @@ class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps,
         }
     }
     
+    public handleFileAdded = (e: any) => {
+        if (this.fileInputRef.current && this.fileInputRef.current.files) {
+            const file = this.fileInputRef.current.files[0];
+            let selectedFileName = '';
+            if (file && file.name) {
+                selectedFileName = file.name;
+                this.props.addFile(file);
+                this.fileInputRef.current.files = null;
+            }
+            this.setState({
+                fileName: selectedFileName
+            });
+        }
+    }
+
     public handleClickClear = (e: any) => {
         this.props.clearRoadClosure();
         this.setState({ url: '' });
@@ -105,6 +125,22 @@ class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps,
                 }
                 { this.props.explore && <Link className={"bp3-button bp3-intent-success"} to="edit">Create new closure</Link> }
                 { this.props.edit && <Link className={"bp3-button bp3-intent-primary"} to="explore">View all road closures</Link> }
+                { this.props.edit &&
+                    <label className="bp3-file-input">
+                        <input
+                            ref={this.fileInputRef}
+                            type="file"
+                            accept=".json, .geojson"
+                            onChange={this.handleFileAdded}/>
+                        <span className="bp3-file-upload-input">
+                        {
+                            this.state.fileName === '' ? 
+                            "Load from GeoJSON file..."
+                            : this.state.fileName
+                        }
+                        </span>
+                    </label>
+                }
                 <Text>{"Organization: " + this.props.orgName}</Text>
             </React.Fragment>
         );

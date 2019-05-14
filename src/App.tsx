@@ -9,8 +9,17 @@ import RoadClosureMap from './containers/road-closure-map';
 import RoadClosureOutputViewer from './containers/road-closure-output-viewer';
 import { RootState } from './store/configureStore';
 
-import { FocusStyleManager } from "@blueprintjs/core";
-import { ACTIONS, loadRoadClosure } from './store/road-closure';
+import {
+  FocusStyleManager,
+  Intent,
+  Position,
+  Toaster,
+} from "@blueprintjs/core";
+import {
+  ACTIONS,
+  IAppMessage,
+  loadRoadClosure,
+} from './store/road-closure';
 FocusStyleManager.onlyShowFocusOnTabs();
 
 export interface IAppProps {
@@ -18,10 +27,17 @@ export interface IAppProps {
   explore: boolean,
   location: any,
   match: any,
+  message: IAppMessage,
+  hideMessage: (d: boolean) => void,
   loadRoadClosure: (url: string) => void,
   resetRoadClosure: () => void,
   setOrgName: (name: string) => void
 };
+
+const AppToaster = Toaster.create({
+  className: "SHST-Top-Toaster",
+  position: Position.TOP,
+});
 
 class App extends React.Component<IAppProps, any> {
   public componentDidMount() {
@@ -39,6 +55,19 @@ class App extends React.Component<IAppProps, any> {
       }
     } else {
       this.props.resetRoadClosure();
+    }
+  }
+
+  public componentDidUpdate(prevProps: IAppProps) {
+    if (prevProps.message.text !== this.props.message.text
+      && prevProps.message.intent !== this.props.message.intent
+      && this.props.message.text !== ""
+      ) {
+        AppToaster.show({
+          intent: this.props.message.intent as Intent,
+          message: this.props.message.text,
+          onDismiss: this.props.hideMessage
+        });
     }
   }
 
@@ -66,8 +95,10 @@ class App extends React.Component<IAppProps, any> {
 export default connect<{}, {}, IAppProps>(
   (state: RootState) => ({
     isShowingRoadClosureOutputViewer: state.roadClosure.isShowingRoadClosureOutputViewer,
+    message: state.roadClosure.message
   }), 
   {
+    hideMessage: ACTIONS.HIDE_MESSAGE,
     loadRoadClosure,
     resetRoadClosure: ACTIONS.RESET_ROAD_CLOSURE,
     setOrgName: ACTIONS.SET_ORG_NAME,
