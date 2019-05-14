@@ -8,11 +8,11 @@ import {
 } from '../../models/SharedStreets/SharedStreetsMatchGeomPath';
 import { SharedStreetsMatchPointFeatureCollection } from '../../models/SharedStreets/SharedStreetsMatchPointFeatureCollection';
 import {
-    ACTIONS as ROAD_CLOSURE_ACTIONS,
     IFetchSharedstreetGeomsSuccessResponse,
     IRoadClosureFormInputChangedPayload,
     IRoadClosureState,
     IRoadClosureStateItemToggleDirectionPayload,
+    ROAD_CLOSURE_ACTIONS,
     roadClosureReducer,
 } from './';
 
@@ -37,11 +37,6 @@ const defaultState: IRoadClosureState = {
     isPuttingOutput: false,
     isSavingOutput: false,
     isShowingRoadClosureOutputViewer: false,
-    message: {
-        intent: "none",
-        text: ""
-    },
-    orgName: '',
     output: new RoadClosureOutputStateItem(),
     uploadUrls: {
         geojsonUploadUrl: '',

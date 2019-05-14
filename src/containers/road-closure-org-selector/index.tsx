@@ -5,7 +5,7 @@ import { loadAllOrgs } from '../../store/road-closure';
 
 const mapStateToProps = (state: RootState) => ({
     allOrgs: state.roadClosure.allOrgs,
-    orgName: state.roadClosure.orgName,
+    orgName: state.context.orgName,
 });
 
 export default connect<{}, {}, IRoadClosureOrgSelectorProps>(

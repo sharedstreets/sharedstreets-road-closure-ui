@@ -9,7 +9,9 @@ import { FocusStyleManager } from "@blueprintjs/core";
 import RoadClosureHeaderMenu from 'src/containers/road-closure-header-menu';
 import RoadClosureSavedDataViewer from 'src/containers/road-closure-saved-data-viewer';
 import {
-  ACTIONS,
+  CONTEXT_ACTIONS
+} from '../../store/context';
+import {
   loadAllRoadClosures,
 } from '../../store/road-closure';
 
@@ -51,6 +53,6 @@ export default connect<{}, {}, IRoadClosureExplorerProps>(
   }), 
   {
     loadAllRoadClosures,
-    setOrgName: ACTIONS.SET_ORG_NAME,
+    setOrgName: CONTEXT_ACTIONS.SET_ORG_NAME,
   }
 )(RoadClosureExplorer) as React.ComponentClass<{}>;

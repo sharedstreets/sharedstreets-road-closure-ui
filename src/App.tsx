@@ -16,9 +16,12 @@ import {
   Toaster,
 } from "@blueprintjs/core";
 import {
-  ACTIONS,
-  IAppMessage,
+  CONTEXT_ACTIONS,
+  IContextMessage,
+} from './store/context';
+import {
   loadRoadClosure,
+  ROAD_CLOSURE_ACTIONS,
 } from './store/road-closure';
 FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -27,7 +30,7 @@ export interface IAppProps {
   explore: boolean,
   location: any,
   match: any,
-  message: IAppMessage,
+  message: IContextMessage,
   hideMessage: (d: boolean) => void,
   loadRoadClosure: (url: string) => void,
   resetRoadClosure: () => void,
@@ -95,12 +98,12 @@ class App extends React.Component<IAppProps, any> {
 export default connect<{}, {}, IAppProps>(
   (state: RootState) => ({
     isShowingRoadClosureOutputViewer: state.roadClosure.isShowingRoadClosureOutputViewer,
-    message: state.roadClosure.message
+    message: state.context.message
   }), 
   {
-    hideMessage: ACTIONS.HIDE_MESSAGE,
+    hideMessage: CONTEXT_ACTIONS.HIDE_MESSAGE,
     loadRoadClosure,
-    resetRoadClosure: ACTIONS.RESET_ROAD_CLOSURE,
-    setOrgName: ACTIONS.SET_ORG_NAME,
+    resetRoadClosure: ROAD_CLOSURE_ACTIONS.RESET_ROAD_CLOSURE,
+    setOrgName: CONTEXT_ACTIONS.SET_ORG_NAME,
   }
 )(App) as React.ComponentClass<{}>;
