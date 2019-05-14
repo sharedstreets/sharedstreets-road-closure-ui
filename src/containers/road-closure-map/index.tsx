@@ -7,9 +7,9 @@ import { getDirectionIconPoints, getRoadBlockIconPoints } from 'src/selectors/ro
 import { RootState } from 'src/store/configureStore';
 import RoadClosureMap, { IRoadClosureMapProps } from '../../components/road-closure-map';
 import {
-    ACTIONS,
     findMatchedPoint,
     findMatchedStreet,
+    ROAD_CLOSURE_ACTIONS,
 } from '../../store/road-closure';
 
 const mapStateToProps = (state: RootState) => ({
@@ -27,6 +27,6 @@ export default connect<{}, {}, IRoadClosureMapProps>(
     {
         findMatchedPoint,
         findMatchedStreet,
-        inputChanged: ACTIONS.INPUT_CHANGED,
+        inputChanged: ROAD_CLOSURE_ACTIONS.INPUT_CHANGED,
     },
 )(RoadClosureMap) as React.ComponentClass<{}>;

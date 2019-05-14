@@ -8,7 +8,7 @@ const mapStateToProps = (state: RootState) => ({
     allRoadClosureMetadata: state.roadClosure.allRoadClosureMetadata,
     allRoadClosuresUploadUrls: state.roadClosure.allRoadClosuresUploadUrls,
     isLoadingAllRoadClosures: state.roadClosure.isLoadingAllRoadClosures,
-    orgName: state.roadClosure.orgName,
+    orgName: state.context.orgName,
 });
 
 export default connect<{}, {}, IRoadClosureSavedDataViewerProps>(
