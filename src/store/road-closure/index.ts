@@ -20,6 +20,7 @@ import { SharedStreetsMatchGeomPath } from '../../models/SharedStreets/SharedStr
 import { SharedStreetsMatchGeomPoint } from '../../models/SharedStreets/SharedStreetsMatchGeomPoint';
 import { SharedStreetsMatchPointFeatureCollection } from '../../models/SharedStreets/SharedStreetsMatchPointFeatureCollection';
 import { getFormattedJSONStringFromOutputItem } from '../../selectors/road-closure-output-item';
+import { isValidGeoJSONFile } from '../../utils/geojson-file-validator';
 import { generateUploadUrlsFromHash, IRoadClosureUploadUrls } from '../../utils/upload-url-generator';
 import { v4 } from '../../utils/uuid-regex';
 import { fetchAction } from '../api';
@@ -85,6 +86,11 @@ export interface IRoadClosureOrgName {
     closureIds: string[],
 }
 
+export interface IAppMessage {
+    text: string;
+    intent: string;
+}
+
 export const ACTIONS = {
     DELETE_STREET_SEGMENT: createStandardAction('ROAD_CLOSURE/DELETE_STREET_SEGMENT')<RoadClosureFormStateStreet>(),
     FETCH_SHAREDSTREETS_ALL_PUBLIC_DATA: createAsyncAction(
@@ -119,6 +125,7 @@ export const ACTIONS = {
         'ROAD_CLOSURE/GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL_SUCCESS',
         'ROAD_CLOSURE/GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL_FAILURE'
     )<void, IGenerateSharedstreetsPublicDataUploadUrlSuccessResponse, Error>(),
+    HIDE_MESSAGE: createStandardAction('ROAD_CLOSURE/HIDE_MESSAGE')<boolean>(),
     HIGHLIGHT_MATCHED_STREET: createStandardAction('ROAD_CLOSURE/HIGHLIGHT_MATCHED_STREET')<RoadClosureFormStateStreet>(),
     HIGHLIGHT_MATCHED_STREETS_GROUP: createStandardAction('ROAD_CLOSURE/HIGHLIGHT_MATCHED_STREETS_GROUP')<SharedStreetsMatchGeomPath[]>(),
     INPUT_CHANGED: createStandardAction('ROAD_CLOSURE/INPUT_CHANGED')<IRoadClosureFormInputChangedPayload>(),
@@ -138,6 +145,7 @@ export const ACTIONS = {
     SAVING_OUTPUT: createStandardAction('ROAD_CLOSURE/SAVING_OUTPUT')<void>(),
     SELECT_OUTPUT_FORMAT: createStandardAction('ROAD_CLOSURE/SELECT_OUTPUT_FORMAT')<IRoadClosureOutputFormatName>(),
     SET_ORG_NAME: createStandardAction('ROAD_CLOSURE/SET_ORG_NAME')<string>(),
+    SHOW_MESSAGE: createStandardAction('ROAD_CLOSURE/SHOW_MESSAGE')<IAppMessage>(),
     TOGGLE_DIRECTION_STREET_SEGMENT: createStandardAction('ROAD_CLOSURE/TOGGLE_DIRECTION_STREET_SEGMENT')<IRoadClosureStateItemToggleDirectionPayload>(),
     VIEWPORT_CHANGED: createStandardAction('ROAD_CLOSURE/VIEWPORT_CHANGED'),
     ZOOM_HIGHLIGHT_MATCHED_STREETS_GROUP: createStandardAction('ROAD_CLOSURE/ZOOM_HIGHLIGHT_MATCHED_STREETS_GROUP')<SharedStreetsMatchGeomPath[]>(),
@@ -433,7 +441,7 @@ export const saveRoadClosure = () => (dispatch: Dispatch<any>, getState: any) =>
     });
 };
 
-export const addFile = (file: any) => (dispatch: Dispatch<any>, getState: any) => {
+export const addFile = (file: File) => (dispatch: Dispatch<any>, getState: any) => {
     const reader = new FileReader();
     reader.onload = (e) => {
         if (e && e.target) {
@@ -442,17 +450,43 @@ export const addFile = (file: any) => (dispatch: Dispatch<any>, getState: any) =
                 const result = fr.result;
                 if (typeof result === "string") {
                     const obj = JSON.parse(result);
-                    if (obj.type) {
+                    if (isValidGeoJSONFile(obj)) {
                         dispatch(ACTIONS.FILE_ADDED());
                         dispatch(ACTIONS.FETCH_SHAREDSTREETS_PUBLIC_DATA.success(obj));
-                        // navigate to editor
+                        dispatch(ACTIONS.SHOW_MESSAGE({
+                            intent: "success",
+                            text: "Success! Loaded your GeoJSON file.",
+                        }));
+                    } else {
+                        dispatch(ACTIONS.SHOW_MESSAGE({
+                            intent: "danger",
+                            text: "You've selected an invalid GeoJSON file!\
+                            We're looking for a GeoJSON file that has a .geojson or .json extension\
+                            and is a FeatureCollection of LineStrings.",
+                        }));
                     }
                 }
             }
+        } else {
+            dispatch(ACTIONS.SHOW_MESSAGE({
+                intent: "danger",
+                text: "You've selected an invalid GeoJSON file!\
+                We're looking for a GeoJSON file that has a .geojson or .json extension\
+                and is a FeatureCollection of LineStrings.",
+            }));
         }
 
     };
-    reader.readAsBinaryString(file);
+    try {
+        reader.readAsBinaryString(file);
+    } catch (e) {
+        dispatch(ACTIONS.SHOW_MESSAGE({
+            intent: "danger",
+            text: "You've selected an invalid GeoJSON file!\
+            We're looking for a GeoJSON file that has a .geojson or .json extension\
+            and is a FeatureCollection of LineStrings.",
+        }));
+    }
 }
 // reducer
 export interface IRoadClosureState {
@@ -475,6 +509,7 @@ export interface IRoadClosureState {
     isPuttingOutput: boolean,
     isSavingOutput: boolean,
     isShowingRoadClosureOutputViewer: boolean,
+    message: IAppMessage,
     orgName: string,
     output: RoadClosureOutputStateItem,
     uploadUrls: IRoadClosureUploadUrls,
@@ -500,6 +535,10 @@ const defaultState: IRoadClosureState = {
     isPuttingOutput: false,
     isSavingOutput: false,
     isShowingRoadClosureOutputViewer: false,
+    message: {
+        intent: "none",
+        text: '',
+    },
     orgName: '',
     output: new RoadClosureOutputStateItem(),
     uploadUrls: {
@@ -511,6 +550,20 @@ const defaultState: IRoadClosureState = {
 export const roadClosureReducer = (state: IRoadClosureState = defaultState, action: RoadClosureAction) => {
     let updatedItem: SharedStreetsMatchGeomFeatureCollection;
     switch (action.type) {
+        case 'ROAD_CLOSURE/SHOW_MESSAGE':
+            return {
+                ...state,
+                message: action.payload
+            };
+
+        case 'ROAD_CLOSURE/HIDE_MESSAGE':
+            return {
+                ...state,
+                message: {
+                    intent: 'none',
+                    text: '',
+                }
+            };
         case 'ROAD_CLOSURE/SET_ORG_NAME':
             return {
                 ...state,

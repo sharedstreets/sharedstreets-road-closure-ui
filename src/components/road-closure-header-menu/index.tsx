@@ -21,13 +21,14 @@ export interface IRoadClosureHeaderMenuProps {
     geojsonUploadUrl: string,
     edit?: boolean,
     explore?: boolean,
-    addFile: (e: any) => void,
+    addFile: (e: File) => void,
     clearRoadClosure: () => void,
     loadRoadClosure: (url: string) => void,
 }
 export interface IRoadClosureHeaderMenuState {
     url: string,
     copyButtonText: string,
+    fileName: string,
 }
 
 class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps, IRoadClosureHeaderMenuState> {
@@ -46,6 +47,7 @@ class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps,
         this.handleClickLoadUrl = this.handleClickLoadUrl.bind(this);
         this.state = {
             copyButtonText: 'Copy',
+            fileName: '',
             url: ''
         };
     }
@@ -61,7 +63,15 @@ class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps,
     public handleFileAdded = (e: any) => {
         if (this.fileInputRef.current && this.fileInputRef.current.files) {
             const file = this.fileInputRef.current.files[0];
-            this.props.addFile(file);
+            let selectedFileName = '';
+            if (file && file.name) {
+                selectedFileName = file.name;
+                this.props.addFile(file);
+                this.fileInputRef.current.files = null;
+            }
+            this.setState({
+                fileName: selectedFileName
+            });
         }
     }
 
@@ -122,7 +132,13 @@ class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps,
                             type="file"
                             accept=".json, .geojson"
                             onChange={this.handleFileAdded}/>
-                        <span className="bp3-file-upload-input">Load from GeoJSON file...</span>
+                        <span className="bp3-file-upload-input">
+                        {
+                            this.state.fileName === '' ? 
+                            "Load from GeoJSON file..."
+                            : this.state.fileName
+                        }
+                        </span>
                     </label>
                 }
                 <Text>{"Organization: " + this.props.orgName}</Text>
