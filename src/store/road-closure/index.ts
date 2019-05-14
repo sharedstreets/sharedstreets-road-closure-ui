@@ -113,6 +113,7 @@ export const ACTIONS = {
         'ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS',
         'ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_FAILURE'
     )<void, IFetchSharedstreetGeomsSuccessResponse, Error>(),
+    FILE_ADDED: createStandardAction('ROAD_CLOSURE/FILE_ADDED')<void>(),
     GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL: createAsyncAction(
         'ROAD_CLOSURE/GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL_REQUEST',
         'ROAD_CLOSURE/GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL_SUCCESS',
@@ -432,6 +433,27 @@ export const saveRoadClosure = () => (dispatch: Dispatch<any>, getState: any) =>
     });
 };
 
+export const addFile = (file: any) => (dispatch: Dispatch<any>, getState: any) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        if (e && e.target) {
+            const fr = e.target;
+            if (fr instanceof FileReader) {
+                const result = fr.result;
+                if (typeof result === "string") {
+                    const obj = JSON.parse(result);
+                    if (obj.type) {
+                        dispatch(ACTIONS.FILE_ADDED());
+                        dispatch(ACTIONS.FETCH_SHAREDSTREETS_PUBLIC_DATA.success(obj));
+                        // navigate to editor
+                    }
+                }
+            }
+        }
+
+    };
+    reader.readAsBinaryString(file);
+}
 // reducer
 export interface IRoadClosureState {
     allOrgs: any,
@@ -935,6 +957,7 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
         case "ROAD_CLOSURE/LOADED_ALL_ROAD_CLOSURES":
             return {
                 ...state,
+                currentItem: new SharedStreetsMatchGeomFeatureCollection(),
                 isLoadingAllRoadClosures: false,
             };
 

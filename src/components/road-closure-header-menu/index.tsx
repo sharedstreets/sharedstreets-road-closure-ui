@@ -21,6 +21,7 @@ export interface IRoadClosureHeaderMenuProps {
     geojsonUploadUrl: string,
     edit?: boolean,
     explore?: boolean,
+    addFile: (e: any) => void,
     clearRoadClosure: () => void,
     loadRoadClosure: (url: string) => void,
 }
@@ -30,11 +31,13 @@ export interface IRoadClosureHeaderMenuState {
 }
 
 class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps, IRoadClosureHeaderMenuState> {
+    public fileInputRef = React.createRef<HTMLInputElement>();
     private urlInput: any;
     
     public constructor(props: IRoadClosureHeaderMenuProps) {
         super(props);
         this.urlInput = React.createRef();
+        this.handleFileAdded = this.handleFileAdded.bind(this);
         this.handleSetInputRef = this.handleSetInputRef.bind(this);
         this.handleUpdateURL = this.handleUpdateURL.bind(this);
         this.handleClickCopy = this.handleClickCopy.bind(this);
@@ -55,6 +58,13 @@ class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps,
         }
     }
     
+    public handleFileAdded = (e: any) => {
+        if (this.fileInputRef.current && this.fileInputRef.current.files) {
+            const file = this.fileInputRef.current.files[0];
+            this.props.addFile(file);
+        }
+    }
+
     public handleClickClear = (e: any) => {
         this.props.clearRoadClosure();
         this.setState({ url: '' });
@@ -105,6 +115,16 @@ class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps,
                 }
                 { this.props.explore && <Link className={"bp3-button bp3-intent-success"} to="edit">Create new closure</Link> }
                 { this.props.edit && <Link className={"bp3-button bp3-intent-primary"} to="explore">View all road closures</Link> }
+                { this.props.edit &&
+                    <label className="bp3-file-input">
+                        <input
+                            ref={this.fileInputRef}
+                            type="file"
+                            accept=".json, .geojson"
+                            onChange={this.handleFileAdded}/>
+                        <span className="bp3-file-upload-input">Load from GeoJSON file...</span>
+                    </label>
+                }
                 <Text>{"Organization: " + this.props.orgName}</Text>
             </React.Fragment>
         );
