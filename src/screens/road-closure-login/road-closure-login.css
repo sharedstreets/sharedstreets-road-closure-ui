@@ -1,0 +1,16 @@
+.SHST-Login-Header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4a4a4a;
+}
+.SHST-Login-Header > * {
+    margin-right: 5px;
+}
+.SHST-Login-Logo {
+    height: 30px;
+}
+
+.SHST-Login-Title {
+    font-weight: bold;
+}
