@@ -2,6 +2,8 @@ import {
     // AnchorButton, 
     // FormGroup,
     // Label,
+    Button,
+    Popover,
     Tag,
     Text,
 } from '@blueprintjs/core';
@@ -10,6 +12,7 @@ import {
 } from 'lodash';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import RoadClosureLogin from 'src/containers/road-closure-login';
 import './road-closure-header-menu.css';
 
 export interface IRoadClosureHeaderMenuProps {
@@ -17,6 +20,7 @@ export interface IRoadClosureHeaderMenuProps {
     isEditingExistingClosure: boolean,
     isFetchingInput: boolean,
     isGeneratingUploadUrl: boolean,
+    isLoggedIn: boolean,
     orgName: string,
     geojsonUploadUrl: string,
     edit?: boolean,
@@ -24,11 +28,13 @@ export interface IRoadClosureHeaderMenuProps {
     addFile: (e: File) => void,
     clearRoadClosure: () => void,
     loadRoadClosure: (url: string) => void,
+    logout: () => void,
 }
 export interface IRoadClosureHeaderMenuState {
     url: string,
     copyButtonText: string,
     fileName: string,
+    isLoginDialogShown: boolean,
 }
 
 class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps, IRoadClosureHeaderMenuState> {
@@ -45,10 +51,13 @@ class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps,
         this.handleClickClear = this.handleClickClear.bind(this);
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.handleClickLoadUrl = this.handleClickLoadUrl.bind(this);
+        this.handleLogIn = this.handleLogIn.bind(this);
+        this.handleLogOut = this.handleLogOut.bind(this);
         this.state = {
             copyButtonText: 'Copy',
             fileName: '',
-            url: ''
+            isLoginDialogShown: false,
+            url: '',
         };
     }
 
@@ -58,6 +67,16 @@ class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps,
                 url: this.props.geojsonUploadUrl
             });
         }
+    }
+
+    public handleLogIn = (e: any) => {
+        this.setState({
+            isLoginDialogShown: !this.state.isLoginDialogShown
+        });
+    }
+
+    public handleLogOut = (e: any) => {
+        this.props.logout();
     }
     
     public handleFileAdded = (e: any) => {
@@ -125,7 +144,7 @@ class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps,
                 }
                 { this.props.explore && <Link className={"bp3-button bp3-intent-success"} to="edit">Create new closure</Link> }
                 { this.props.edit && <Link className={"bp3-button bp3-intent-primary"} to="explore">View all road closures</Link> }
-                { this.props.edit &&
+                { (this.props.edit && !this.props.isEditingExistingClosure) &&
                     <label className="bp3-file-input">
                         <input
                             ref={this.fileInputRef}
@@ -141,7 +160,36 @@ class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps,
                         </span>
                     </label>
                 }
-                <Text>{"Organization: " + this.props.orgName}</Text>
+                <Text>{this.props.orgName}</Text>
+                {
+                    !this.props.isLoggedIn &&
+                    <Popover
+                        canEscapeKeyClose={true}
+                        minimal={true}
+                        position={"bottom-left"}
+                        isOpen={this.state.isLoginDialogShown}>
+                        <Button
+                            title={"Have an account? Log in"}
+                            text={"Have an account? Log in"}
+                            intent={"primary"}
+                            onClick={this.handleLogIn}
+                        />
+                        <div className={"SHST-Header-Menu-Login-Dropdown"}>
+                            <RoadClosureLogin
+                                redirectOnLogin={false}
+                            />
+                        </div>
+                    </Popover>
+                }
+                {
+                    this.props.isLoggedIn &&
+                    <Button
+                        title={"Log out"}
+                        text={"Log out"}
+                        intent={"none"}
+                        onClick={this.handleLogOut}
+                    />
+                }
             </React.Fragment>
         );
     }
