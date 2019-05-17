@@ -212,6 +212,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
         <div
           className="SHST-Road-Closure-Form"
         >
+            <H3>Selected Roads</H3>
             {
               isEmpty(this.props.currentRoadClosureItem.properties.street) ?
               this.renderEmptyMatchedStreetsTable() :
@@ -232,6 +233,8 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                 isLoggedIn={this.props.isLoggedIn}
               />
             }
+            <Divider />
+            <H3>Closure Information</H3>
             <FormGroup
               label="Start and end time"
               labelInfo="(required)"
