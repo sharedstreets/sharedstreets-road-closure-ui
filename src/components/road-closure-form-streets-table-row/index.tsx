@@ -15,7 +15,8 @@ export interface IRoadClosureFormStreetsTableRowProps {
     // matchedStreetsGroup: Array<SharedStreetsMatchPath|SharedStreetsMatchPoint>,
     currentFeature: SharedStreetsMatchGeomPath,
     key: string,
-    street: RoadClosureFormStateStreet
+    street: RoadClosureFormStateStreet,
+    isLoggedIn: boolean,
     deleteStreetSegment: (payload: any) => void,
     inputChanged: (e: any) => void,
     highlightMatchedStreet: (e: any) => void,
@@ -93,6 +94,7 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
                         id={geometryId}
                         onClick={this.handleDeleteStreetSegment}
                         icon={"delete"}
+                        disabled={!this.props.isLoggedIn}
                     />
                 </td>
                 <td>
@@ -103,6 +105,7 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
                         value={this.state.streetnameValue}
                         // onBlur={this.handleDispatchStreetName}
                         onChange={this.handleChangeStreetName}
+                        disabled={!this.props.isLoggedIn}
                         rightElement={
                             <Button 
                                 disabled={this.state.streetnameValue === this.props.street.streetname}

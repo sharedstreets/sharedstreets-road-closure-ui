@@ -29,6 +29,7 @@ export interface IRoadClosureFormStreetsGroupItemProps {
     index: number,
     streets: any,
     geometryIdDirectionFilter: { [ geometryId: string] : { forward: boolean, backward: boolean } },
+    isLoggedIn: boolean,
     deleteStreetSegment: (payload: any) => void,
     inputChanged: (e: any) => void,
     toggleStreetSegmentDirection: (e: any) => void,
@@ -187,6 +188,7 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
                             title={'Delete this group'}
                             icon={"delete"}
                             intent={"danger"}
+                            disabled={!this.props.isLoggedIn}
                             onClick={this.handleDeleteGroup}
                         />
                         <Button
@@ -214,6 +216,7 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
                             matchedStreetsGroupsGeometryIdPathMap={this.props.matchedStreetsGroupsGeometryIdPathMap}
                             geometryIdDirectionFilter={this.props.geometryIdDirectionFilter}
                             highlightMatchedStreet={this.props.highlightMatchedStreet}
+                            isLoggedIn={this.props.isLoggedIn}
                         />
                     </Collapse>
         </Card>

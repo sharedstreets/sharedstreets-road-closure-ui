@@ -2,6 +2,9 @@ import { connect } from 'react-redux';
 import RoadClosureHeaderMenu, { IRoadClosureHeaderMenuProps } from 'src/components/road-closure-header-menu';
 import { RootState } from 'src/store/configureStore';
 import {
+    logout,
+} from '../../store/context';
+import {
     addFile,
     loadRoadClosure,
     ROAD_CLOSURE_ACTIONS,
@@ -19,6 +22,7 @@ const mapStateToProps = (state: RootState, ownProps: IRoadClosureHeaderMenuConta
     isEditingExistingClosure: state.roadClosure.isEditingExistingClosure,
     isFetchingInput: state.roadClosure.isFetchingInput,
     isGeneratingUploadUrl: state.roadClosure.isGeneratingUploadUrl,
+    isLoggedIn: state.context.isLoggedIn,
     orgName: state.context.orgName,
 });
 
@@ -28,5 +32,6 @@ export default connect<{}, {}, IRoadClosureHeaderMenuProps>(
         addFile,
         clearRoadClosure: ROAD_CLOSURE_ACTIONS.RESET_ROAD_CLOSURE,
         loadRoadClosure,
+        logout,
     },
 )(RoadClosureHeaderMenu) as React.ComponentClass<IRoadClosureHeaderMenuContainerProps>;
