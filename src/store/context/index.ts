@@ -38,17 +38,25 @@ export const CONTEXT_ACTIONS = {
 };
 
 // side effects
-export const login = (username: string, password: string, history: H.History) => (dispatch: Dispatch<any>, getState: any) => {
+export const login = (username: string, password: string, history?: H.History) => (dispatch: Dispatch<any>, getState: any) => {
     const fakeFetch = () => {
         return {
-            namespace: "PANYNJ"
+            namespace: "PANYNJ",
+            token: 'fake-auth-token',
+            viewport: {
+                latitude: 40.7138849,
+                longitude: -74.1499855,
+                zoom: 11
+            },
         }
     };
 
     return Promise.resolve(fakeFetch())
     .then((response) => {
         dispatch(CONTEXT_ACTIONS.LOG_IN.success(response));
-        history.push(`/${response.namespace}/`);
+        if (history) {
+            history.push(`/${response.namespace}/`);
+        }
     });
 };
 
@@ -61,6 +69,7 @@ export interface IContextState {
     authToken: string,
     isLoggedIn: boolean,
     isLoggingIn: boolean,
+    isLoggingOut: boolean,
     message: IContextMessage,
     orgName: string,
 };
@@ -69,6 +78,7 @@ const defaultState: IContextState = {
     authToken: '',
     isLoggedIn: false,
     isLoggingIn: false,
+    isLoggingOut: false,
     message: {
         intent: "none",
         text: '',
