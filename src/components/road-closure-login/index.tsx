@@ -13,7 +13,10 @@ import './road-closure-login.css';
 
 import '../../../node_modules/@blueprintjs/core/lib/css/blueprint.css';
 export interface IRoadClosureLoginProps {
-    login: (u: string, p: string, history: H.History) => void,
+    login: (u: string, p: string, history?: H.History) => void,
+    isLoggedIn: boolean,
+    isLoggingIn: boolean,
+    orgName: string,
     redirectOnLogin: boolean,
 };
 
@@ -39,6 +42,12 @@ class RoadClosureLogin extends React.Component<IRoadClosureLoginProps & RouteCom
         this.handleLogIn = this.handleLogIn.bind(this);
     }
 
+    public componentDidMount() {
+        if (this.props.isLoggedIn && this.props.redirectOnLogin) {
+            this.props.history.push(`/${this.props.orgName}`)
+        }
+    }
+
     public handleToggleShowPassword() {
         this.setState({
             showPassword: !this.state.showPassword
@@ -58,11 +67,18 @@ class RoadClosureLogin extends React.Component<IRoadClosureLoginProps & RouteCom
     }
 
     public handleLogIn() {
-        this.props.login(
-            this.state.username,
-            this.state.password,
-            this.props.history,
-        );
+        if (this.props.redirectOnLogin) {
+            this.props.login(
+                this.state.username,
+                this.state.password,
+                this.props.history,
+            );
+        } else {
+            this.props.login(
+                this.state.username,
+                this.state.password,
+            );
+        }
     }
 
     public render() {
