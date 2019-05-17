@@ -11,6 +11,7 @@ export interface IRoadClosureFormStreetsTableProps {
     matchedStreetsGroupsGeometryIdPathMap: { [geomId: string]: { [direction: string] : SharedStreetsMatchGeomPath} },
     geometryIdDirectionFilter: { [ geometryId: string] : { forward: boolean, backward: boolean } },
     streets: any,
+    isLoggedIn: boolean,
     deleteStreetSegment: (payload: any) => void,
     highlightMatchedStreet: (e: any) => void,
     inputChanged: (e: any) => void,
@@ -56,7 +57,8 @@ class RoadClosureFormStreetsTable extends React.Component<IRoadClosureFormStreet
                             inputChanged={this.props.inputChanged}
                             deleteStreetSegment={this.props.deleteStreetSegment}
                             key={path.properties.geometryId}
-                            street={street} />
+                            street={street}
+                            isLoggedIn={this.props.isLoggedIn}/>
                     })
                 }
             </tbody>

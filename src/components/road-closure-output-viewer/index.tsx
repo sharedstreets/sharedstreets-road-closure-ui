@@ -31,6 +31,7 @@ export interface IRoadClosureOutputViewerProps {
     downloadFileName: string,
     isEditingExistingClosure: boolean,
     isGeneratingUploadUrl: boolean,
+    isLoggedIn: boolean,
     isSavingOutput: boolean,
     isOutputItemEmpty: boolean,
     outputItemFormattedJSONString: string,
@@ -78,6 +79,19 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
         this.props.selectOutputFormat(e.target.value);
     }
 
+
+    // public handleClickCopy = (e: any) => {
+    //     if (!isEmpty(this.state.url)) {
+    //         this.urlInput.select();
+    //         document.execCommand('copy');
+    //         this.setState({ copyButtonText: 'Copied!' }, () => {
+    //             setTimeout ( () => {
+    //                 this.setState( { copyButtonText: "Copy"});
+    //             }, 2000)
+    //         });
+    //     }
+    // }
+
     public render() {
         let downloadButtonProps = {
             className: "bp3-button bp3-large bp3-intent-success",
@@ -112,11 +126,14 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
                             text={"Back"}
                             onClick={this.handleClickCancel}/> */}
                         <Button
-                            title={"You have to create a road closure before you can save & publish it"}
-                            disabled={this.props.isOutputItemEmpty}
+                            title={
+                                this.props.isLoggedIn ?
+                                "Log in to publish to the public feed"
+                                : "You have to create a road closure before you can save & publish it"}
+                            disabled={this.props.isOutputItemEmpty || !this.props.isLoggedIn}
                             large={true}
                             intent={"primary"}
-                            text={this.props.isEditingExistingClosure ? "Save closure & Publish" : "Save closure & Publish"}
+                            text={this.props.isEditingExistingClosure ? "Update and publish to public feed" : "Publish to public feed"}
                             loading={this.props.isSavingOutput}
                             onClick={this.handleClickSave}/> 
                         {

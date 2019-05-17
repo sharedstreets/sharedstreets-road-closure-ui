@@ -15,6 +15,7 @@ const mapStateToProps = (state: RootState) => ({
     downloadFileName: getFileNameFromOutputItem(state.roadClosure),
     isEditingExistingClosure: state.roadClosure.isEditingExistingClosure,
     isGeneratingUploadUrl: state.roadClosure.isGeneratingUploadUrl,
+    isLoggedIn: state.context.isLoggedIn,
     isOutputItemEmpty: isOutputItemEmpty(state.roadClosure),
     isSavingOutput: state.roadClosure.isSavingOutput,
     outputFormat: state.roadClosure.output.outputFormat,

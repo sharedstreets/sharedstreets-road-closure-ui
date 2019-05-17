@@ -14,6 +14,7 @@ const mapStateToProps = (state: RootState) => ({
     currentRoadClosureGroupsDirection: getContiguousFeatureGroupsDirections(state.roadClosure),
     currentRoadClosureGroupsGeometryIdPathMap: getGeometryIdPathMap(state.roadClosure),
     currentRoadClosureItem: currentRoadClosureItemSelector(state.roadClosure),
+    isLoggedIn: state.context.isLoggedIn,
     roadClosure: state.roadClosure,
 });
 

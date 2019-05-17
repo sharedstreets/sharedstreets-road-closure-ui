@@ -38,6 +38,7 @@ export interface IRoadClosureFormProps {
   deselectRoadClosure: () => void,
   highlightMatchedStreet: () => void,
   highlightMatchedStreetsGroup: () => void,
+  isLoggedIn: boolean,
   nextSelection: () => void,
   previousSelection: () => void,
   inputChanged: (payload: any) => void,
@@ -228,6 +229,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                 streets={this.props.currentRoadClosureItem.properties.street}
                 isFetchingMatchedStreets={this.props.roadClosure.isFetchingMatchedStreets}
                 zoomHighlightMatchedStreetsGroup={this.props.zoomHighlightMatchedStreetsGroup}
+                isLoggedIn={this.props.isLoggedIn}
               />
             }
             <FormGroup
@@ -236,6 +238,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
               className={"SHST-Road-Closure-Form-Group-Date-Time"}
             >
               <DateRangeInput
+                disabled={!this.props.isLoggedIn}
                 value={currentDateRange}
                 className={"SHST-Road-Closure-Form-Date-Range-Input-Group"}
                 allowSingleDayRange={true}
@@ -254,6 +257,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                 }}
               />
               <TimezonePicker
+                disabled={!this.props.isLoggedIn}
                 inputProps={{
                   className: "SHST-Timezone-Picker-Input",
                 }}
@@ -273,6 +277,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
               labelInfo="(required)"
             >
               <InputGroup
+                  disabled={!this.props.isLoggedIn}
                   placeholder={"Enter a description of the closure here..."}
                   onChange={this.handleChangeDescription}
                   value={currentDescription}
@@ -284,6 +289,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
               labelInfo="(required)"
             >
               <InputGroup
+                  disabled={!this.props.isLoggedIn}
                   placeholder={"Enter the name of your organization here..."}
                   onChange={this.handleChangeReference}
                   value={this.props.currentRoadClosureItem.properties.reference}
@@ -294,6 +300,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
               labelInfo={"(optional)"}>
               <div className="bp3-select">
                 <select
+                  disabled={!this.props.isLoggedIn}
                   value={this.props.currentRoadClosureItem.properties.subtype}
                   onChange={this.handleChangeSubtype}>
                   <option defaultChecked={true} value={''}>Choose a subtype...</option>

@@ -14,8 +14,7 @@ import RoadClosureLogin from 'src/containers/road-closure-login';
 FocusStyleManager.onlyShowFocusOnTabs();
 
 export interface IRoadClosureLoginScreenProps {
-  isShowingRoadClosureOutputViewer: boolean,
-  explore: boolean,
+  isLoggedIn: boolean,
 };
 
 class RoadClosureLoginScreen extends React.Component<IRoadClosureLoginScreenProps, any> {

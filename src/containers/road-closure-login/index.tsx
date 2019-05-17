@@ -9,6 +9,8 @@ export interface IRoadClosureLoginContainerProps {
 
 const mapStateToProps = (state: RootState, ownProps: IRoadClosureLoginContainerProps) => ({
     // allOrgs: state.roadClosure.allOrgs,
+    isLoggedIn: state.context.isLoggedIn,
+    isLoggingIn: state.context.isLoggingIn,
     orgName: state.context.orgName,
     redirectOnLogin: ownProps.redirectOnLogin,
 });
