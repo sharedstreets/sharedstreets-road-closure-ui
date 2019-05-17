@@ -83,31 +83,35 @@ class RoadClosureLogin extends React.Component<IRoadClosureLoginProps & RouteCom
 
     public render() {
         return (
-            <FormGroup>
-                <InputGroup
-                    onChange={this.handleChangeUsername}
-                    id="username-input"
-                    placeholder="Enter your username..." />
-                <InputGroup
-                    onChange={this.handleChangePassword}
-                    id="password-input"
-                    type={this.state.showPassword ? "text" : "password"}
-                    placeholder="Enter your password..."
-                    rightElement={
-                        <Button
-                            icon={this.state.showPassword ? "unlock" : "lock"}
-                            minimal={true}
-                            onClick={this.handleToggleShowPassword}
-                        />
-                    }/>
-                <Button
-                    disabled={this.state.username.length === 0 || this.state.password.length === 0}
-                    intent={"primary"}
-                    fill={true}
-                    text={"Log in"}
-                    onClick={this.handleLogIn}
-                />
-            </FormGroup>
+            <form>
+                <FormGroup>
+                    <InputGroup
+                        onChange={this.handleChangeUsername}
+                        id="username-input"
+                        placeholder="Enter your username..." />
+                    <InputGroup
+                        onChange={this.handleChangePassword}
+                        id="password-input"
+                        type={this.state.showPassword ? "text" : "password"}
+                        placeholder="Enter your password..."
+                        rightElement={
+                            <Button
+                                icon={this.state.showPassword ? "unlock" : "lock"}
+                                minimal={true}
+                                onClick={this.handleToggleShowPassword}
+                            />
+                        }/>
+                    <Button
+                        type={"submit"}
+                        disabled={this.state.username.length === 0 || this.state.password.length === 0}
+                        intent={"primary"}
+                        fill={true}
+                        text={"Log in"}
+                        onClick={this.handleLogIn}
+                        loading={this.props.isLoggingIn}
+                    />
+                </FormGroup>
+            </form>
         );
     }
 }
