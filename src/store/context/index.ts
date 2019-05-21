@@ -39,8 +39,9 @@ export const CONTEXT_ACTIONS = {
 
 // side effects
 export const login = (username: string, password: string, history?: H.History) => (dispatch: Dispatch<any>, getState: any) => {
-    const fakeFetch = () => {
-        return {
+
+    const fakeFetch: any = () => {
+        const responseValue = {
             namespace: "PANYNJ",
             token: 'fake-auth-token',
             viewport: {
@@ -48,19 +49,32 @@ export const login = (username: string, password: string, history?: H.History) =
                 longitude: -74.1499855,
                 zoom: 11
             },
-        }
+        };
+
+        return new Promise((resolve, reject): any => {
+            resolve({
+                ok: true,
+                text: () => Promise.resolve(JSON.stringify(responseValue))
+            })
+        });
     };
 
     return Promise.resolve(fakeFetch())
-    .then((response) => {
-        dispatch(CONTEXT_ACTIONS.LOG_IN.success(response));
-        if (history) {
-            history.push(`/${response.namespace}/`);
+    .then(async (response) => {
+        if (response.ok) {
+            const text = await response.text();
+            const data = JSON.parse(text);
+            localStorage.setItem('user', text);
+            dispatch(CONTEXT_ACTIONS.LOG_IN.success(data));
+            if (history) {
+                history.push(`/${data.namespace}/`);
+            }
         }
     });
 };
 
 export const logout = () => (dispatch: Dispatch<any>, getState: any) => {
+    localStorage.removeItem('user');
     return dispatch(CONTEXT_ACTIONS.LOG_OUT.success());
 };
 
