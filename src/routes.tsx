@@ -19,10 +19,14 @@ export const handleRedirectExplore = (props: any) => {
 	}
 }
 
+export const handleRedirectPANYNJ = (props: any) => {
+	return <Redirect to={`/PANYNJ`} />
+}
+
 export default () => (
 	<BrowserRouter>
 		<Switch>
-			<Route exact={true} path='/' component={RoadClosureSelector} />
+			<Route exact={true} path='/' component={handleRedirectPANYNJ} />
 			<Route exact={true} path='/:org/' render={handleRedirectExplore} />
 			<Route path='/:org/explore' component={RoadClosureExplorer} />
 			<Route path='/:org/edit' component={App} />
