@@ -73,6 +73,7 @@ jobs:
             - build
 
 
+
   deploy:
     docker:
       # specify the version you desire here
@@ -97,8 +98,16 @@ jobs:
           command: sudo pip install awscli
 
       - run:
-          name: Deploy to S3
+          name: Deploy to S3 test
           command: aws s3 sync build/ s3://roadclosures-test.sharedstreets.io/ --delete
+
+      - run:
+          name: Deploy to S3 panynj
+          command: aws s3 sync build/ s3://roadclosures-panynj.sharedstreets.io/ --delete
+
+      - run:
+          name: invalidate panynj cache
+          command: aws cloudfront create-invalidation --distribution-id ECUCBYCGMUYQ --paths "/*"
 
 workflows:
   version: 2
