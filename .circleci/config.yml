@@ -101,6 +101,29 @@ jobs:
           name: Deploy to S3 test
           command: aws s3 sync build/ s3://roadclosures-test.sharedstreets.io/ --delete
 
+  deploy-panynj:
+    docker:
+      # specify the version you desire here
+      - image: circleci/python:2.7-jessie
+      
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/mongo:3.4.4
+
+    working_directory: ~/repo
+
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: install pip
+          command: sudo apt install python-pip
+
+      - run:
+          name: Install awscli
+          command: sudo pip install awscli
+
       - run:
           name: Deploy to S3 panynj
           command: aws s3 sync build/ s3://roadclosures-panynj.sharedstreets.io/ --delete
@@ -120,3 +143,12 @@ workflows:
           filters:
             branches:
               only: master
+  build-deploy-panynj:
+      jobs:
+        - build
+        - deploy-panynj:
+            requires:
+              - build
+            filters:
+              branches:
+                only: panynj
