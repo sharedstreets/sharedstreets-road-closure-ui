@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import './sharedstreets-header.css';
 
 export interface ISharedStreetsHeaderProps {
@@ -13,9 +13,9 @@ class SharedStreetsHeader extends React.Component<ISharedStreetsHeaderProps, any
               <img src="/SharedStreets_symbol.svg" className="SHST-Header-Logo"/>
               <span className={"SHST-Header-Title"}>SharedStreets</span>
               <span className={"SHST-Header-Subtitle"}>
-                <Link to="/">
+                {/* <Link to="/"> */}
                   Road Closures
-                </Link>
+                {/* </Link> */}
               </span>
             </span>
             <span className="SHST-Header-Right-Content">
