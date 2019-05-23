@@ -1,7 +1,10 @@
 import { connect } from 'react-redux';
 import RoadClosureLogin, { IRoadClosureLoginProps } from 'src/components/road-closure-login';
 import { RootState } from 'src/store/configureStore';
-import { login } from '../../store/context';
+import {
+    CONTEXT_ACTIONS,
+    login,
+} from '../../store/context';
 
 export interface IRoadClosureLoginContainerProps {
     redirectOnLogin: boolean,
@@ -19,5 +22,6 @@ export default connect<IRoadClosureLoginContainerProps, {}, IRoadClosureLoginPro
     mapStateToProps,
     {
         login,
+        loginSuccess: CONTEXT_ACTIONS.LOG_IN.success,
     },
 )(RoadClosureLogin) as React.ComponentClass<IRoadClosureLoginContainerProps>;

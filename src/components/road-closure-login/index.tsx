@@ -9,11 +9,16 @@ import {
     RouteComponentProps,
     withRouter
 } from 'react-router-dom';
+import {
+    authCookie,
+    authHeader,
+} from 'src/services/auth';
 import './road-closure-login.css';
 
 import '../../../node_modules/@blueprintjs/core/lib/css/blueprint.css';
 export interface IRoadClosureLoginProps {
     login: (u: string, p: string, history?: H.History) => void,
+    loginSuccess: (data: any) => void,
     isLoggedIn: boolean,
     isLoggingIn: boolean,
     orgName: string,
@@ -43,8 +48,14 @@ class RoadClosureLogin extends React.Component<IRoadClosureLoginProps & RouteCom
     }
 
     public componentDidMount() {
-        if (this.props.isLoggedIn && this.props.redirectOnLogin) {
-            this.props.history.push(`/${this.props.orgName}`)
+        // if (this.props.isLoggedIn && this.props.redirectOnLogin) {
+        const token = authCookie();
+        if (token !== "") {
+            const user = authHeader();
+            if (user) {
+                this.props.loginSuccess(user);
+                this.props.history.push(`/${user.namespace}`)
+            }
         }
     }
 
