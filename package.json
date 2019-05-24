@@ -57,6 +57,8 @@
   },
   "scripts": {
     "start": "react-scripts-ts start",
+    "start:edit-publish": " REACT_APP_EDIT_ONLY=false yarn start",
+    "start:edit": " REACT_APP_EDIT_ONLY=true yarn start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "test:debug": "react-scripts-ts --inspect-brk test --runInBand --no-cache",

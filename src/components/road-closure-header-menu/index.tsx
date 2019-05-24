@@ -124,7 +124,7 @@ class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps,
                     </Tag>
                 }
                 { this.props.explore && <Link className={"bp3-button bp3-intent-success"} to="edit">Create new closure</Link> }
-                { this.props.edit && <Link className={"bp3-button bp3-intent-primary"} to="explore">View all road closures</Link> }
+                { this.props.edit && !process.env.REACT_APP_EDIT_ONLY && <Link className={"bp3-button bp3-intent-primary"} to="explore">View all road closures</Link> }
                 { this.props.edit &&
                     <label className="bp3-file-input">
                         <input
@@ -141,7 +141,10 @@ class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps,
                         </span>
                     </label>
                 }
-                <Text>{"Organization: " + this.props.orgName}</Text>
+                {
+                    !process.env.REACT_APP_EDIT_ONLY && 
+                    <Text>{"Organization: " + this.props.orgName}</Text>
+                }
             </React.Fragment>
         );
     }
