@@ -22,10 +22,16 @@ export const handleRedirectExplore = (props: any) => {
 export default () => (
 	<BrowserRouter>
 		<Switch>
-			<Route exact={true} path='/' component={RoadClosureSelector} />
-			<Route exact={true} path='/:org/' render={handleRedirectExplore} />
-			<Route path='/:org/explore' component={RoadClosureExplorer} />
-			<Route path='/:org/edit' component={App} />
+			{
+				process.env.REACT_APP_EDIT_ONLY ?
+				<Route exact={false} path='/' component={App} />
+				: <React.Fragment>
+					<Route exact={true} path='/' component={RoadClosureSelector} />
+					<Route exact={true} path='/:org/' render={handleRedirectExplore} />
+					<Route path='/:org/explore' component={RoadClosureExplorer} />
+					<Route path='/:org/edit' component={App} />
+				</React.Fragment>
+			}
 		</Switch>
 	</BrowserRouter>
 );
