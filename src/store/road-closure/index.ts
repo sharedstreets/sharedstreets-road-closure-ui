@@ -576,7 +576,7 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             updatedItem = Object.assign(Object.create(state.currentItem), state.currentItem);
             updatedItem.features.forEach((path: SharedStreetsMatchGeomPath) => {
                 if (path.properties.color) {
-                    path.properties.color = '';
+                    delete path.properties.color;
                 }
             });
 
@@ -598,7 +598,7 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             updatedItem = Object.assign(Object.create(state.currentItem), state.currentItem);
             updatedItem.features.forEach((path: SharedStreetsMatchGeomPath) => {
                 if (path.properties.color) {
-                    path.properties.color = '';
+                    delete path.properties.color;
                 }
             });
 

@@ -18,7 +18,8 @@ export const currentItemToGeojson = (state: IRoadClosureState) => {
                 })
                 .map((path: SharedStreetsMatchGeomPath) => {
                     path.properties.streetname = state.currentItem.properties.street[path.properties.geometryId][path.properties.direction].streetname;
-                    return omit(path, ['properties.color']);
+                    // return omit(path, ['properties.color']);
+                    return path;
                 }),
         properties: omit(state.currentItem.properties, ['geometryIdDirectionFilter', 'street'])
     }
