@@ -42,7 +42,7 @@ export const getFormattedJSONStringFromOutputItem = (state: IRoadClosureState, o
     }
     const item = currentRoadClosureItemOutput(state, outputFormatName);
     if (outputFormatName === IRoadClosureOutputFormatName.waze) {
-        return JSON.stringify(item.incidents!, null, 2);
+        return JSON.stringify(item, null, 2);
     } else {
         return JSON.stringify(item, null, 2);
     }
