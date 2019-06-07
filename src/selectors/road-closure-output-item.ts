@@ -8,10 +8,28 @@ export const getFileNameFromOutputItem = (state: IRoadClosureState) => {
     if (isOutputItemEmpty(state)) { 
         return "";
     }
+    let dynamicName = '';
+    if (state.currentItem.properties.reference) {
+        dynamicName += '-';
+        dynamicName += state.currentItem.properties.reference;
+    }
+    if (state.currentItem.properties.description) {
+        dynamicName += '-';
+        dynamicName += state.currentItem.properties.description.substr(0, 10).split(" ").join("_");
+    }
+    // if (state.currentItem.properties.startTime) {
+    //     dynamicName += '-';
+    //     dynamicName += state.currentItem.properties.startTime.split(" ").join("-");
+    // }
+    // if (state.currentItem.properties.endTime) {
+    //     dynamicName += '-';
+    //     dynamicName += state.currentItem.properties.endTime.split(" ").join("-");
+    // }
+    dynamicName += '-';
     if (state.output.outputFormat === IRoadClosureOutputFormatName.waze) {
-        return "waze-cifs-sharedstreets-road-closure-data.json";
+        return "sharedstreets-CIFS"+dynamicName+"road-closure.json";
     } else {
-        return "sharedstreets-road-closure-data.geojson";
+        return "sharedstreets"+dynamicName+"road-closure.geojson";
     }
 }
 
