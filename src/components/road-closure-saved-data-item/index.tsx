@@ -15,19 +15,33 @@ import './road-closure-saved-data-item.css';
 
 
 export interface IRoadClosureSavedDataItemProps {
-    key: string,
     item: SharedStreetsMatchGeomFeatureCollection,
     metadata: any,
     uploadUrls: IRoadClosureUploadUrls,
+    orgName: string,
 };
 
 // export interface IRoadClosureSavedDataItemState {
 //     isSavedUrlsDialogOpen: boolean;
 // }
 
+
 class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItemProps, any> {
+    private urlInput: any;
+
     public constructor(props: IRoadClosureSavedDataItemProps) {
         super(props);
+        this.handleClickCopy = this.handleClickCopy.bind(this);
+        this.urlInput = React.createRef();
+    }
+    
+    public handleClickCopy = (e: any) => {
+        this.urlInput.select();
+        document.execCommand('copy');
+    }
+
+    public handleSetInputRef = (ref: HTMLInputElement | null) => {
+        this.urlInput = ref;
     }
     
     public render() {
@@ -47,30 +61,49 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
                         </div>
                     </div>
                 </Card>
+                <input
+                    ref={this.handleSetInputRef}
+                    value={window.location.origin+`/${this.props.orgName}/edit?url=`+this.props.uploadUrls.geojsonUploadUrl}
+                    type={"text"}
+                    style={{
+                        'left': '-1000px',
+                        'position': 'absolute',
+                        'top': '-1000px',
+                    }} />
             </Link>
-            {(this.props.uploadUrls.geojsonUploadUrl || this.props.uploadUrls.wazeUploadUrl) && 
-                <ButtonGroup fill={true}>
-                    {
-                        this.props.uploadUrls.geojsonUploadUrl &&
-                        <AnchorButton
-                            href={this.props.uploadUrls.geojsonUploadUrl}
-                            target={"_blank"}
-                            fill={true}>
-                            View GeoJSON
-                        </AnchorButton>
-                    }
-                    {" "}
-                    {
-                        this.props.uploadUrls.wazeUploadUrl && 
-                        <AnchorButton
-                            href={this.props.uploadUrls.wazeUploadUrl}
-                            target={"_blank"}
-                            fill={true}>
-                            View Waze
-                        </AnchorButton>
-                    }
-                </ButtonGroup>
+            <ButtonGroup fill={true}>
+                <AnchorButton
+                    href={'edit?url='+this.props.uploadUrls.geojsonUploadUrl}
+                    fill={true}>
+                    View closure on map
+                </AnchorButton>
+                {" "}
+                <AnchorButton
+                    onClick={this.handleClickCopy}
+                    target={"_blank"}
+                    fill={true}>
+                    Copy link to closure
+                </AnchorButton>
+            {
+                this.props.uploadUrls.geojsonUploadUrl &&
+                <AnchorButton
+                    href={this.props.uploadUrls.geojsonUploadUrl}
+                    target={"_blank"}
+                    fill={true}>
+                    View GeoJSON File
+                </AnchorButton>
             }
+                {" "}
+            {
+                this.props.uploadUrls.wazeUploadUrl && 
+                <AnchorButton
+                    href={this.props.uploadUrls.wazeUploadUrl}
+                    target={"_blank"}
+                    fill={true}>
+                    View Waze CIFS File
+                </AnchorButton>
+            }
+            </ButtonGroup>
             </>
         );
     }

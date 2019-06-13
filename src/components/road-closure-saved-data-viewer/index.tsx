@@ -76,11 +76,13 @@ class RoadClosureSavedDataViewer extends React.Component<IRoadClosureSavedDataVi
                     }
                     {this.props.allRoadClosureItems && 
                         Object.keys(this.props.allRoadClosureItems).map((roadClosureId: any) => {
-                            return <RoadClosureSavedDataItem
-                                        key={roadClosureId} 
+                            return <React.Fragment key={roadClosureId}>
+                                <RoadClosureSavedDataItem
+                                        orgName={this.props.orgName}
                                         item={this.props.allRoadClosureItems[roadClosureId]}
                                         metadata={this.props.allRoadClosureMetadata[roadClosureId]}
                                         uploadUrls={this.props.allRoadClosuresUploadUrls[roadClosureId]} />
+                            </React.Fragment>
                         })
                     }
                 </div>
