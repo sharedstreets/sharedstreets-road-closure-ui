@@ -82,7 +82,7 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
                     onClick={this.handleClickCopy}
                     target={"_blank"}
                     fill={true}>
-                    Copy link to closure
+                    Copy link to closure on map
                 </AnchorButton>
             {
                 this.props.uploadUrls.geojsonUploadUrl &&
