@@ -14,7 +14,9 @@ export interface IRoadClosureSavedDataViewerProps {
     allRoadClosuresUploadUrls: IRoadClosureUploadUrls[],
     isLoadingAllRoadClosures: boolean,
     orgName: string,
-    loadAllRoadClosures: () => void
+    loadAllRoadClosures: () => void,
+    previewClosure: (e: any) => void,
+    resetClosurePreview: () => void,
 };
 
 export interface IRoadClosureSavedDataViewerState {
@@ -78,6 +80,8 @@ class RoadClosureSavedDataViewer extends React.Component<IRoadClosureSavedDataVi
                         Object.keys(this.props.allRoadClosureItems).map((roadClosureId: any) => {
                             return <React.Fragment key={roadClosureId}>
                                 <RoadClosureSavedDataItem
+                                        previewClosure={this.props.previewClosure}
+                                        resetClosurePreview={this.props.resetClosurePreview}
                                         orgName={this.props.orgName}
                                         item={this.props.allRoadClosureItems[roadClosureId]}
                                         metadata={this.props.allRoadClosureMetadata[roadClosureId]}
