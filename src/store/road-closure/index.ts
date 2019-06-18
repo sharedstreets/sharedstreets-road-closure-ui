@@ -986,6 +986,7 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 ...state,
                 currentItem: new SharedStreetsMatchGeomFeatureCollection(),
                 isEditingExistingClosure: false,
+                isLoadedInput: false,
             };
             
         default:

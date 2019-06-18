@@ -12,12 +12,17 @@ import {
     ROAD_CLOSURE_ACTIONS,
 } from '../../store/road-closure';
 
-const mapStateToProps = (state: RootState) => ({
+export interface IRoadClosureMapContainerProps {
+    isDrawingEnabled: boolean,
+}
+
+const mapStateToProps = (state: RootState, ownProps: IRoadClosureMapContainerProps) => ({
     // currentRoadClosureGroups: getContiguousFeatureGroups(state.roadClosure),
     currentPossibleDirections: state.roadClosure.currentPossibleDirections,
     currentRoadClosureItemOutput: currentRoadClosureItemOutput(state.roadClosure),
     directionIconPoints: getDirectionIconPoints(state.roadClosure),
     highlightedFeatureGroup: state.roadClosure.highlightedFeatureGroup,
+    isDrawingEnabled: ownProps.isDrawingEnabled,
     roadBlockIconPoints: getRoadBlockIconPoints(state.roadClosure),
     roadClosure: state.roadClosure,
 });
@@ -29,4 +34,4 @@ export default connect<{}, {}, IRoadClosureMapProps>(
         findMatchedStreet,
         inputChanged: ROAD_CLOSURE_ACTIONS.INPUT_CHANGED,
     },
-)(RoadClosureMap) as React.ComponentClass<{}>;
+)(RoadClosureMap) as React.ComponentClass<IRoadClosureMapContainerProps>;

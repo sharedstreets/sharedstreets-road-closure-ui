@@ -44,6 +44,7 @@ export interface IRoadClosureMapProps {
   currentRoadClosureItemOutput: any,
   directionIconPoints: any,
   highlightedFeatureGroup: SharedStreetsMatchGeomPath[],
+  isDrawingEnabled: boolean,
   roadBlockIconPoints: any,
   roadClosure: IRoadClosureState,
 };
@@ -442,18 +443,21 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
           margin: '0 auto',
           width: '100%',
         }} />
-        <SharedStreetsMapDrawControl
-          isFetchingMatchedStreets={this.props.roadClosure.isFetchingMatchedStreets}
-          numberOfPointsSelected={
-            this.state.selectedCoordinates[this.state.currentLineId] ? 
-            this.state.selectedCoordinates[this.state.currentLineId].length
-            : 0
-          }
-          onCancel={this.handleCancelDrawing}
-          onConfirm={this.handleConfirmDrawing}
-          onStart={this.handleStartDrawing}
-          onUndo={this.handleUndoLastDrawnPoint}
-        />
+        {
+          this.props.isDrawingEnabled && 
+          <SharedStreetsMapDrawControl
+            isFetchingMatchedStreets={this.props.roadClosure.isFetchingMatchedStreets}
+            numberOfPointsSelected={
+              this.state.selectedCoordinates[this.state.currentLineId] ? 
+              this.state.selectedCoordinates[this.state.currentLineId].length
+              : 0
+            }
+            onCancel={this.handleCancelDrawing}
+            onConfirm={this.handleConfirmDrawing}
+            onStart={this.handleStartDrawing}
+            onUndo={this.handleUndoLastDrawnPoint}
+          />
+        }
       </div>
     );
   }

@@ -7,6 +7,7 @@ import './road-closure-explorer.css';
 
 import { FocusStyleManager } from "@blueprintjs/core";
 import RoadClosureHeaderMenu from 'src/containers/road-closure-header-menu';
+import RoadClosureMap from 'src/containers/road-closure-map';
 import RoadClosureSavedDataViewer from 'src/containers/road-closure-saved-data-viewer';
 import {
   CONTEXT_ACTIONS
@@ -41,6 +42,7 @@ class RoadClosureExplorer extends React.Component<IRoadClosureExplorerProps, any
         </SharedStreetsHeader>
         <div className="SHST-Container">
           <RoadClosureSavedDataViewer />
+          <RoadClosureMap isDrawingEnabled={false}/>
         </div>
       </div>
     );
