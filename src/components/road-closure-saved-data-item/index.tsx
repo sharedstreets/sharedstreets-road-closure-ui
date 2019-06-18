@@ -3,7 +3,7 @@ import {
     Card,
     H3,
     H4,
-    H6,
+    // H6,
     Menu,
     MenuItem,
     Popover,
@@ -153,12 +153,17 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
                         />
                     </div>
                     <div>
-                        <H6><em>Last modified on: {new Date(this.props.metadata.lastModified).toString()}</em></H6>
                         <H3>{this.props.item.properties.description && this.props.item.properties.description}</H3>
                         <H4>{this.props.item.properties.street && `${Object.keys(this.props.item.properties.street).length} streets matched`}</H4>
                     </div>
                     <div>
-                        {this.props.item.properties.startTime && new Date(this.props.item.properties.startTime) + " to " + new Date(this.props.item.properties.endTime)}
+                        {this.props.item.properties.startTime && "Starts: " + new Date(this.props.item.properties.startTime)}
+                    </div>
+                    <div>
+                        {this.props.item.properties.startTime && "Ends: " + new Date(this.props.item.properties.endTime)}
+                    </div>
+                    <div>
+                        <em>Last modified on: {new Date(this.props.metadata.lastModified).toString()}</em>
                     </div>
                 </div>
             </Card>
