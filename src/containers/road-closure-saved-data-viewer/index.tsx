@@ -17,6 +17,7 @@ const mapStateToProps = (state: RootState) => ({
 export default connect<{}, {}, IRoadClosureSavedDataViewerProps>(
     mapStateToProps,
     {
+        highlightFeaturesGroup: ROAD_CLOSURE_ACTIONS.HIGHLIGHT_MATCHED_STREETS_GROUP,
         loadAllRoadClosures,
         previewClosure: ROAD_CLOSURE_ACTIONS.FETCH_SHAREDSTREETS_PUBLIC_DATA.success,
         resetClosurePreview: ROAD_CLOSURE_ACTIONS.RESET_ROAD_CLOSURE,

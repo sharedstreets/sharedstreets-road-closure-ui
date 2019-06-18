@@ -22,6 +22,7 @@ export interface IRoadClosureSavedDataItemProps {
     orgName: string,
     previewClosure: (e: any) => void,
     resetClosurePreview: () => void,
+    highlightFeaturesGroup: (e: any) => void,
 };
 
 class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItemProps, any> {
@@ -33,9 +34,16 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
         super(props);
         this.handleClickCopyDirectURL = this.handleClickCopyDirectURL.bind(this);
         this.handlePreviewClosure = this.handlePreviewClosure.bind(this);
+        this.handleMouseout = this.handleMouseout.bind(this);
+        this.handleMouseover = this.handleMouseover.bind(this);
+
         this.directUrlInput = React.createRef();
         this.geojsonUrlInput = React.createRef();
         this.wazeUrlInput = React.createRef();
+
+        this.state = {
+            isHighlighted: false,
+        };
     }
     
     public handleClickCopyDirectURL = (e: any) => {
@@ -71,12 +79,33 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
             this.props.previewClosure(this.props.item);
         });
     }
+
+    public handleMouseover () {
+        this.props.highlightFeaturesGroup(this.props.item.features);
+        this.setState({
+            isHighlighted: true
+        });
+    }
+    
+    public handleMouseout() {
+        this.props.highlightFeaturesGroup([]);
+        this.setState({
+            isHighlighted: false,
+        })
+    }
+
     
     public render() {
+        let cardClassName = 'SHST-Road-Closure-Saved-Data-Item';
+        if (this.state.isHighlighted) {
+            cardClassName += " SHST-Road-Closure-Saved-Data-Item-Highlighted";
+        }
         return (
             <React.Fragment>
             <Card
-                className={'SHST-Road-Closure-Saved-Data-Item'}>
+                onMouseEnter={this.handleMouseover}
+                onMouseLeave={this.handleMouseout}
+                className={cardClassName}>
                 <div>
                     <div className={'SHST-Road-Closure-Saved-Data-Item-Buttons'}>
                         <Popover>

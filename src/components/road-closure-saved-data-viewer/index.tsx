@@ -12,11 +12,12 @@ export interface IRoadClosureSavedDataViewerProps {
     allRoadClosureItems: SharedStreetsMatchGeomFeatureCollection[],
     allRoadClosureMetadata: any[],
     allRoadClosuresUploadUrls: IRoadClosureUploadUrls[],
-    isLoadingAllRoadClosures: boolean,
+    isLoadingAllRoadClosures: boolean,  
     orgName: string,
     loadAllRoadClosures: () => void,
     previewClosure: (e: any) => void,
     resetClosurePreview: () => void,
+    highlightFeaturesGroup: (e: any) => void,
 };
 
 export interface IRoadClosureSavedDataViewerState {
@@ -80,6 +81,7 @@ class RoadClosureSavedDataViewer extends React.Component<IRoadClosureSavedDataVi
                         Object.keys(this.props.allRoadClosureItems).map((roadClosureId: any) => {
                             return <React.Fragment key={roadClosureId}>
                                 <RoadClosureSavedDataItem
+                                        highlightFeaturesGroup={this.props.highlightFeaturesGroup}
                                         previewClosure={this.props.previewClosure}
                                         resetClosurePreview={this.props.resetClosurePreview}
                                         orgName={this.props.orgName}

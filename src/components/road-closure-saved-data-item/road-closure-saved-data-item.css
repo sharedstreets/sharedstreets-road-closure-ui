@@ -5,6 +5,10 @@
     flex-direction: column;
 }
 
+.SHST-Road-Closure-Saved-Data-Item-Highlighted {
+    outline: 2px solid #E35051;
+}
+
 .SHST-Road-Closure-Saved-Data-Item-Buttons {
     display: flex;
     justify-content: flex-end;
