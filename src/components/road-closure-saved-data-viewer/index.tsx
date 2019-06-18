@@ -12,9 +12,12 @@ export interface IRoadClosureSavedDataViewerProps {
     allRoadClosureItems: SharedStreetsMatchGeomFeatureCollection[],
     allRoadClosureMetadata: any[],
     allRoadClosuresUploadUrls: IRoadClosureUploadUrls[],
-    isLoadingAllRoadClosures: boolean,
+    isLoadingAllRoadClosures: boolean,  
     orgName: string,
-    loadAllRoadClosures: () => void
+    loadAllRoadClosures: () => void,
+    previewClosure: (e: any) => void,
+    resetClosurePreview: () => void,
+    highlightFeaturesGroup: (e: any) => void,
 };
 
 export interface IRoadClosureSavedDataViewerState {
@@ -76,11 +79,16 @@ class RoadClosureSavedDataViewer extends React.Component<IRoadClosureSavedDataVi
                     }
                     {this.props.allRoadClosureItems && 
                         Object.keys(this.props.allRoadClosureItems).map((roadClosureId: any) => {
-                            return <RoadClosureSavedDataItem
-                                        key={roadClosureId} 
+                            return <React.Fragment key={roadClosureId}>
+                                <RoadClosureSavedDataItem
+                                        highlightFeaturesGroup={this.props.highlightFeaturesGroup}
+                                        previewClosure={this.props.previewClosure}
+                                        resetClosurePreview={this.props.resetClosurePreview}
+                                        orgName={this.props.orgName}
                                         item={this.props.allRoadClosureItems[roadClosureId]}
                                         metadata={this.props.allRoadClosureMetadata[roadClosureId]}
                                         uploadUrls={this.props.allRoadClosuresUploadUrls[roadClosureId]} />
+                            </React.Fragment>
                         })
                     }
                 </div>
