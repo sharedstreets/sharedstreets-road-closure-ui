@@ -17,6 +17,7 @@ const mapStateToProps = (state: RootState) => ({
     ),
     isLoadingAllRoadClosures: state.roadClosure.isLoadingAllRoadClosures,
     orgName: state.context.orgName,
+    totalItemCount: state.roadClosure.allRoadClosureItems.length,
 });
 
 export default connect<{}, {}, IRoadClosureSavedDataViewerProps>(

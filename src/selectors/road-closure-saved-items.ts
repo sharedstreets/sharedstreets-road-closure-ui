@@ -61,22 +61,22 @@ export const filterRoadClosureSavedItems = (state: any, filterLevel = 'all') => 
     switch (filterLevel) {
         case 'current':
             zipped = zipped.filter((i) => {
-                    return moment(i[0]!.properties.endTime).isSameOrAfter(now) &&
-                    moment(i[0]!.properties.startTime).isSameOrBefore(now)
+                    return (i[0]!.properties.endTime && moment(i[0]!.properties.endTime).isSameOrAfter(now)) &&
+                    (i[0]!.properties.startTime && moment(i[0]!.properties.startTime).isSameOrBefore(now))
                 }
             );
             break;
         case 'past':
-            zipped = zipped.filter((i) => moment(i[0]!.properties.endTime).isBefore(moment()));
+            zipped = zipped.filter((i) => moment(i[0]!.properties.endTime).isBefore(now));
             break;
         case 'scheduled':
-            zipped = zipped.filter((i) => moment(i[0]!.properties.startTime).isAfter(moment()));
+            zipped = zipped.filter((i) => moment(i[0]!.properties.startTime).isAfter(now));
             break;
     }
     const unzipped = unzip(zipped);
     return {
-        allRoadClosureItems: unzipped[0],
-        allRoadClosureMetadata: unzipped[1],
-        allRoadClosuresUploadUrls: unzipped[2],
+        allRoadClosureItems: unzipped[0] ? unzipped[0] : [],
+        allRoadClosureMetadata: unzipped[1] ? unzipped[1] : [],
+        allRoadClosuresUploadUrls: unzipped[2] ? unzipped[2] : [],
     }
 }

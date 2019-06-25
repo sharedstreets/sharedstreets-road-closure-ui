@@ -81,10 +81,12 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
     }
 
     public handleMouseover () {
-        this.props.highlightFeaturesGroup(this.props.item.features);
-        this.setState({
-            isHighlighted: true
-        });
+        if (this.props.item) {
+            this.props.highlightFeaturesGroup(this.props.item.features);
+            this.setState({
+                isHighlighted: true
+            });
+        }
     }
     
     public handleMouseout() {
@@ -121,7 +123,7 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
                                     onClick={this.handleClickCopyDirectURL}
                                 />
                                 {
-                                    this.props.uploadUrls.geojsonUploadUrl &&
+                                    this.props.uploadUrls && this.props.uploadUrls.geojsonUploadUrl &&
                                     <MenuItem
                                         text={"link to GeoJSON data"}
                                         icon={"document"}
@@ -130,7 +132,7 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
                                 }
                                     {" "}
                                 {
-                                    this.props.uploadUrls.wazeUploadUrl && 
+                                    this.props.uploadUrls && this.props.uploadUrls.wazeUploadUrl && 
                                     <MenuItem
                                         text={"link to Waze CIFS data"}
                                         icon={"document"}
@@ -146,15 +148,18 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
                                 small={true}
                             />
                             <Menu>
-                                <Link to={'edit?url='+this.props.uploadUrls.geojsonUploadUrl}>
-                                    <MenuItem
-                                        text={"in map editor"}
-                                        icon={"edit"}
-                                        onClick={this.handleClickCopyDirectURL}
-                                    />
-                                </Link>
                                 {
-                                    this.props.uploadUrls.geojsonUploadUrl &&
+                                    this.props.uploadUrls && this.props.uploadUrls.geojsonUploadUrl &&
+                                    <Link to={'edit?url='+this.props.uploadUrls.geojsonUploadUrl}>
+                                        <MenuItem
+                                            text={"in map editor"}
+                                            icon={"edit"}
+                                            onClick={this.handleClickCopyDirectURL}
+                                        />
+                                    </Link>
+                                }
+                                {
+                                    this.props.uploadUrls && this.props.uploadUrls.geojsonUploadUrl &&
                                     <MenuItem
                                         text={"as GeoJSON data"}
                                         icon={"document-open"}
@@ -164,7 +169,7 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
                                 }
                                     {" "}
                                 {
-                                    this.props.uploadUrls.wazeUploadUrl && 
+                                    this.props.uploadUrls && this.props.uploadUrls.wazeUploadUrl && 
                                     <MenuItem
                                         text={"as Waze CIFS data"}
                                         icon={"document-open"}
@@ -182,50 +187,62 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
                         />
                     </div>
                     <div>
-                        <H3>{this.props.item.properties.description && this.props.item.properties.description}</H3>
-                        <H4>{this.props.item.properties.street && `${Object.keys(this.props.item.properties.street).length} streets matched`}</H4>
+                        <H3>{this.props.item && this.props.item.properties.description && this.props.item.properties.description}</H3>
+                        <H4>{this.props.item && this.props.item.properties.street && `${Object.keys(this.props.item.properties.street).length} streets matched`}</H4>
                     </div>
                     <div>
-                        {this.props.item.properties.startTime && "Starts: " + new Date(this.props.item.properties.startTime)}
+                        {this.props.item && this.props.item.properties.startTime && "Starts: " + new Date(this.props.item.properties.startTime)}
                     </div>
                     <div>
-                        {this.props.item.properties.startTime && "Ends: " + new Date(this.props.item.properties.endTime)}
+                        {this.props.item && this.props.item.properties.startTime && "Ends: " + new Date(this.props.item.properties.endTime)}
                     </div>
                     <div>
                         <em>Last modified on: {new Date(this.props.metadata.lastModified).toString()}</em>
                     </div>
                 </div>
             </Card>
-            <input
-                ref={this.handleSetDirectURLInputRef}
-                value={window.location.origin+`/${this.props.orgName}/edit?url=`+this.props.uploadUrls.geojsonUploadUrl}
-                type={"text"}
-                style={{
-                    // 'display': 'none',
-                    'left': '-1000px',
-                    'position': 'absolute',
-                    'top': '-1000px',
-            }} />
-            <input
-                ref={this.handleSetGeoJSONURLInputRef}
-                value={this.props.uploadUrls.geojsonUploadUrl}
-                type={"text"}
-                style={{
-                    // 'display': 'none',
-                    'left': '-1000px',
-                    'position': 'absolute',
-                    'top': '-1000px',
-            }} />
-            <input
-                ref={this.handleSetWazeURLInputRef}
-                value={this.props.uploadUrls.wazeUploadUrl}
-                type={"text"}
-                style={{
-                    // 'display': 'none',
-                    'left': '-1000px',
-                    'position': 'absolute',
-                    'top': '-1000px',
-            }} />
+
+            {
+                this.props.uploadUrls && this.props.uploadUrls.geojsonUploadUrl && 
+                <input
+                    ref={this.handleSetDirectURLInputRef}
+                    value={window.location.origin+`/${this.props.orgName}/edit?url=`+this.props.uploadUrls.geojsonUploadUrl}
+                    type={"text"}
+                    style={{
+                        // 'display': 'none',
+                        'left': '-1000px',
+                        'position': 'absolute',
+                        'top': '-1000px',
+                }} />
+            }
+
+            {
+                this.props.uploadUrls && this.props.uploadUrls.geojsonUploadUrl && 
+                <input
+                    ref={this.handleSetGeoJSONURLInputRef}
+                    value={this.props.uploadUrls.geojsonUploadUrl}
+                    type={"text"}
+                    style={{
+                        // 'display': 'none',
+                        'left': '-1000px',
+                        'position': 'absolute',
+                        'top': '-1000px',
+                }} />
+            }
+
+            {
+                this.props.uploadUrls && this.props.uploadUrls.wazeUploadUrl && 
+                <input
+                    ref={this.handleSetWazeURLInputRef}
+                    value={this.props.uploadUrls.wazeUploadUrl}
+                    type={"text"}
+                    style={{
+                        // 'display': 'none',
+                        'left': '-1000px',
+                        'position': 'absolute',
+                        'top': '-1000px',
+                }} />
+            }
 
             </React.Fragment>
         );

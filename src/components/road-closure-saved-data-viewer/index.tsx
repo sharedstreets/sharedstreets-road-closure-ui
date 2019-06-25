@@ -14,6 +14,7 @@ export interface IRoadClosureSavedDataViewerProps {
     allRoadClosuresUploadUrls: IRoadClosureUploadUrls[],
     isLoadingAllRoadClosures: boolean,  
     orgName: string,
+    totalItemCount: number,
     loadAllRoadClosures: () => void,
     previewClosure: (e: any) => void,
     resetClosurePreview: () => void,
@@ -59,21 +60,29 @@ class RoadClosureSavedDataViewer extends React.Component<IRoadClosureSavedDataVi
     public render() {
         return (
             <div className={"SHST-Road-Closure-Saved-Data-Viewer"}>
-                <div>
-                    <div className="bp3-select">
-                        <select onChange={this.handleSelectSortOrder}>
-                            <option value={'ascending'}>Ascending</option>
-                            <option value="descending">Descending</option>
-                        </select>
+                <div className={"SHST-Road-Closure-Saved-Data-Viewer-Filter"}>
+                    <div>
+                        <div className="bp3-select">
+                            <select onChange={this.handleSelectSortOrder}>
+                                <option value="descending">Most recently modified</option>
+                                <option value='ascending'>Least recently modified</option>
+                            </select>
+                        </div>
+                        <div className="bp3-select">
+                            <select onChange={this.handleSelectFilterLevel}>
+                                <option value="all">All</option>
+                                <option value="current">Happening now</option>
+                                <option value="past">Completed</option>
+                                <option value="scheduled">Coming up</option>
+                            </select>
+                        </div>
                     </div>
-                    <div className="bp3-select">
-                        <select onChange={this.handleSelectFilterLevel}>
-                            <option value="all">All</option>
-                            <option value="current">Current</option>
-                            <option value="past">Past</option>
-                            <option value="scheduled">Scheduled</option>
-                        </select>
-                    </div>
+                    {
+                        this.props.allRoadClosureItems && 
+                        <span>
+                            Showing {this.props.allRoadClosureItems.length} of {this.props.totalItemCount} items.
+                        </span>
+                    }
                 </div>
                 <div className={"SHST-Road-Closure-Saved-Data-Viewer-List"}>
                     {this.props.allRoadClosureItems && this.props.allRoadClosureItems.length === 0 && !this.props.isLoadingAllRoadClosures &&
@@ -96,7 +105,7 @@ class RoadClosureSavedDataViewer extends React.Component<IRoadClosureSavedDataVi
                             </h4>
                         </div>
                     }
-                    {this.props.allRoadClosureItems && 
+                    {this.props.allRoadClosureItems && this.props.allRoadClosureItems.length > 0 && 
                         Object.keys(this.props.allRoadClosureItems).map((roadClosureId: any) => {
                             return <React.Fragment key={roadClosureId}>
                                 <RoadClosureSavedDataItem

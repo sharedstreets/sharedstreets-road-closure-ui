@@ -25,7 +25,7 @@ import { generateUploadUrlsFromHash, IRoadClosureUploadUrls } from '../../utils/
 import { v4 } from '../../utils/uuid-regex';
 import { fetchAction } from '../api';
 import { RootState } from '../configureStore';
-import { CONTEXT_ACTIONS } from '../context';
+import { CONTEXT_ACTIONS, ContextAction } from '../context';
 
 
 
@@ -514,7 +514,7 @@ const defaultState: IRoadClosureState = {
     allRoadClosureItems: [],
     allRoadClosureMetadata: [],
     allRoadClosuresFilterLevel: 'all',
-    allRoadClosuresSortOrder: 'ascending',
+    allRoadClosuresSortOrder: 'descending',
     allRoadClosuresUploadUrls: [],
     currentItem: new SharedStreetsMatchGeomFeatureCollection(),
     currentLineId: '',
@@ -538,7 +538,7 @@ const defaultState: IRoadClosureState = {
     }
 };
 
-export const roadClosureReducer = (state: IRoadClosureState = defaultState, action: RoadClosureAction) => {
+export const roadClosureReducer = (state: IRoadClosureState = defaultState, action: RoadClosureAction | ContextAction) => {
     let updatedItem: SharedStreetsMatchGeomFeatureCollection;
     switch (action.type) {
         case 'ROAD_CLOSURE/SELECT_OUTPUT_FORMAT':
@@ -1000,12 +1000,18 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 allRoadClosuresSortOrder: action.payload
             };
 
+        case "CONTEXT/SET_ORG_NAME":
         case "ROAD_CLOSURE/RESET_ROAD_CLOSURE":
             return {
                 ...state,
+                allOrgs: [],
+                allRoadClosureItems: [],
+                allRoadClosureMetadata: [],
+                allRoadClosuresUploadUrls: [],
                 currentItem: new SharedStreetsMatchGeomFeatureCollection(),
                 isEditingExistingClosure: false,
                 isLoadedInput: false,
+                isLoadingAllRoadClosures: false,
             };
             
         default:
