@@ -8,6 +8,12 @@
     padding: 50px;
 }
 
+.SHST-Road-Closure-Saved-Data-Viewer-Filter {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
 .SHST-Road-Closure-Saved-Data-Viewer-List > * {
     margin-bottom: 20px
 }

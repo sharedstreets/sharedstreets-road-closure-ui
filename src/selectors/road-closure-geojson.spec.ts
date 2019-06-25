@@ -30,6 +30,8 @@ const defaultState: IRoadClosureState = {
     allOrgs: [],
     allRoadClosureItems: [],
     allRoadClosureMetadata: [],
+    allRoadClosuresFilterLevel: 'all',
+    allRoadClosuresSortOrder: 'ascending',
     allRoadClosuresUploadUrls: [],
     currentItem: new SharedStreetsMatchGeomFeatureCollection(),
     currentLineId: '',
