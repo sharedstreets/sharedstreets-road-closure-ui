@@ -1,5 +1,9 @@
 import { connect } from 'react-redux';
 import RoadClosureSavedDataViewer, { IRoadClosureSavedDataViewerProps } from 'src/components/road-closure-saved-data-viewer';
+import {
+    filterRoadClosureSavedItems,
+    sortRoadClosureSavedItemsByLastModified
+} from 'src/selectors/road-closure-saved-items';
 import { RootState } from 'src/store/configureStore';
 import { 
     loadAllRoadClosures,
@@ -7,9 +11,10 @@ import {
 } from '../../store/road-closure';
 
 const mapStateToProps = (state: RootState) => ({
-    allRoadClosureItems: state.roadClosure.allRoadClosureItems,
-    allRoadClosureMetadata: state.roadClosure.allRoadClosureMetadata,
-    allRoadClosuresUploadUrls: state.roadClosure.allRoadClosuresUploadUrls,
+    ...filterRoadClosureSavedItems(
+        sortRoadClosureSavedItemsByLastModified(state.roadClosure, state.roadClosure.allRoadClosuresSortOrder),
+        state.roadClosure.allRoadClosuresFilterLevel
+    ),
     isLoadingAllRoadClosures: state.roadClosure.isLoadingAllRoadClosures,
     orgName: state.context.orgName,
 });
@@ -21,5 +26,7 @@ export default connect<{}, {}, IRoadClosureSavedDataViewerProps>(
         loadAllRoadClosures,
         previewClosure: ROAD_CLOSURE_ACTIONS.FETCH_SHAREDSTREETS_PUBLIC_DATA.success,
         resetClosurePreview: ROAD_CLOSURE_ACTIONS.RESET_ROAD_CLOSURE,
+        setFilterLevel: ROAD_CLOSURE_ACTIONS.SET_ALL_ROAD_CLOSURES_FILTER_LEVEL,
+        setSortOrder: ROAD_CLOSURE_ACTIONS.SET_ALL_ROAD_CLOSURES_SORT_ORDER,
     },
 )(RoadClosureSavedDataViewer) as React.ComponentClass<{}>;

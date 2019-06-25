@@ -138,6 +138,8 @@ export const ROAD_CLOSURE_ACTIONS = {
     SAVED_OUTPUT: createStandardAction('ROAD_CLOSURE/SAVED_OUTPUT')<void>(),
     SAVING_OUTPUT: createStandardAction('ROAD_CLOSURE/SAVING_OUTPUT')<void>(),
     SELECT_OUTPUT_FORMAT: createStandardAction('ROAD_CLOSURE/SELECT_OUTPUT_FORMAT')<IRoadClosureOutputFormatName>(),
+    SET_ALL_ROAD_CLOSURES_FILTER_LEVEL: createStandardAction('ROAD_CLOSURE/SET_ALL_ROAD_CLOSURES_FILTER_LEVEL')<string>(),
+    SET_ALL_ROAD_CLOSURES_SORT_ORDER: createStandardAction('ROAD_CLOSURE/SET_ALL_ROAD_CLOSURES_SORT_ORDER')<string>(),
     TOGGLE_DIRECTION_STREET_SEGMENT: createStandardAction('ROAD_CLOSURE/TOGGLE_DIRECTION_STREET_SEGMENT')<IRoadClosureStateItemToggleDirectionPayload>(),
     VIEWPORT_CHANGED: createStandardAction('ROAD_CLOSURE/VIEWPORT_CHANGED'),
     ZOOM_HIGHLIGHT_MATCHED_STREETS_GROUP: createStandardAction('ROAD_CLOSURE/ZOOM_HIGHLIGHT_MATCHED_STREETS_GROUP')<SharedStreetsMatchGeomPath[]>(),
@@ -485,6 +487,8 @@ export interface IRoadClosureState {
     allOrgs: any,
     allRoadClosureItems: SharedStreetsMatchGeomFeatureCollection[],
     allRoadClosureMetadata: any[],
+    allRoadClosuresFilterLevel: string,
+    allRoadClosuresSortOrder: string,
     allRoadClosuresUploadUrls: IRoadClosureUploadUrls[],
     currentItem: SharedStreetsMatchGeomFeatureCollection,
     currentLineId: string,
@@ -509,6 +513,8 @@ const defaultState: IRoadClosureState = {
     allOrgs: [],
     allRoadClosureItems: [],
     allRoadClosureMetadata: [],
+    allRoadClosuresFilterLevel: 'all',
+    allRoadClosuresSortOrder: 'ascending',
     allRoadClosuresUploadUrls: [],
     currentItem: new SharedStreetsMatchGeomFeatureCollection(),
     currentLineId: '',
@@ -676,7 +682,8 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                     }
                 }
             });
-        newStateItem.properties.geometryIdDirectionFilter = newStateItemGeometryIdDirectionFilter;
+            
+            newStateItem.properties.geometryIdDirectionFilter = newStateItemGeometryIdDirectionFilter;
             newStateItem.properties.street = newStateItemStreet;
 
             const newStateItemUploadUrls = {
@@ -979,6 +986,18 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 ...state,
                 currentItem: new SharedStreetsMatchGeomFeatureCollection(),
                 isLoadingAllRoadClosures: false,
+            };
+
+        case "ROAD_CLOSURE/SET_ALL_ROAD_CLOSURES_FILTER_LEVEL":
+            return {
+                ...state,
+                allRoadClosuresFilterLevel: action.payload
+            };
+        
+        case "ROAD_CLOSURE/SET_ALL_ROAD_CLOSURES_SORT_ORDER":
+            return {
+                ...state,
+                allRoadClosuresSortOrder: action.payload
             };
 
         case "ROAD_CLOSURE/RESET_ROAD_CLOSURE":
