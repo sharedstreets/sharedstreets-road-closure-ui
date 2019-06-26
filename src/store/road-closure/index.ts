@@ -977,6 +977,7 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             return {
                 ...state,
                 allRoadClosureItems: [],
+                allRoadClosureMetadata: [],
                 allRoadClosuresUploadUrls: [],
                 isLoadingAllRoadClosures: true,
             };
@@ -1000,14 +1001,10 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 allRoadClosuresSortOrder: action.payload
             };
 
-        case "CONTEXT/SET_ORG_NAME":
         case "ROAD_CLOSURE/RESET_ROAD_CLOSURE":
             return {
                 ...state,
                 allOrgs: [],
-                allRoadClosureItems: [],
-                allRoadClosureMetadata: [],
-                allRoadClosuresUploadUrls: [],
                 currentItem: new SharedStreetsMatchGeomFeatureCollection(),
                 isEditingExistingClosure: false,
                 isLoadedInput: false,
