@@ -6,18 +6,21 @@ import {
 } from 'src/selectors/road-closure-saved-items';
 import { RootState } from 'src/store/configureStore';
 import { 
-    loadAllRoadClosures,
     ROAD_CLOSURE_ACTIONS
 } from '../../store/road-closure';
+import { 
+    loadAllRoadClosures,
+    ROAD_CLOSURE_EXPLORER_ACTIONS
+} from '../../store/road-closure-explorer';
 
 const mapStateToProps = (state: RootState) => ({
     ...filterRoadClosureSavedItems(
-        sortRoadClosureSavedItemsByLastModified(state.roadClosure, state.roadClosure.allRoadClosuresSortOrder),
-        state.roadClosure.allRoadClosuresFilterLevel
+        sortRoadClosureSavedItemsByLastModified(state.roadClosureExplorer, state.roadClosureExplorer.allRoadClosuresSortOrder),
+        state.roadClosureExplorer.allRoadClosuresFilterLevel
     ),
-    isLoadingAllRoadClosures: state.roadClosure.isLoadingAllRoadClosures,
+    isLoadingAllRoadClosures: state.roadClosureExplorer.isLoadingAllRoadClosures,
     orgName: state.context.orgName,
-    totalItemCount: state.roadClosure.allRoadClosureItems.length,
+    totalItemCount: state.roadClosureExplorer.allRoadClosureItems.length,
 });
 
 export default connect<{}, {}, IRoadClosureSavedDataViewerProps>(
@@ -27,7 +30,7 @@ export default connect<{}, {}, IRoadClosureSavedDataViewerProps>(
         loadAllRoadClosures,
         previewClosure: ROAD_CLOSURE_ACTIONS.FETCH_SHAREDSTREETS_PUBLIC_DATA.success,
         resetClosurePreview: ROAD_CLOSURE_ACTIONS.RESET_ROAD_CLOSURE,
-        setFilterLevel: ROAD_CLOSURE_ACTIONS.SET_ALL_ROAD_CLOSURES_FILTER_LEVEL,
-        setSortOrder: ROAD_CLOSURE_ACTIONS.SET_ALL_ROAD_CLOSURES_SORT_ORDER,
+        setFilterLevel: ROAD_CLOSURE_EXPLORER_ACTIONS.SET_ALL_ROAD_CLOSURES_FILTER_LEVEL,
+        setSortOrder: ROAD_CLOSURE_EXPLORER_ACTIONS.SET_ALL_ROAD_CLOSURES_SORT_ORDER,
     },
 )(RoadClosureSavedDataViewer) as React.ComponentClass<{}>;

@@ -14,7 +14,7 @@ import {
 } from '../../store/context';
 import {
   loadAllRoadClosures,
-} from '../../store/road-closure';
+} from '../../store/road-closure-explorer';
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
