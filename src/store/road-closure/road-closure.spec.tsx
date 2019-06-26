@@ -19,11 +19,6 @@ import {
 
 const defaultState: IRoadClosureState = {
     allOrgs: [],
-    allRoadClosureItems: [],
-    allRoadClosureMetadata: [],
-    allRoadClosuresFilterLevel: 'all',
-    allRoadClosuresSortOrder: 'ascending',
-    allRoadClosuresUploadUrls: [],
     currentItem: new SharedStreetsMatchGeomFeatureCollection(),
     currentLineId: '',
     currentPossibleDirections: new SharedStreetsMatchPointFeatureCollection(),
@@ -34,7 +29,6 @@ const defaultState: IRoadClosureState = {
     isFetchingMatchedStreets: false,
     isGeneratingUploadUrl: false,
     isLoadedInput: false,
-    isLoadingAllRoadClosures: false,
     isLoadingInput: false,
     isPuttingOutput: false,
     isSavingOutput: false,
@@ -46,105 +40,6 @@ const defaultState: IRoadClosureState = {
         wazeUploadUrl: '',
     }
 };
-
-test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_METADATA_SUCCESS - 0 items in payload', () => {
-    const startingState = Object.assign({}, defaultState);
-    const payload = {};
-    const expectedState = Object.assign({}, defaultState);
-    
-    expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.FETCH_SHAREDSTREETS_PUBLIC_METADATA.success(payload))).toEqual(expectedState)
-});
-
-test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_METADATA_SUCCESS - 1 item in payload', () => {
-    const startingState = Object.assign({}, defaultState);
-
-    const pathProperties: ISharedStreetsMatchGeomPathProperties = {
-        direction: 'forward',
-        fromIntersectionId: '',
-        fromStreetnames: [''],
-        geometryId: 'a',
-        originalFeature: {
-            geometry: {
-                coordinates: [
-                    [1, 2],
-                    [2, 3]
-                ],
-                type: "LineString",
-            },
-            properties: {},
-            type: "Feature"
-        },
-        point: 1,
-        referenceId: 'b',
-        referenceLength: 1,
-        roadClass: '',
-        section: [1],
-        side: '',
-        streetname: '',
-        toIntersectionId: '',
-        toStreetnames: ['']
-    };
-    const path = new SharedStreetsMatchGeomPath({
-        geometry: {
-            coordinates: [
-                [1, 2],
-                [2, 3],
-            ],
-            type: "LineString",
-        },
-        properties: pathProperties,
-        type: "Feature",
-    });
-
-    const roadClosureItemProperties = new RoadClosureFormStateItem();
-
-    const geometryIdDirectionFilter = {
-        "a": {
-            backward: false,
-            forward: true,
-        }
-    };
-
-    
-    const forwardStreet = new RoadClosureFormStateStreet();
-    forwardStreet.geometryId = 'a';
-    forwardStreet.referenceId = 'b';
-    forwardStreet.streetname = '';
-
-    const roadClosureItem = new SharedStreetsMatchGeomFeatureCollection();
-    roadClosureItem.features = [path];
-    roadClosureItem.properties = {
-        ...roadClosureItemProperties,
-        geometryIdDirectionFilter,
-        street: {
-            "a": {
-                backward: new RoadClosureFormStateStreet(),
-                forward: forwardStreet,
-            }
-        }
-    }
-
-    const expectedState = Object.assign({}, startingState, {
-        allRoadClosureItems: [roadClosureItem],
-        allRoadClosureMetadata: [{
-            lastModified: '04-16-2019'
-        }],
-        allRoadClosuresUploadUrls: [{
-            geojsonUploadUrl: 'https://geojsonuploadurl.com',
-            wazeUploadUrl: 'https://wazeuploadurl.com',
-        }],
-    });
-
-    const payload = {
-        features: [path],
-        geojsonUploadUrl: 'https://geojsonuploadurl.com',
-        lastModified: '04-16-2019',
-        properties: roadClosureItemProperties,
-        wazeUploadUrl: 'https://wazeuploadurl.com',
-    };
-
-    expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.FETCH_SHAREDSTREETS_PUBLIC_METADATA.success(payload))).toEqual(expectedState);
-});
 
 test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_DATA_SUCCESS', () => {
     const startingState = Object.assign({}, defaultState, {
@@ -490,17 +385,3 @@ test('ACTION: ROAD_CLOSURE/INPUT_CHANGED - text', () => {
 
 //     expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.INPUT_CHANGED(payload))).toEqual(expectedState)
 // });
-
-test('ACTION: ROAD_CLOSURE/LOAD_ALL_ROAD_CLOSURES', () => {
-    const startingState = Object.assign({}, defaultState, {
-        allRoadClosureItems: [{}],
-        allRoadClosuresUploadUrls: [{}],
-        isLoadingAllRoadClosures: false,
-    });
-    const expectedState = Object.assign({}, startingState, {
-        allRoadClosureItems: [],
-        allRoadClosuresUploadUrls: [],
-        isLoadingAllRoadClosures: true,
-    })
-    expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.LOAD_ALL_ROAD_CLOSURES())).toEqual(expectedState)
-});
