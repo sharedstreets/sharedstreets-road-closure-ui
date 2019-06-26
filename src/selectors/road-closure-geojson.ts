@@ -92,7 +92,7 @@ export const groupPathsByContiguitySplitByIntersection = (state: IRoadClosureSta
     const output: SharedStreetsMatchGeomPath[][] = [];
     const groups = groupPathsByContiguity(state);
     groups.forEach((group) => {
-        const intersections = {};
+        const intersections: { [id: string]: number } = {};
         group.forEach((outputValue) => {
             if (!intersections[outputValue.properties.toIntersectionId]) {
                 intersections[outputValue.properties.toIntersectionId] = 0;

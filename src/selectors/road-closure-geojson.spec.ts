@@ -12,18 +12,18 @@ import {
 } from './road-closure-geojson';
 
 
-import * as NEW_BRUNSWICK_NJ_1 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_1.json';
-import * as NEW_BRUNSWICK_NJ_10 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_10.json';
-import * as NEW_BRUNSWICK_NJ_2 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_2.json';
-import * as NEW_BRUNSWICK_NJ_3 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_3.json';
-import * as NEW_BRUNSWICK_NJ_4 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_4.json';
-import * as NEW_BRUNSWICK_NJ_5 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_5.json';
-import * as NEW_BRUNSWICK_NJ_6 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_6.json';
-import * as NEW_BRUNSWICK_NJ_7 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_7.json';
-import * as NEW_BRUNSWICK_NJ_8 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_8.json';
-// import * as NEW_BRUNSWICK_NJ_9 from '../../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_9.json';
-import * as PITTSBURGH_PA_1 from '../../test/static/usa/pa/pittsburgh/matched_pittsburgh_pa_1.json';
-import * as PITTSBURGH_PA_2 from '../../test/static/usa/pa/pittsburgh/matched_pittsburgh_pa_2.json';
+import * as NEW_BRUNSWICK_NJ_1 from '../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_1.json';
+import * as NEW_BRUNSWICK_NJ_10 from '../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_10.json';
+import * as NEW_BRUNSWICK_NJ_2 from '../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_2.json';
+import * as NEW_BRUNSWICK_NJ_3 from '../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_3.json';
+import * as NEW_BRUNSWICK_NJ_4 from '../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_4.json';
+import * as NEW_BRUNSWICK_NJ_5 from '../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_5.json';
+import * as NEW_BRUNSWICK_NJ_6 from '../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_6.json';
+import * as NEW_BRUNSWICK_NJ_7 from '../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_7.json';
+import * as NEW_BRUNSWICK_NJ_8 from '../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_8.json';
+// import * as NEW_BRUNSWICK_NJ_9 from '../test/static/usa/nj/new-brunswick/matched_new_brunswick_nj_9.json';
+import * as PITTSBURGH_PA_1 from '../test/static/usa/pa/pittsburgh/matched_pittsburgh_pa_1.json';
+import * as PITTSBURGH_PA_2 from '../test/static/usa/pa/pittsburgh/matched_pittsburgh_pa_2.json';
 
 
 const defaultState: IRoadClosureState = {
