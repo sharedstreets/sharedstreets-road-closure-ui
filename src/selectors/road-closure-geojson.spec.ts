@@ -28,11 +28,6 @@ import * as PITTSBURGH_PA_2 from '../../test/static/usa/pa/pittsburgh/matched_pi
 
 const defaultState: IRoadClosureState = {
     allOrgs: [],
-    allRoadClosureItems: [],
-    allRoadClosureMetadata: [],
-    allRoadClosuresFilterLevel: 'all',
-    allRoadClosuresSortOrder: 'ascending',
-    allRoadClosuresUploadUrls: [],
     currentItem: new SharedStreetsMatchGeomFeatureCollection(),
     currentLineId: '',
     currentPossibleDirections: new SharedStreetsMatchPointFeatureCollection(),
@@ -43,7 +38,6 @@ const defaultState: IRoadClosureState = {
     isFetchingMatchedStreets: false,
     isGeneratingUploadUrl: false,
     isLoadedInput: false,
-    isLoadingAllRoadClosures: false,
     isLoadingInput: false,
     isPuttingOutput: false,
     isSavingOutput: false,

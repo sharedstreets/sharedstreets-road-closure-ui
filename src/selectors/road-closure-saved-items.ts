@@ -4,9 +4,9 @@ import {
     zip,
 } from 'lodash';
 import * as moment from 'moment';
-import { IRoadClosureState } from 'src/store/road-closure';
+import { IRoadClosureExplorerState } from 'src/store/road-closure-explorer';
 
-export const sortRoadClosureSavedItemsByLastModified = (state: IRoadClosureState, sortOrder = 'ascending') => {
+export const sortRoadClosureSavedItemsByLastModified = (state: IRoadClosureExplorerState, sortOrder = 'ascending') => {
     if (
         state.allRoadClosureItems.length === 0 &&
         state.allRoadClosureMetadata.length === 0 &&
