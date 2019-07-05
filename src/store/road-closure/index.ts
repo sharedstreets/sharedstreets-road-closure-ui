@@ -766,6 +766,16 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 forEach(Object.keys(updatedItem.properties[key][action.payload.geometryId]), (refId: string) => {
                     updatedItem.properties[key][action.payload.geometryId][refId].streetname = action.payload.street;
                 });
+            } else if (key === "mode") {
+                if (!updatedItem.properties[key]) {
+                    updatedItem.properties[key] = [];
+                }
+                if (updatedItem.properties[key] && updatedItem.properties[key].includes(action.payload[key])) {
+                    const removeIndex = updatedItem.properties[key].indexOf(action.payload[key]);
+                    updatedItem.properties[key].splice(removeIndex, 1);
+                } else {
+                    updatedItem.properties[key].push(action.payload[key]);
+                }
             } else {
                 updatedItem.properties[key] = action.payload[key];
             }

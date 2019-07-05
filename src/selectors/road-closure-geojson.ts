@@ -3,6 +3,7 @@ import {
     isEmpty,
     // isEqual,
     omit,
+    omitBy,
     reverse,
     uniq,
 } from 'lodash';
@@ -21,7 +22,7 @@ export const currentItemToGeojson = (state: IRoadClosureState) => {
                     // return omit(path, ['properties.color']);
                     return path;
                 }),
-        properties: omit(state.currentItem.properties, ['geometryIdDirectionFilter', 'street'])
+        properties: omitBy(omit(state.currentItem.properties, ['geometryIdDirectionFilter', 'street']), isEmpty)
     }
 }
 
