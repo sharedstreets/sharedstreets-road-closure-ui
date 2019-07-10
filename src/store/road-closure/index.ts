@@ -67,6 +67,8 @@ export interface IRoadClosureFormInputChangedPayload {
     description?: string,
     reference?: string,
     subtype?: string,
+    day?: string,
+    index?: number,
 }
 
 export interface IRoadClosureStateItemToggleDirectionPayload {
@@ -107,6 +109,7 @@ export const ROAD_CLOSURE_ACTIONS = {
     HIGHLIGHT_MATCHED_STREET: createStandardAction('ROAD_CLOSURE/HIGHLIGHT_MATCHED_STREET')<RoadClosureFormStateStreet>(),
     HIGHLIGHT_MATCHED_STREETS_GROUP: createStandardAction('ROAD_CLOSURE/HIGHLIGHT_MATCHED_STREETS_GROUP')<SharedStreetsMatchGeomPath[]>(),
     INPUT_CHANGED: createStandardAction('ROAD_CLOSURE/INPUT_CHANGED')<IRoadClosureFormInputChangedPayload>(),
+    INPUT_REMOVED: createStandardAction('ROAD_CLOSURE/INPUT_REMOVED')<IRoadClosureFormInputChangedPayload>(),
     LOAD_ALL_ORGS: createStandardAction('ROAD_CLOSURE/LOAD_ALL_ORGS')<{ [name: string]: IRoadClosureOrgName }>(),
     LOAD_INPUT: createStandardAction('ROAD_CLOSURE/LOAD_INPUT')<IRoadClosureUploadUrls>(),
     PUT_SHAREDSTREETS_PUBLIC_DATA: createAsyncAction(
@@ -776,6 +779,35 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 } else {
                     updatedItem.properties[key].push(action.payload[key]);
                 }
+            } else if (key === "schedule") {
+                if (!updatedItem.properties[key]) {
+                    updatedItem.properties[key] = {}
+                }
+                if (!updatedItem.properties[key][action.payload.day!]) {
+                    updatedItem.properties[key][action.payload.day!] = [];
+                }
+                if (!isEmpty(action.payload.startTime) && action.payload.startTime &&
+                    !isEmpty(action.payload.endTime) && action.payload.endTime && 
+                    action.payload.startTime !== action.payload.endTime
+                ) {
+                    // const startEndKey = action.payload.startTime.replace(":", "-")+"-"+action.payload.endTime.replace(":", "-");
+                    // updatedItem.properties[key][action.payload.day!][startEndKey] = {
+                    //     endTime: action.payload.endTime,
+                    //     startTime: action.payload.startTime,
+                    // };
+                    updatedItem.properties[key][action.payload.day!].push({
+                        endTime: action.payload.endTime,
+                        startTime: action.payload.startTime,
+                    });
+                }
+            } else if (key === "scheduleRemove") {
+                if (!isEmpty(action.payload.startTime) && action.payload.startTime &&
+                    !isEmpty(action.payload.endTime) && action.payload.endTime && 
+                    action.payload.startTime !== action.payload.endTime
+                ) {
+                    const startEndKey = action.payload.startTime.replace(":", "-")+"-"+action.payload.endTime.replace(":", "-");
+                    updatedItem.properties[key][action.payload.day!] = omit(updatedItem.properties[key][action.payload.day!], startEndKey);
+                }
             } else {
                 updatedItem.properties[key] = action.payload[key];
             }
@@ -784,7 +816,59 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 ...state,
                 currentItem: updatedItem,
             }
-        
+        case "ROAD_CLOSURE/INPUT_CHANGED":
+            const inputChangedKey = action.payload.key;
+            updatedItem = Object.assign(Object.create(state.currentItem), state.currentItem);
+
+            if (inputChangedKey === "street") {
+                forEach(Object.keys(updatedItem.properties[inputChangedKey][action.payload.geometryId]), (refId: string) => {
+                    updatedItem.properties[inputChangedKey][action.payload.geometryId][refId].streetname = action.payload.street;
+                });
+            } else if (inputChangedKey === "mode") {
+                if (!updatedItem.properties[inputChangedKey]) {
+                    updatedItem.properties[inputChangedKey] = [];
+                }
+                if (updatedItem.properties[inputChangedKey] && updatedItem.properties[inputChangedKey].includes(action.payload[inputChangedKey])) {
+                    const removeIndex = updatedItem.properties[inputChangedKey].indexOf(action.payload[inputChangedKey]);
+                    updatedItem.properties[inputChangedKey].splice(removeIndex, 1);
+                } else {
+                    updatedItem.properties[inputChangedKey].push(action.payload[inputChangedKey]);
+                }
+            } else if (inputChangedKey === "schedule") {
+                if (!updatedItem.properties[inputChangedKey][action.payload.day!]) {
+                    updatedItem.properties[inputChangedKey][action.payload.day!] = [];
+                }
+                if (!isEmpty(action.payload.startTime) && action.payload.startTime &&
+                    !isEmpty(action.payload.endTime) && action.payload.endTime && 
+                    action.payload.startTime !== action.payload.endTime
+                ) {
+                    updatedItem.properties[inputChangedKey][action.payload.day!].push({
+                        endTime: action.payload.endTime,
+                        startTime: action.payload.startTime,
+                    });
+                }
+            } else {
+                updatedItem.properties[inputChangedKey] = action.payload[inputChangedKey];
+            }
+            
+            return {
+                ...state,
+                currentItem: updatedItem,
+            }
+
+            case "ROAD_CLOSURE/INPUT_REMOVED":
+                const removedInputKey = action.payload.key;
+                updatedItem = Object.assign(Object.create(state.currentItem), state.currentItem);
+    
+                if (removedInputKey === "schedule") {
+                    updatedItem.properties[removedInputKey][action.payload.day!].splice(action.payload.index!, 1);
+                }
+                
+                return {
+                    ...state,
+                    currentItem: updatedItem,
+                }
+    
         case "ROAD_CLOSURE/LOAD_ALL_ORGS": 
             return {
                 ...state,
