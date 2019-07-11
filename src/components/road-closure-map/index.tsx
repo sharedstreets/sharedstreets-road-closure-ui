@@ -70,7 +70,7 @@ export interface IRoadClosureMapState {
   lastPointIndex: number,
 }
 
-export const FIT_BOUNDS_ANIMATION_DURATION = 500;
+export const FIT_BOUNDS_ANIMATION_DURATION = 0;
 class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureMapState> {
   public mapContainer: any;
 
@@ -124,29 +124,7 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
     );
 
     this.mapContainer.on('load', () => {
-      if (this.props.isViewingAllClosures) {
-        // this.props.allRoadClosureItems.forEach((item, index) => {
-        //   this.mapContainer.addSource(`closure-${index}`, {
-        //     data: item,
-        //     type: "geojson",
-        //   });
-        //   this.mapContainer.addLayer({
-        //     "id": `closure-${index}`,
-        //     "paint": {
-        //       "line-color": [ 'match', ['get', 'color'],
-        //                       '#E35051', '#E35051', // #E35051 - highlighted
-        //                       "#253EF7"], // default - blue 
-        //       "line-offset": 5,
-        //       "line-opacity": [ 'match', ['get', 'color'],
-        //                       '#E35051', 0.8, // #E35051 - highlighted
-        //                       0.5], // default - blue 
-        //       "line-width": 3,
-        //     },
-        //     "source": `closure-${index}`,
-        //     "type": "line",
-        //   });
-        // })
-      } else {
+      if (!this.props.isViewingAllClosures) {
         if (!this.mapContainer.getLayer('matchedFeatures')) {
           this.mapContainer.addSource('matchedFeatures', {
             // data: this.props.roadClosure.currentItem,
@@ -258,56 +236,74 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
       // currentItem,
       currentLineId,
     } = this.props.roadClosure;
-
+    
     if (this.props.isViewingAllClosures) {
-      if (prevProps.allRoadClosureItems.length > this.props.allRoadClosureItems.length) {
-        prevProps.allRoadClosureItems.forEach((item, index) => {
-          this.mapContainer.removeLayer(`closure-${index}`);
-          this.mapContainer.removeSource(`closure-${index}`);
-        });
+      const isStyleLoaded = () => {
+        return this.mapContainer.isStyleLoaded();
       }
-      let allFeatures: any[] = [];
-      this.props.allRoadClosureItems.forEach((item, index) => {
-        allFeatures = allFeatures.concat(item.features);
-        if (this.mapContainer.getSource(`closure-${index}`)) {
-          this.mapContainer.getSource(`closure-${index}`).setData(item);
-        } else {
-          this.mapContainer.addSource(`closure-${index}`, {
-            data: item,
-            type: "geojson",
-          });
-          this.mapContainer.addLayer({
-            "id": `closure-${index}`,
-            "paint": {
-              "line-color": [ 'match', ['get', 'color'],
-                              '#E35051', '#E35051', // #E35051 - highlighted
-                              "#253EF7"], // default - blue 
-              "line-offset": 5,
-              "line-opacity": [ 'match', ['get', 'color'],
-                              '#E35051', 0.8, // #E35051 - highlighted
-                              0.5], // default - blue 
-              "line-width": 3,
-            },
-            "source": `closure-${index}`,
-            "type": "line",
+
+      const addLayers = () => {
+        const check = isStyleLoaded();
+        if (!check) {
+          setTimeout(() => {
+            addLayers()
+          }, 200);
+          return;
+        }
+
+        if (prevProps.allRoadClosureItems.length > this.props.allRoadClosureItems.length) {
+          prevProps.allRoadClosureItems.forEach((item, index) => {
+            if (this.mapContainer.getSource(`closure-${index}`)) {
+              this.mapContainer.removeLayer(`closure-${index}`);
+              this.mapContainer.removeSource(`closure-${index}`);
+            }
           });
         }
-      });
-
-      if (allFeatures.length > 0 &&
-        !isEqual(prevProps.allRoadClosureItems, this.props.allRoadClosureItems)) {
-        // prevProps.allRoadClosureItems.length !== this.props.allRoadClosureItems.length) {
-        this.mapContainer.fitBounds(
-          bbox(
-            featureCollection(allFeatures)
-          ),
-          {
-            duration: FIT_BOUNDS_ANIMATION_DURATION,
-            padding: {top: 100, bottom:100, left: 100, right: 100}
+        let allFeatures: any[] = [];
+  
+        this.props.allRoadClosureItems.forEach((item, index) => {
+          allFeatures = allFeatures.concat(item.features);
+          if (this.mapContainer.getSource(`closure-${index}`)) {
+            this.mapContainer.getSource(`closure-${index}`).setData(item);
+          } else {
+            this.mapContainer.addSource(`closure-${index}`, {
+              data: item,
+              type: "geojson",
+            });
+            this.mapContainer.addLayer({
+              "id": `closure-${index}`,
+              "paint": {
+                "line-color": [ 'match', ['get', 'color'],
+                                '#E35051', '#E35051', // #E35051 - highlighted
+                                "#253EF7"], // default - blue 
+                "line-offset": 5,
+                "line-opacity": [ 'match', ['get', 'color'],
+                                '#E35051', 0.8, // #E35051 - highlighted
+                                0.5], // default - blue 
+                "line-width": 3,
+              },
+              "source": `closure-${index}`,
+              "type": "line",
+            });
           }
-        )
+        });
+  
+        if (allFeatures.length > 0 &&
+          !isEqual(prevProps.allRoadClosureItems, this.props.allRoadClosureItems)) {
+          // prevProps.allRoadClosureItems.length !== this.props.allRoadClosureItems.length) {
+          this.mapContainer.fitBounds(
+            bbox(
+              featureCollection(allFeatures)
+            ),
+            {
+              duration: FIT_BOUNDS_ANIMATION_DURATION,
+              padding: {top: 100, bottom:100, left: 100, right: 100}
+            }
+          )
+        }
       }
-
+      addLayers();
+      
     } else {
       if (this.mapContainer.getLayer('matchedFeatures')) {
         this.mapContainer.getSource('matchedFeatures').setData(this.props.currentRoadClosureItemOutput);
