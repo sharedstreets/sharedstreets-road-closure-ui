@@ -332,6 +332,19 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
               // onChange={this.handleChangeMode}
               label="Mode"
               labelInfo="(optional)">
+              <Button
+                text={"Select All"}
+                onClick={this.selectAllModes}
+              />
+              <Checkbox
+                checked={
+                  this.props.currentRoadClosureItem.properties.mode
+                  && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_PEDESTRIAN)
+                }
+                onChange={this.handleChangeMode}
+                label={"Pedestrian"}
+                value={IRoadClosureMode.ROAD_CLOSED_PEDESTRIAN}
+              />
               <Checkbox
                 checked={
                   this.props.currentRoadClosureItem.properties.mode
@@ -339,10 +352,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                 }
                 onChange={this.handleChangeMode}
                 label={"Bicycle"}
-                value={"ROAD_CLOSED_BICYCLE"}
-              <Button
-                text={"Select All"}
-                onClick={this.selectAllModes}
+                value={IRoadClosureMode.ROAD_CLOSED_BICYCLE}
               />
               <Checkbox
                 defaultChecked={true}
@@ -352,7 +362,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                 }
                 onChange={this.handleChangeMode}
                 label={"Bus"}
-                value={"ROAD_CLOSED_BUS"}
+                value={IRoadClosureMode.ROAD_CLOSED_BUS}
               />
               <Checkbox
                 checked={
@@ -361,35 +371,18 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                 }
                 onChange={this.handleChangeMode}
                 label={"Car"}
-                value={"ROAD_CLOSED_CAR"}
+                value={IRoadClosureMode.ROAD_CLOSED_CAR}
               />
               <Checkbox
                 checked={
                   this.props.currentRoadClosureItem.properties.mode
-                  && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_TAXI)
+                  && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_TAXI_RIDESHARE)
                 }
                 onChange={this.handleChangeMode}
-                label={"Taxi"}
-                value={"ROAD_CLOSED_TAXI"}
+                label={"Taxi/Rideshare"}
+                value={IRoadClosureMode.ROAD_CLOSED_TAXI_RIDESHARE}
               />
-              <Checkbox
-                checked={
-                  this.props.currentRoadClosureItem.properties.mode
-                  && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_RIDESHARE)
-                }
-                onChange={this.handleChangeMode}
-                label={"Rideshare"}
-                value={"ROAD_CLOSED_RIDESHARE"}
-              />
-              <Checkbox
-                checked={
-                  this.props.currentRoadClosureItem.properties.mode
-                  && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_PEDESTRIAN)
-                }
-                onChange={this.handleChangeMode}
-                label={"Pedestrian"}
-                value={"ROAD_CLOSED_PEDESTRIAN"}
-              />
+
             </FormGroup>
             <Divider />
             <H3>Output</H3>
