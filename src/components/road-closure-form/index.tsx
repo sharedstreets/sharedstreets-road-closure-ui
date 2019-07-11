@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   Checkbox,
   Divider,
@@ -60,6 +61,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
     this.handleChangeDescription = this.handleChangeDescription.bind(this);
     this.handleChangeReference = this.handleChangeReference.bind(this);
     this.handleChangeSubtype = this.handleChangeSubtype.bind(this);
+    this.selectAllModes = this.selectAllModes.bind(this);
     this.handleChangeMode = this.handleChangeMode.bind(this);
     this.handleChangeTime = this.handleChangeTime.bind(this);
     this.handleChangeTimeZone = this.handleChangeTimeZone.bind(this);
@@ -110,6 +112,18 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
         subtype: e.target.value
       });
     }
+  }
+
+  public selectAllModes(e: any) {
+    Object.keys(IRoadClosureMode).forEach((mode) => {
+      if (!this.props.currentRoadClosureItem.properties.mode || 
+        !this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode[mode])) {
+          this.props.inputChanged({
+            key: 'mode',
+            mode,
+          });
+        }
+    });
   }
 
   public handleChangeMode(e: any) {
@@ -326,6 +340,9 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                 onChange={this.handleChangeMode}
                 label={"Bicycle"}
                 value={"ROAD_CLOSED_BICYCLE"}
+              <Button
+                text={"Select All"}
+                onClick={this.selectAllModes}
               />
               <Checkbox
                 defaultChecked={true}
