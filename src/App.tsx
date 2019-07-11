@@ -89,6 +89,7 @@ class App extends React.Component<IAppProps, any> {
             !this.props.isShowingRoadClosureOutputViewer && <RoadClosureForm />
           }
           <RoadClosureMap
+            isViewingAllClosures={false}
             isDrawingEnabled={true}
           />
         </div>

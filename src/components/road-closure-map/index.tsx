@@ -10,15 +10,18 @@ import {
 import {
   // forEach,
   // flatten,
+  isEqual,
   omit
 } from 'lodash';
 import * as mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import * as React from 'react';
 // import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
+import { SharedStreetsMatchGeomFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchGeomFeatureCollection';
 import { SharedStreetsMatchGeomPath } from 'src/models/SharedStreets/SharedStreetsMatchGeomPath';
 import { SharedStreetsMatchPointFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchPointFeatureCollection';
 import { IRoadClosureState } from 'src/store/road-closure';
+import { IRoadClosureUploadUrls } from 'src/utils/upload-url-generator';
 import { v4 as uuid } from 'uuid';
 import SharedStreetsMapDrawControl from '../sharedstreets-map-draw-control';
 import './road-closure-map.css';
@@ -45,8 +48,13 @@ export interface IRoadClosureMapProps {
   directionIconPoints: any,
   highlightedFeatureGroup: SharedStreetsMatchGeomPath[],
   isDrawingEnabled: boolean,
+  isViewingAllClosures: boolean,
   roadBlockIconPoints: any,
   roadClosure: IRoadClosureState,
+  allRoadClosureItems: SharedStreetsMatchGeomFeatureCollection[],
+  allRoadClosureMetadata: any[],
+  allRoadClosuresUploadUrls: IRoadClosureUploadUrls[],
+  isLoadingAllRoadClosures: boolean,
 };
 
 interface IRoadClosureMapSelectedCoordinates {
@@ -62,6 +70,7 @@ export interface IRoadClosureMapState {
   lastPointIndex: number,
 }
 
+export const FIT_BOUNDS_ANIMATION_DURATION = 500;
 class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureMapState> {
   public mapContainer: any;
 
@@ -115,107 +124,131 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
     );
 
     this.mapContainer.on('load', () => {
-      if (!this.mapContainer.getLayer('matchedFeatures')) {
-        this.mapContainer.addSource('matchedFeatures', {
-          // data: this.props.roadClosure.currentItem,
-          data: this.props.currentRoadClosureItemOutput,
-          type: "geojson",
-        });
-        this.mapContainer.addLayer({
-          "id": 'matchedFeatures',
-          "paint": {
-            "line-color": [ 'match', ['get', 'color'],
-                            '#E35051', '#E35051', // #E35051 - highlighted
-                            "#253EF7"], // default - blue 
-            "line-offset": 5,
-            "line-opacity": [ 'match', ['get', 'color'],
-                            '#E35051', 0.8, // #E35051 - highlighted
-                            0.5], // default - blue 
-            "line-width": 3,
-          },
-          "source": 'matchedFeatures',
-          "type": "line",
-        });
-
-        this.mapContainer.addSource('possibleDirectionsPoints', {
-          data: this.props.currentPossibleDirections,
-          type: "geojson",
-        });
-        this.mapContainer.addLayer({
-          "id": "possibleDirections",
-          'layout': {
-            'icon-allow-overlap': true,
-            'icon-ignore-placement': true,
-            'icon-image': 'triangle-11',
-            'icon-offset': [0, -7],
-            'icon-rotate': {
-              'property': 'bearing',
-              'type': 'identity',
-            },
-            'icon-rotation-alignment': 'map',
-            'icon-size': 1.5,
-          },
-          // "paint": {
-          //   "icon-color": "red",
-          // },
-          "source": "possibleDirectionsPoints",
-          "type": "symbol",
-        });
-
-        this.mapContainer.addSource('directionPoints', {
-          data: this.props.roadClosure.currentItem,
-          type: "geojson",
-        });
-        this.mapContainer.addLayer({
-          "id": "direction",
-          'layout': {
-            'icon-allow-overlap': true,
-            'icon-ignore-placement': true,
-            'icon-image': 'triangle-11',
-            'icon-offset': [5, 0],
-            'icon-rotate': {
-              'property': 'bearing',
-              'type': 'identity',
-            },
-            'icon-rotation-alignment': 'map',
-            'icon-size': 1.5,
-          },
-          // "paint": {
-          //   "icon-color": "red",
-          // },
-          "source": "directionPoints",
-          "type": "symbol",
-        });
-
-        // this.mapContainer.loadImage('/roadblock.png', (error: any, image: any) => {
-        //   if (error) {
-        //     throw error;
-        //   }
-            
-        //   this.mapContainer.addImage("roadblock", image, {
-        //     "sdf": true
-        //   });
-
-        //   this.mapContainer.addSource('roadblockPoints', {
-        //     data: this.props.roadClosure.currentItem,
+      if (this.props.isViewingAllClosures) {
+        // this.props.allRoadClosureItems.forEach((item, index) => {
+        //   this.mapContainer.addSource(`closure-${index}`, {
+        //     data: item,
         //     type: "geojson",
         //   });
         //   this.mapContainer.addLayer({
-        //     "id": "roadblock",
-        //     "layout": {
-        //       "icon-allow-overlap": true,
-        //       "icon-image": "roadblock",
-        //       "icon-size": 0.2
-
-        //     },
+        //     "id": `closure-${index}`,
         //     "paint": {
-        //       "icon-color": "red",
+        //       "line-color": [ 'match', ['get', 'color'],
+        //                       '#E35051', '#E35051', // #E35051 - highlighted
+        //                       "#253EF7"], // default - blue 
+        //       "line-offset": 5,
+        //       "line-opacity": [ 'match', ['get', 'color'],
+        //                       '#E35051', 0.8, // #E35051 - highlighted
+        //                       0.5], // default - blue 
+        //       "line-width": 3,
         //     },
-        //     "source": "roadblockPoints",
-        //     "type": "symbol",
+        //     "source": `closure-${index}`,
+        //     "type": "line",
         //   });
-
         // })
+      } else {
+        if (!this.mapContainer.getLayer('matchedFeatures')) {
+          this.mapContainer.addSource('matchedFeatures', {
+            // data: this.props.roadClosure.currentItem,
+            data: this.props.currentRoadClosureItemOutput,
+            type: "geojson",
+          });
+          this.mapContainer.addLayer({
+            "id": 'matchedFeatures',
+            "paint": {
+              "line-color": [ 'match', ['get', 'color'],
+                              '#E35051', '#E35051', // #E35051 - highlighted
+                              "#253EF7"], // default - blue 
+              "line-offset": 5,
+              "line-opacity": [ 'match', ['get', 'color'],
+                              '#E35051', 0.8, // #E35051 - highlighted
+                              0.5], // default - blue 
+              "line-width": 3,
+            },
+            "source": 'matchedFeatures',
+            "type": "line",
+          });
+  
+          this.mapContainer.addSource('possibleDirectionsPoints', {
+            data: this.props.currentPossibleDirections,
+            type: "geojson",
+          });
+          this.mapContainer.addLayer({
+            "id": "possibleDirections",
+            'layout': {
+              'icon-allow-overlap': true,
+              'icon-ignore-placement': true,
+              'icon-image': 'triangle-11',
+              'icon-offset': [0, -7],
+              'icon-rotate': {
+                'property': 'bearing',
+                'type': 'identity',
+              },
+              'icon-rotation-alignment': 'map',
+              'icon-size': 1.5,
+            },
+            // "paint": {
+            //   "icon-color": "red",
+            // },
+            "source": "possibleDirectionsPoints",
+            "type": "symbol",
+          });
+  
+          this.mapContainer.addSource('directionPoints', {
+            data: this.props.roadClosure.currentItem,
+            type: "geojson",
+          });
+          this.mapContainer.addLayer({
+            "id": "direction",
+            'layout': {
+              'icon-allow-overlap': true,
+              'icon-ignore-placement': true,
+              'icon-image': 'triangle-11',
+              'icon-offset': [5, 0],
+              'icon-rotate': {
+                'property': 'bearing',
+                'type': 'identity',
+              },
+              'icon-rotation-alignment': 'map',
+              'icon-size': 1.5,
+            },
+            // "paint": {
+            //   "icon-color": "red",
+            // },
+            "source": "directionPoints",
+            "type": "symbol",
+          });
+  
+          // this.mapContainer.loadImage('/roadblock.png', (error: any, image: any) => {
+          //   if (error) {
+          //     throw error;
+          //   }
+              
+          //   this.mapContainer.addImage("roadblock", image, {
+          //     "sdf": true
+          //   });
+  
+          //   this.mapContainer.addSource('roadblockPoints', {
+          //     data: this.props.roadClosure.currentItem,
+          //     type: "geojson",
+          //   });
+          //   this.mapContainer.addLayer({
+          //     "id": "roadblock",
+          //     "layout": {
+          //       "icon-allow-overlap": true,
+          //       "icon-image": "roadblock",
+          //       "icon-size": 0.2
+  
+          //     },
+          //     "paint": {
+          //       "icon-color": "red",
+          //     },
+          //     "source": "roadblockPoints",
+          //     "type": "symbol",
+          //   });
+  
+          // })
+        }
       }
     })
   }
@@ -226,47 +259,100 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
       currentLineId,
     } = this.props.roadClosure;
 
-    if (this.mapContainer.getLayer('matchedFeatures')) {
-      this.mapContainer.getSource('matchedFeatures').setData(this.props.currentRoadClosureItemOutput);
-    }
-
-    // if (this.mapContainer.getLayer('roadblock')) {
-    //   this.mapContainer.getSource('roadblockPoints').setData(this.props.roadBlockIconPoints);
-    // }
-    
-    if (this.mapContainer.getLayer('direction')) {
-      this.mapContainer.getSource('directionPoints').setData(this.props.directionIconPoints);
-    }
-        
-    if (this.mapContainer.getLayer('possibleDirections')) {
-      this.mapContainer.getSource('possibleDirectionsPoints').setData(this.props.currentPossibleDirections);
-    }
-
-    if (prevProps.roadClosure.currentLineId !== currentLineId) {
-      this.removeAllSelectedPoints(currentLineId);
-      this.removeSelectedLine(currentLineId);
-    }
-
-    if (prevProps.highlightedFeatureGroup !== this.props.highlightedFeatureGroup) {
-      this.mapContainer.fitBounds(
-        bbox(
-          featureCollection(this.props.highlightedFeatureGroup)
-        ),
-        {
-          padding: {top: 100, bottom:100, left: 100, right: 100}
+    if (this.props.isViewingAllClosures) {
+      if (prevProps.allRoadClosureItems.length > this.props.allRoadClosureItems.length) {
+        prevProps.allRoadClosureItems.forEach((item, index) => {
+          this.mapContainer.removeLayer(`closure-${index}`);
+          this.mapContainer.removeSource(`closure-${index}`);
+        });
+      }
+      let allFeatures: any[] = [];
+      this.props.allRoadClosureItems.forEach((item, index) => {
+        allFeatures = allFeatures.concat(item.features);
+        if (this.mapContainer.getSource(`closure-${index}`)) {
+          this.mapContainer.getSource(`closure-${index}`).setData(item);
+        } else {
+          this.mapContainer.addSource(`closure-${index}`, {
+            data: item,
+            type: "geojson",
+          });
+          this.mapContainer.addLayer({
+            "id": `closure-${index}`,
+            "paint": {
+              "line-color": [ 'match', ['get', 'color'],
+                              '#E35051', '#E35051', // #E35051 - highlighted
+                              "#253EF7"], // default - blue 
+              "line-offset": 5,
+              "line-opacity": [ 'match', ['get', 'color'],
+                              '#E35051', 0.8, // #E35051 - highlighted
+                              0.5], // default - blue 
+              "line-width": 3,
+            },
+            "source": `closure-${index}`,
+            "type": "line",
+          });
         }
-      )
-    }
+      });
 
-    if (!prevProps.roadClosure.isLoadedInput && this.props.roadClosure.isLoadedInput) {
-      this.mapContainer.fitBounds(
-        bbox(
-          this.props.currentRoadClosureItemOutput
-        ),
-        {
-          padding: {top: 100, bottom:100, left: 100, right: 100}
-        }
-      )
+      if (allFeatures.length > 0 &&
+        !isEqual(prevProps.allRoadClosureItems, this.props.allRoadClosureItems)) {
+        // prevProps.allRoadClosureItems.length !== this.props.allRoadClosureItems.length) {
+        this.mapContainer.fitBounds(
+          bbox(
+            featureCollection(allFeatures)
+          ),
+          {
+            duration: FIT_BOUNDS_ANIMATION_DURATION,
+            padding: {top: 100, bottom:100, left: 100, right: 100}
+          }
+        )
+      }
+
+    } else {
+      if (this.mapContainer.getLayer('matchedFeatures')) {
+        this.mapContainer.getSource('matchedFeatures').setData(this.props.currentRoadClosureItemOutput);
+      }
+  
+      // if (this.mapContainer.getLayer('roadblock')) {
+      //   this.mapContainer.getSource('roadblockPoints').setData(this.props.roadBlockIconPoints);
+      // }
+      
+      if (this.mapContainer.getLayer('direction')) {
+        this.mapContainer.getSource('directionPoints').setData(this.props.directionIconPoints);
+      }
+          
+      if (this.mapContainer.getLayer('possibleDirections')) {
+        this.mapContainer.getSource('possibleDirectionsPoints').setData(this.props.currentPossibleDirections);
+      }
+  
+      if (prevProps.roadClosure.currentLineId !== currentLineId) {
+        this.removeAllSelectedPoints(currentLineId);
+        this.removeSelectedLine(currentLineId);
+      }
+  
+      if (prevProps.highlightedFeatureGroup !== this.props.highlightedFeatureGroup) {
+        this.mapContainer.fitBounds(
+          bbox(
+            featureCollection(this.props.highlightedFeatureGroup)
+          ),
+          {
+            duration: FIT_BOUNDS_ANIMATION_DURATION,
+            padding: {top: 100, bottom:100, left: 100, right: 100}
+          }
+        )
+      }
+  
+      if (!prevProps.roadClosure.isLoadedInput && this.props.roadClosure.isLoadedInput) {
+        this.mapContainer.fitBounds(
+          bbox(
+            this.props.currentRoadClosureItemOutput
+          ),
+          {
+            duration: FIT_BOUNDS_ANIMATION_DURATION,
+            padding: {top: 100, bottom:100, left: 100, right: 100}
+          }
+        )
+      }
     }
   }
 

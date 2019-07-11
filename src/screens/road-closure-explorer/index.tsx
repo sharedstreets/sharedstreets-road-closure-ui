@@ -42,7 +42,9 @@ class RoadClosureExplorer extends React.Component<IRoadClosureExplorerProps, any
         </SharedStreetsHeader>
         <div className="SHST-Container">
           <RoadClosureSavedDataViewer />
-          <RoadClosureMap isDrawingEnabled={false}/>
+          <RoadClosureMap
+            isViewingAllClosures={true}
+            isDrawingEnabled={false}/>
         </div>
       </div>
     );
