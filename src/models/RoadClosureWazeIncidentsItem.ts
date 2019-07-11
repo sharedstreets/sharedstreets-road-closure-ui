@@ -19,6 +19,7 @@ export class RoadClosureWazeIncidentsItem {
     public description: string;
     public type: string;
     public subtype: string;
+    public mode: string[];
     public location: {
         street: string,
         direction: "BOTH_DIRECTIONS" | "ONE_DIRECTION" | '',
@@ -51,6 +52,7 @@ export class RoadClosureWazeIncidentsItem {
         this.type = form.type;
         this.subtype = form.subtype;
         this.description = form.description;
+        this.mode = form.mode;
 
         this.location.direction = bothDirections ? "BOTH_DIRECTIONS" : "ONE_DIRECTION";
         this.location.incidentId = uuid();
