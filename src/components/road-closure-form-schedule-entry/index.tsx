@@ -1,7 +1,7 @@
 import {
-    // InputGroup,
     Button,
     ControlGroup,
+    FormGroup,
     // Card,
     // Collapse,
     // H5,
@@ -80,26 +80,42 @@ class RoadClosureFormScheduleEntry extends React.Component<IRoadClosureFormSched
     public render() {
 
         return <ControlGroup>
-        <div className={"bp3-select"}>
-          <select onChange={this.handleChangeDay}>
-            <option value={"Sunday"}>Sunday</option>
-            <option value={"Monday"}>Monday</option>
-            <option value={"Tuesday"}>Tuesday</option>
-            <option value={"Wednesday"}>Wednesday</option>
-            <option value={"Thursday"}>Thursday</option>
-            <option value={"Friday"}>Friday</option>
-            <option value={"Saturday"}>Saturday</option>
-          </select>
-        </div>
+        <FormGroup
+            helperText={"Select a day"}
+        >
+            <div id={"SHST-Road-Closure-Form-Schedule-Select-Day"} className={"bp3-select"}>
+            <select onChange={this.handleChangeDay}>
+                <option value={"Sunday"}>Sunday</option>
+                <option value={"Monday"}>Monday</option>
+                <option value={"Tuesday"}>Tuesday</option>
+                <option value={"Wednesday"}>Wednesday</option>
+                <option value={"Thursday"}>Thursday</option>
+                <option value={"Friday"}>Friday</option>
+                <option value={"Saturday"}>Saturday</option>
+            </select>
+            </div>
+        </FormGroup>
+        <FormGroup
+            helperText={"Start time"}
+        >
         <TimePicker
             // onChange={this.handleChangeStart}
             ref={this.handleSetStartTimeRef}
         />
+        </FormGroup>
+        <FormGroup
+            helperText={"End time"}
+        >
         <TimePicker
             // onChange={this.handleChangeEnd}
             ref={this.handleSetEndTimeRef}
         />
-        <Button icon={"add"} onClick={this.handleClickAdd} />
+        </FormGroup>
+        <FormGroup
+            helperText={"Add to schedule"}
+        >
+            <Button text={"Add"} icon={"add"} onClick={this.handleClickAdd} />
+        </FormGroup>
       </ControlGroup>
     }
 }
