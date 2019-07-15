@@ -2,7 +2,8 @@ import {
     isEmpty,
     omit
 } from 'lodash';
-const API_URL = "https://api.sharedstreets.io/v0.1.0/";
+// const API_URL = "https://api.sharedstreets.io/v0.1.0/";
+const API_URL = "http://localhost:3001/";
 
 const paramStringBuilder = (obj: {}) => {
     let output = '';
