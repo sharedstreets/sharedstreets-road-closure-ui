@@ -3,6 +3,7 @@ import {
     isEmpty,
     // isEqual,
     omit,
+    omitBy,
     reverse,
     uniq,
 } from 'lodash';
@@ -21,7 +22,7 @@ export const currentItemToGeojson = (state: IRoadClosureState) => {
                     // return omit(path, ['properties.color']);
                     return path;
                 }),
-        properties: omit(state.currentItem.properties, ['geometryIdDirectionFilter', 'street'])
+        properties: omitBy(omit(state.currentItem.properties, ['geometryIdDirectionFilter', 'street']), isEmpty)
     }
 }
 
@@ -92,7 +93,7 @@ export const groupPathsByContiguitySplitByIntersection = (state: IRoadClosureSta
     const output: SharedStreetsMatchGeomPath[][] = [];
     const groups = groupPathsByContiguity(state);
     groups.forEach((group) => {
-        const intersections = {};
+        const intersections: { [id: string]: number } = {};
         group.forEach((outputValue) => {
             if (!intersections[outputValue.properties.toIntersectionId]) {
                 intersections[outputValue.properties.toIntersectionId] = 0;

@@ -25,6 +25,7 @@ export default connect<{}, {}, IRoadClosureFormProps>(
         highlightMatchedStreet: ROAD_CLOSURE_ACTIONS.HIGHLIGHT_MATCHED_STREET,
         highlightMatchedStreetsGroup: ROAD_CLOSURE_ACTIONS.HIGHLIGHT_MATCHED_STREETS_GROUP,
         inputChanged: ROAD_CLOSURE_ACTIONS.INPUT_CHANGED,
+        inputRemoved: ROAD_CLOSURE_ACTIONS.INPUT_REMOVED,
         toggleStreetSegmentDirection: ROAD_CLOSURE_ACTIONS.TOGGLE_DIRECTION_STREET_SEGMENT,
         viewRoadClosureOutput: ROAD_CLOSURE_ACTIONS.ROAD_CLOSURE_VIEW_OUTPUT,
         zoomHighlightMatchedStreetsGroup: ROAD_CLOSURE_ACTIONS.ZOOM_HIGHLIGHT_MATCHED_STREETS_GROUP,

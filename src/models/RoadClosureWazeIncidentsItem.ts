@@ -4,8 +4,10 @@ import {
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
 import {
+    IRoadClosureSchedule,
+    IRoadClosureScheduleBlock,
     IStreetsByGeometryId,
-    RoadClosureFormStateItem
+    RoadClosureFormStateItem,
 } from './RoadClosureFormStateItem';
 import {
     ISharedStreetsMatchGeomPathProperties,
@@ -19,6 +21,7 @@ export class RoadClosureWazeIncidentsItem {
     public description: string;
     public type: string;
     public subtype: string;
+    public mode: string[];
     public location: {
         street: string,
         direction: "BOTH_DIRECTIONS" | "ONE_DIRECTION" | '',
@@ -38,6 +41,7 @@ export class RoadClosureWazeIncidentsItem {
     };
     public starttime: string;
     public endtime: string;
+    public schedule: any;
 
     public constructor(matchedStreetSegment: SharedStreetsMatchGeomPath, form: RoadClosureFormStateItem, bothDirections: boolean) {
         this.creationtime = moment().format();
@@ -48,9 +52,11 @@ export class RoadClosureWazeIncidentsItem {
             this.starttime = form.startTime ? moment(form.startTime).format() : '';
             this.endtime = form.endTime ? moment(form.endTime).format() : '';
         }
+        this.schedule = this.setSchedule(form.schedule);
         this.type = form.type;
         this.subtype = form.subtype;
         this.description = form.description;
+        this.mode = form.mode;
 
         this.location.direction = bothDirections ? "BOTH_DIRECTIONS" : "ONE_DIRECTION";
         this.location.incidentId = uuid();
@@ -59,6 +65,20 @@ export class RoadClosureWazeIncidentsItem {
         this.location.toStreetnames = matchedStreetSegment.properties.toStreetnames;
         this.location.street = this.setStreetname(matchedStreetSegment.properties, form.street);
         this.location.polyline = this.setPolyline(matchedStreetSegment.geometry);
+    }
+
+    private setSchedule(schedule: IRoadClosureSchedule) {
+        const output = {};
+        Object.keys(schedule).forEach((day) => {
+            output[day] = '';
+            schedule[day].forEach((scheduleBlock: IRoadClosureScheduleBlock, index) => {
+                output[day] += `${scheduleBlock.startTime}-${scheduleBlock.endTime}`;
+                if (index+1 < schedule[day].length) {
+                    output[day] += ',';
+                }
+            });
+        })
+        return output;
     }
     
 
