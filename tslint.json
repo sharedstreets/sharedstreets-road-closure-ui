@@ -7,7 +7,8 @@
       "node_modules/**/*.ts",
       "coverage/lcov-report/*.js",
       "*.json",
-      "**/*.json"
+      "**/*.json",
+      "bin/"
     ]
   }
 }
