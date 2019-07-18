@@ -1,5 +1,7 @@
 import {
+  Button,
   Card,
+  Checkbox,
   Divider,
   FormGroup,
   H3,
@@ -20,8 +22,11 @@ import {
 import * as moment from 'moment';
 import * as React from 'react';
 import RoadClosureOutputViewer from 'src/containers/road-closure-output-viewer';
+import { IRoadClosureMode } from 'src/models/RoadClosureFormStateItem';
 import { SharedStreetsMatchGeomFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchGeomFeatureCollection';
 import { IRoadClosureState } from 'src/store/road-closure';
+import RoadClosureFormScheduleEntry from '../road-closure-form-schedule-entry';
+import RoadClosureFormScheduleTable from '../road-closure-form-schedule-table';
 import RoadClosureFormStreetsGroups from '../road-closure-form-streets-groups';
 
 import '../../../node_modules/@blueprintjs/core/lib/css/blueprint.css';
@@ -41,6 +46,7 @@ export interface IRoadClosureFormProps {
   nextSelection: () => void,
   previousSelection: () => void,
   inputChanged: (payload: any) => void,
+  inputRemoved: (payload: any) => void,
   roadClosure: IRoadClosureState,
   currentRoadClosureGroups: any,
   currentRoadClosureGroupsDirection: any,
@@ -58,6 +64,8 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
     this.handleChangeDescription = this.handleChangeDescription.bind(this);
     this.handleChangeReference = this.handleChangeReference.bind(this);
     this.handleChangeSubtype = this.handleChangeSubtype.bind(this);
+    this.selectAllModes = this.selectAllModes.bind(this);
+    this.handleChangeMode = this.handleChangeMode.bind(this);
     this.handleChangeTime = this.handleChangeTime.bind(this);
     this.handleChangeTimeZone = this.handleChangeTimeZone.bind(this);
     this.handleSave = this.handleSave.bind(this);
@@ -107,6 +115,25 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
         subtype: e.target.value
       });
     }
+  }
+
+  public selectAllModes(e: any) {
+    Object.keys(IRoadClosureMode).forEach((mode) => {
+      if (!this.props.currentRoadClosureItem.properties.mode || 
+        !this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode[mode])) {
+          this.props.inputChanged({
+            key: 'mode',
+            mode,
+          });
+        }
+    });
+  }
+
+  public handleChangeMode(e: any) {
+    this.props.inputChanged({
+      key: 'mode',
+      mode: e.target.value,
+    })
   }
 
   public formatDate(date: Date, locale?: string) {
@@ -268,6 +295,20 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
               />
             </FormGroup>
             <FormGroup
+              label="Schedule"
+              labelInfo="(optional)"
+              className={"SHST-Road-Closure-Form-Schedule-Input"}
+            >
+              <RoadClosureFormScheduleEntry
+                inputChanged={this.props.inputChanged}
+                schedule={this.props.currentRoadClosureItem.properties.schedule} />
+            </FormGroup>
+            <div className={"SHST-Road-Closure-Form-Schedule-Table-Container"}>
+              <RoadClosureFormScheduleTable
+                inputRemoved={this.props.inputRemoved}
+                schedule={this.props.currentRoadClosureItem.properties.schedule} />
+            </div>
+            <FormGroup
               label="Description"
               labelFor="text-area"
               labelInfo="(required)"
@@ -302,6 +343,63 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                   <option value="ROAD_CLOSED_EVENT">Event</option>
                 </select>
               </div>
+            </FormGroup>
+            <FormGroup
+              // selectedValue={this.props.currentRoadClosureItem.properties.mode}
+              // onChange={this.handleChangeMode}
+              label="Mode"
+              labelInfo="(optional)">
+              <Button
+                text={"Select All"}
+                onClick={this.selectAllModes}
+              />
+              <Checkbox
+                checked={
+                  this.props.currentRoadClosureItem.properties.mode
+                  && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_PEDESTRIAN)
+                }
+                onChange={this.handleChangeMode}
+                label={"Pedestrian"}
+                value={IRoadClosureMode.ROAD_CLOSED_PEDESTRIAN}
+              />
+              <Checkbox
+                checked={
+                  this.props.currentRoadClosureItem.properties.mode
+                  && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_BICYCLE)
+                }
+                onChange={this.handleChangeMode}
+                label={"Bicycle"}
+                value={IRoadClosureMode.ROAD_CLOSED_BICYCLE}
+              />
+              <Checkbox
+                defaultChecked={true}
+                checked={
+                  this.props.currentRoadClosureItem.properties.mode
+                  && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_BUS)
+                }
+                onChange={this.handleChangeMode}
+                label={"Bus"}
+                value={IRoadClosureMode.ROAD_CLOSED_BUS}
+              />
+              <Checkbox
+                checked={
+                  this.props.currentRoadClosureItem.properties.mode
+                  && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_CAR)
+                }
+                onChange={this.handleChangeMode}
+                label={"Car"}
+                value={IRoadClosureMode.ROAD_CLOSED_CAR}
+              />
+              <Checkbox
+                checked={
+                  this.props.currentRoadClosureItem.properties.mode
+                  && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_TAXI_RIDESHARE)
+                }
+                onChange={this.handleChangeMode}
+                label={"Taxi/Rideshare"}
+                value={IRoadClosureMode.ROAD_CLOSED_TAXI_RIDESHARE}
+              />
+
             </FormGroup>
             <Divider />
             <H3>Output</H3>

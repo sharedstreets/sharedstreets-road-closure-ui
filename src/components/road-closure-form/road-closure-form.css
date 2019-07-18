@@ -32,6 +32,12 @@
     flex: 2;
 }
 
+.SHST-Road-Closure-Form-Schedule-Table-Container {
+    min-height: 100px;
+    width: 100%;
+    overflow-x: scroll;
+}
+
 .SHST-Timezone-Picker-Input + ul {
     max-height: 150px;
     overflow-y: scroll;
