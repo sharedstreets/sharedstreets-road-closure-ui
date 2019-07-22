@@ -1,0 +1,6 @@
+{
+    "directory": "/full/path/to/closure/files/directory",
+    "extent": [],
+    "base_server_url": "",
+    "server_port": 3001
+}
