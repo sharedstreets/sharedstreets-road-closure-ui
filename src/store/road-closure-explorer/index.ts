@@ -9,6 +9,7 @@ import {
     createAsyncAction,
     createStandardAction,
 } from 'typesafe-actions';
+import { AppBaseServerURL, AppPort } from '../../config';
 import { RoadClosureFormStateStreet } from '../../models/RoadClosureFormStateStreet';
 import { SharedStreetsMatchGeomFeatureCollection } from '../../models/SharedStreets/SharedStreetsMatchGeomFeatureCollection';
 import { SharedStreetsMatchGeomPath } from '../../models/SharedStreets/SharedStreetsMatchGeomPath';
@@ -52,10 +53,11 @@ export const loadAllRoadClosures = () => (dispatch: Dispatch<any>, getState: any
     const orgName = state.context.orgName;
     dispatch(ROAD_CLOSURE_EXPLORER_ACTIONS.LOAD_ALL_ROAD_CLOSURES());
     const generateListObjectsUrl = async () => {
-        const response = await fetch(`https://api.sharedstreets.io/v0.1.0/data/list?filePath=road-closures/${orgName}/`);
-        const json = await response.json();
-        const url = await json.url;
-        return url;
+        return `${AppBaseServerURL}:${AppPort}/load-files/${orgName}`
+        // const response = await fetch(`https://api.sharedstreets.io/v0.1.0/data/list?filePath=road-closures/${orgName}/`);
+        // const json = await response.json();
+        // const url = await json.url;
+        // return url;
     };
     generateListObjectsUrl()
     .then((url) => {
@@ -66,54 +68,76 @@ export const loadAllRoadClosures = () => (dispatch: Dispatch<any>, getState: any
         };
 
         getAllRoadClosures(url).then((data) => {
-            const responseDoc = new DOMParser().parseFromString(data, 'application/xml');
-                const contents = responseDoc.querySelectorAll('Contents');
-                const output: { [org: string] : {[id: string] : IFetchAllSharedstreetsRoadClosuresSuccessResponse}} = {};
-                contents.forEach((content) => {
-                    const lastModifieds = content.querySelectorAll("LastModified");
-                    content.querySelectorAll("Key").forEach((key, index) => {
-                        if (key.textContent) {
-                            // road-closures/<org>/<uuid>/<type>
-                            const parts = key.textContent.split("/");
-                            if (parts.length !== 4) {
-                                return;
-                            }
-                            if (!output[parts[1]]) {
-                                output[parts[1]] = {};
-                            }
-                            if (!output[parts[1]][parts[2]]) {
-                                output[parts[1]][parts[2]] = {
-                                    id: parts[2],
-                                    lastModified: lastModifieds[index].textContent as string,
-                                    org: parts[1],
-                                };
-                            }
-                        }
-                    })
-                });
-                return output;
+            // tslint:disable-next-line
+            console.log(data);
+            return JSON.parse(data);
+            // const responseDoc = new DOMParser().parseFromString(data, 'application/xml');
+            // const contents = responseDoc.querySelectorAll('Contents');
+            // const output: { [org: string] : {[id: string] : IFetchAllSharedstreetsRoadClosuresSuccessResponse}} = {};
+            // contents.forEach((content) => {
+            //     const lastModifieds = content.querySelectorAll("LastModified");
+            //     content.querySelectorAll("Key").forEach((key, index) => {
+            //         if (key.textContent) {
+            //             // road-closures/<org>/<uuid>/<type>
+            //             const parts = key.textContent.split("/");
+            //             if (parts.length !== 4) {
+            //                 return;
+            //             }
+            //             if (!output[parts[1]]) {
+            //                 output[parts[1]] = {};
+            //             }
+            //             if (!output[parts[1]][parts[2]]) {
+            //                 output[parts[1]][parts[2]] = {
+            //                     id: parts[2],
+            //                     lastModified: lastModifieds[index].textContent as string,
+            //                     org: parts[1],
+            //                 };
+            //             }
+            //         }
+            //     })
+            // });
+            // return output;
         })
-        .then((allRoadClosures) => {
-            forEach(allRoadClosures, (roadClosure) => {
-                forEach(roadClosure, (closureObject: IFetchAllSharedstreetsRoadClosuresSuccessResponse) => {
-                    const id = closureObject.id;
-                    const uploadUrls = generateUploadUrlsFromHash(id, orgName);
-                    if (uploadUrls.geojsonUploadUrl) {
-                        dispatch(fetchAction({
-                            afterRequest: (data) => {
-                                if (typeof data === "string") {
-                                    return;
-                                }
-                                return { ...data, ...uploadUrls, ...{lastModified: closureObject.lastModified} };
+        .then((allRoadClosures: any) => {
+            forEach(allRoadClosures, (roadClosure: any) => {
+                const id = roadClosure.id;
+                const uploadUrls = generateUploadUrlsFromHash(id, orgName);
+                dispatch(fetchAction({
+                    afterRequest: (data) => {
+                        return {
+                            ...data,
+                            ...{
+                                lastModified: roadClosure.lastModifiedTime,
                             },
-                            method: 'get',
-                            requestUrl: uploadUrls.geojsonUploadUrl,
-                            requested: 'ROAD_CLOSURE_EXPLORER/FETCH_SHAREDSTREETS_PUBLIC_METADATA_SUCCESS',
-                            requesting: 'ROAD_CLOSURE_EXPLORER/FETCH_SHAREDSTREETS_PUBLIC_METADATA_REQUEST',
-                        }));
-                    }
-                })
-            })
+                            ...uploadUrls
+                        }
+                    },
+                    method: 'get',
+                    requestUrl: `${AppBaseServerURL}:${AppPort}/load-file/${orgName}/${id}/geojson`,
+                    requested: 'ROAD_CLOSURE_EXPLORER/FETCH_SHAREDSTREETS_PUBLIC_METADATA_SUCCESS',
+                    requesting: 'ROAD_CLOSURE_EXPLORER/FETCH_SHAREDSTREETS_PUBLIC_METADATA_REQUEST',
+                }));
+            });
+            // forEach(allRoadClosures, (roadClosure) => {
+            //     forEach(roadClosure, (closureObject: IFetchAllSharedstreetsRoadClosuresSuccessResponse) => {
+            //         const id = closureObject.id;
+            //         const uploadUrls = generateUploadUrlsFromHash(id, orgName);
+            //         if (uploadUrls.geojsonUploadUrl) {
+            //             dispatch(fetchAction({
+            //                 afterRequest: (data) => {
+            //                     if (typeof data === "string") {
+            //                         return;
+            //                     }
+            //                     return { ...data, ...uploadUrls, ...{lastModified: closureObject.lastModified} };
+            //                 },
+            //                 method: 'get',
+            //                 requestUrl: uploadUrls.geojsonUploadUrl,
+            //                 requested: 'ROAD_CLOSURE_EXPLORER/FETCH_SHAREDSTREETS_PUBLIC_METADATA_SUCCESS',
+            //                 requesting: 'ROAD_CLOSURE_EXPLORER/FETCH_SHAREDSTREETS_PUBLIC_METADATA_REQUEST',
+            //             }));
+            //         }
+            //     })
+            // })
         })
         .then(() => {
             dispatch(ROAD_CLOSURE_EXPLORER_ACTIONS.LOADED_ALL_ROAD_CLOSURES());

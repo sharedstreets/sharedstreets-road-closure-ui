@@ -9,6 +9,9 @@
       "*.json",
       "**/*.json",
       "bin/"
+    ],
+    "include": [
+      "config.json"
     ]
   }
 }

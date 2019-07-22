@@ -2,8 +2,14 @@ import {
     isEmpty,
     omit
 } from 'lodash';
-// const API_URL = "https://api.sharedstreets.io/v0.1.0/";
-const API_URL = "http://localhost:3001/";
+import {
+    AppBaseServerURL,
+    AppPort,
+    isAppRunningLocally,
+} from '../config';
+// const API_URL = ;
+const API_URL = isAppRunningLocally() ? `${AppBaseServerURL}:${AppPort}`
+    : "https://api.sharedstreets.io/v0.1.0/";
 
 const paramStringBuilder = (obj: {}) => {
     let output = '';

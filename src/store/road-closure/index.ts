@@ -10,6 +10,7 @@ import {
     createStandardAction,
 } from 'typesafe-actions';
 import { v4 as uuid } from 'uuid';
+import { AppBaseServerURL, AppPort, isAppRunningLocally } from '../../config';
 import { RoadClosureFormStateStreet } from '../../models/RoadClosureFormStateStreet';
 import {
     IRoadClosureOutputFormatName,
@@ -249,6 +250,14 @@ export const loadAllOrgs = () => (dispatch: Dispatch<any>, getState: any) => {
     });
 };
 
+export const loadRoadClosureFromFile = () => (dispatch: Dispatch<any>, getState: any) => {
+    // full filename should probably be: <dir>/<hash>/<readable-name>.<ext>
+    // but to keep things consistent with existing code, the <hash> value should be enough to load the data 
+    
+    // call local server /load endpoint
+    // const method = 'get';
+};
+
 export const loadRoadClosure = (url: string) => (dispatch: Dispatch<any>, getState: any) => {
     const state = getState() as RootState;
     const orgName = state.context.orgName;
@@ -293,10 +302,14 @@ export const saveRoadClosure = () => (dispatch: Dispatch<any>, getState: any) =>
     dispatch(ROAD_CLOSURE_ACTIONS.GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL.request());
        
     const generateGeojsonUploadUrl = async () => {
-        const response = await fetch(`https://api.sharedstreets.io/v0.1.0/data/upload?contentType=application/json&filePath=road-closures/${orgName}/${filename}/geojson`);
-        const json = await response.json();
-        const url = await json.url;
-        return url;
+        if (isAppRunningLocally()) {
+            return `${AppBaseServerURL}:${AppPort}/save-file?orgName=${orgName}&filename=${filename}&extension=geojson`;
+        } else {
+            const response = await fetch(`https://api.sharedstreets.io/v0.1.0/data/upload?contentType=application/json&filePath=road-closures/${orgName}/${filename}/geojson`);
+            const json = await response.json();
+            const url = await json.url;
+            return url;
+        }
     };
     generateGeojsonUploadUrl().then((signedGeojsonUploadUrl) => {
         dispatch(fetchAction({
@@ -316,10 +329,14 @@ export const saveRoadClosure = () => (dispatch: Dispatch<any>, getState: any) =>
     });
            
     const generateWazeUploadUrl = async () => {
-        const response = await fetch(`https://api.sharedstreets.io/v0.1.0/data/upload?contentType=application/json&filePath=road-closures/${orgName}/${filename}/waze`);
-        const json = await response.json();
-        const url = await json.url;
-        return url;
+        if (isAppRunningLocally()) {
+            return `${AppBaseServerURL}:${AppPort}/save-file?orgName=${orgName}&filename=${filename}&extension=waze.json`;
+        } else {
+            const response = await fetch(`https://api.sharedstreets.io/v0.1.0/data/upload?contentType=application/json&filePath=road-closures/${orgName}/${filename}/waze`);
+            const json = await response.json();
+            const url = await json.url;
+            return url;
+        }
     };
     generateWazeUploadUrl().then((signedWazeUploadUrl) => {
         dispatch(fetchAction({
