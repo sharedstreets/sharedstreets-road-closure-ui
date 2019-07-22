@@ -12,6 +12,9 @@ config.json
 # testing
 /coverage
 
+# data
+road-closures/
+
 # production
 /build
 bin/
