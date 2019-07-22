@@ -14,6 +14,7 @@ config.json
 
 # production
 /build
+bin/
 
 # misc
 .DS_Store
@@ -28,3 +29,5 @@ yarn-debug.log*
 yarn-error.log*
 
 *.zip
+bin/server.js
+bin/index.js
