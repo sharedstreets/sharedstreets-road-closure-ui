@@ -2,9 +2,7 @@
 const config = require('./app.config.json');
 
 export const isAppRunningLocally = () => {
-    // TODO - check NODE_ENV
     return process.env.REACT_APP_LOCAL_SERVER;
-    // return config && config.local_server;
 }
 
 export const AppStorageDirectory = config.directory;
