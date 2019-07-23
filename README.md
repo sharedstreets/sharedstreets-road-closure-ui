@@ -11,9 +11,9 @@ This is a lightweight web app for cities to generate road construction, incident
 - Upcoming development
 - Future development
 
-## Running the application
+## Running the application locally/on your own computer
 
-To run the application yourself on your local computer, you will first need to make sure you have node js and npm installed ([see here for instructions](https://www.npmjs.com/get-npm)), as well as yarn ([see here for instructions](https://yarnpkg.com/lang/en/docs/install/)).
+To run the application yourself on your local computer, you will need a Linux or Mac. Then, make sure you have node js and npm installed ([see here for instructions](https://www.npmjs.com/get-npm)), as well as yarn ([see here for instructions](https://yarnpkg.com/lang/en/docs/install/)).
 
 Then, you have to [clone this repository](https://help.github.com/articles/cloning-a-repository/):
 ```
@@ -24,11 +24,36 @@ Then, install the required dependencies:
 cd sharedstreets-road-closure-ui/
 yarn install 
 ```
+You'll have to create a file named `app.config.json` in the application's `src` directory.
+You can simply make a copy of the included file `app.config.template.json` and populate the values appropriately:
+```
+{
+    "base_server_url": "",
+    "server_port": 3001
+}
+```
+Next, you need to build the application by running this command:
+```
+yarn build:local
+```
+This will create a build of the web app that relies on the included `server.ts`.
+Note that this command sets the environment variable `REACT_APP_LOCAL_SERVER` to `true`.
+
+Before you can start that server, you'll have to create a file named `server.config.json` in the application's root (topmost) directory.
+You can simply make a copy of the included file `server.config.template.json` and populate the values appropriately:
+```
+{
+    "directory": "/full/path/to/road/closure/files/directory",
+    "extent": [min X coordinate, min Y coordinate, max X coordinate, max Y coordinate],
+    "port": 3001 (or any port number you want. If you change this, you'll also have to change it elsewhere.)
+}
+```
+
 And then finally, you can run the application:
 ```
-yarn start
+yarn server
 ```
-By default, the application will run at the following URL: http://localhost:3000.
+By default, the application will run at the following URL: http://localhost:3001 unless you've configured it otherwise.
 
 ## Using the application
 
@@ -58,4 +83,3 @@ This project also makes heavy use of [Redux](https://redux.js.org), a state cont
 
 ## Future development
 - Pluggable output formats
-- Multimodal (bike, pedestrian, parking) support 
