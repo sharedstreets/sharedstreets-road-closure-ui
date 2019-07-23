@@ -13,9 +13,26 @@ import * as through2 from 'through2';
 
 // tslint:disable
 // config is relative to bin/
-const config = require('../src/config.json');
+const favicon = require('express-favicon');
+const config = require('../server.config.json');
 const sharedstreets = require('sharedstreets');
 // tslint:enable
+
+if (!config.directory) {
+  let error = "`directory` not set in `server.config.json`\n";
+  error += "Set `directory` to the full file path where you want read and write road closure data.\n"
+  throw new Error(error);
+  process.exit(0);
+}
+
+if (!config.extent) {
+  let error = "`extent` not set in `server.config.json`\n";
+  error += "Set `extent` to the bounding box in which you are closing roads.\n"
+  error += "extent=[minX, minY, maxX, maxY].\n"
+  error += "you can use http://bboxfinder.com/ to generate an extent.\n"
+  throw new Error(error);
+  process.exit(0);
+}
 
 enum MatchDirection {
   BEST,
@@ -63,6 +80,8 @@ async function getMatcher() {
 const app = express();
 app.use(bodyParser.text());
 app.use(express.json());
+app.use(express.static(nodePath.join(__dirname, '..', 'build')));
+app.use(favicon(__dirname + '..' + 'build' + 'favicon.ico'));
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS");
     res.header("Access-Control-Allow-Origin", "*");
@@ -71,13 +90,6 @@ app.use((req, res, next) => {
 });
 
 app.put("/save-file", async (req, res) => {
-  // tslint:disable-next-line
-  console.log(`/save-file/`);
-  // tslint:disable-next-line
-  console.log(req.query.orgName, req.query.filename, req.query.extension);
-  // const body = JSON.parse(req.body)
-  // tslint:disable-next-line
-  console.log(req.body);
   if (!req.query.orgName || !req.query.filename || !req.query.extension || !req.body) {
     return res.status(404);
   }
@@ -87,32 +99,20 @@ app.put("/save-file", async (req, res) => {
   }
   const orgDirPath = nodePath.join(config.directory, req.query.orgName);
   try {
-    // tslint:disable-next-line
-    console.log(`stat orgDirPath: ${orgDirPath}`);
     await fsPromises.stat(orgDirPath)
   } catch (e) {
     try {
-      // tslint:disable-next-line
-      console.log(`creating orgDirPath: ${orgDirPath}`);
       await fsPromises.mkdir(orgDirPath);
-      // tslint:disable-next-line
-      console.log(`created orgDirPath`);
     } catch (e) {
       res.status(500).send();
     }
   }
   const fileDirPath = nodePath.join(orgDirPath, req.query.filename);
   try {
-    // tslint:disable-next-line
-    console.log(`stat fileDirPath: ${fileDirPath}`);
     await fsPromises.stat(fileDirPath)
   } catch (e) {
     try {
-      // tslint:disable-next-line
-      console.log(`creating fileDirPath: ${fileDirPath}`);
       await fsPromises.mkdir(fileDirPath);
-      // tslint:disable-next-line
-      console.log(`created fileDirPath`);
     }
     catch (e) {
       res.status(500).send();
@@ -120,28 +120,16 @@ app.put("/save-file", async (req, res) => {
   }
   const filePath = nodePath.join(fileDirPath, `${req.query.filename}.${req.query.extension}`);
   try {
-    // tslint:disable-next-line
-    console.log(`writing to filePath: ${filePath}`);
     const fileContents = JSON.stringify(req.body);
     await fsPromises.writeFile(filePath, fileContents);
-    // tslint:disable-next-line
-    console.log(`wrote contents: ${fileContents}`);
   } catch (e) {
     res.status(500).send();
   }
-  // tslint:disable-next-line
-  console.log("200 OK");
   return res.status(200).send();
-    // return res.status(500).send();
 });
 
 app.get("/load-files/:orgName", async (req, res) => {
-  // tslint:disable-next-line
-  console.log(`/load-files/${req.params.orgName}`);
-  // read
-  // const fullPath = nodePath.join(config.directory, req.params.orgName);
   const filterForGeoJSON = through2.obj(function (item, enc, next) {
-    // tslint:disable-next-line
     const basename = nodePath.basename(item.path);
     if (basename.includes('geojson')) {
       this.push(item);
@@ -154,8 +142,6 @@ app.get("/load-files/:orgName", async (req, res) => {
     .pipe(filterForGeoJSON)
     .on('data', item => items.push(item))
     .on('end', () => {
-      // tslint:disable-next-line
-      // console.dir(items);
       // sort by last modified
       items.sort((a, b) => a.stats.mtime < b.stats.mtime ? -1 : 1 );
       const output = items.map((item) => {
@@ -170,14 +156,7 @@ app.get("/load-files/:orgName", async (req, res) => {
 });
 
 app.get("/load-file/:orgName/:id/:extension", async (req, res) => {
-  // tslint:disable-next-line
-  console.log(`/load-file/${req.params.orgName}/${req.params.id}/${req.params.extension}`);
-  
-  // if config set to aws, use that, if not use local
-  // parse filename
-  // lookup filename in config.directory
-  // const directory = config.directory;
-  if (!req.params.id || !req.params.orgName) {
+  if (!req.params.id || !req.params.orgName || !req.params.extension) {
     return res.status(404);
   }
 
@@ -185,10 +164,6 @@ app.get("/load-file/:orgName/:id/:extension", async (req, res) => {
     return res.status(404);
   }
   const fullPath = nodePath.join(config.directory, req.params.orgName, req.params.id, `${req.params.id}.${req.params.extension}`);
-  // const fullPath = nodePath.join(__dirname, '..', 'road-closures', req.query.orgName, req.query.id, `${req.query.id}.geojson`);
-  // tslint:disable-next-line
-  console.log(fullPath);
-  // read
   try {
     const file = await fsPromises.readFile(fullPath, { encoding: 'utf8'});
     if (file) {
@@ -202,35 +177,27 @@ app.get("/load-file/:orgName/:id/:extension", async (req, res) => {
 app.get("/match/point/:lon,:lat", async (req, res) => {
     const searchPoint = turfHelpers.point([req.params.lon, req.params.lat]);
     const maxCandidates = req.query.maxCandidates;
-    const matches = await matcher.matchPoint(searchPoint, null, maxCandidates);
-    if (matches.length > 0) {
-        const matchFeatures = matches.map((m: any) => m.toFeature());
-        const matchedFeatureCollection:turfHelpers.FeatureCollection<turfHelpers.Point> = turfHelpers.featureCollection(matchFeatures);
-        res.status(200).send(JSON.stringify(matchedFeatureCollection));
-    } else {
-        res.status(200).send(turfHelpers.featureCollection([]))
+    try {
+      const matches = await matcher.matchPoint(searchPoint, null, maxCandidates);
+      if (matches.length > 0) {
+          const matchFeatures = matches.map((m: any) => m.toFeature());
+          const matchedFeatureCollection:turfHelpers.FeatureCollection<turfHelpers.Point> = turfHelpers.featureCollection(matchFeatures);
+          res.status(200).send(JSON.stringify(matchedFeatureCollection));
+      } else {
+          res.status(200).send(turfHelpers.featureCollection([]))
+      }
+    } catch (e) {
+      res.status(500).send(`Failed to match point: ${req.params}`)
     }
 });
 
 app.post("/match/geoms", async (req, res) => {
-    // tslint:disable-next-line
-    // console.log("POST match/geoms,\nrequest:")
-    // tslint:disable-next-line
-    // console.log(req.query);
-    // tslint:disable-next-line
-    // console.log(req.body);
     const query = req.query;
     const body = JSON.parse(req.body);
-    // console.log(query);
-    // console.log(body);
-    // console.log(h);
-    // matchLines({}, body, query);
     let matchDirection = MatchDirection.BEST;
     if (query.ignoreDirection) {
         matchDirection = MatchDirection.BOTH;
     }
-    // let matchedLines:Array<turfHelpers.Feature<turfHelpers.LineString>> = [];
-    // const unmatchedLines:Array<turfHelpers.Feature<turfHelpers.LineString>> = [];
     let matchedLines:any[] = [];
     const unmatchedLines:any[] = [];
     let matchedLine:boolean = false;
@@ -244,13 +211,10 @@ app.post("/match/geoms", async (req, res) => {
     // const backwardGisRef:SharedStreetsReference = backReference(body);
 
     matchForward = await matcher.matchGeom(body);
-    // tslint:disable-next-line
-    // console.log("matchForward = \n", matchForward);
     if(matchForward && matchForward.score < matcher.searchRadius * 2) {
         matchForwardSegments = getMatchedSegments(matchForward);
     }
     matchBackward = await matcher.matchGeom(body);
-    // console.log("matchBackward = \n", matchBackward);
     if(matchBackward && matchBackward.score < matcher.searchRadius * 2) {
         matchBackwardSegments = getMatchedSegments(matchBackward);
     }
@@ -332,13 +296,17 @@ app.post("/match/geoms", async (req, res) => {
     res.status(200).send(JSON.stringify(output));
 });
 
+app.get('*', (req, res) => {
+  res.sendFile(nodePath.join(__dirname, '..', 'build', 'index.html'));
+});
+
+
 const server = async () => {
   matcher = await getMatcher();
-  const appBaseURL = config.server_base_url ? config.server_base_url : 'http://localhost';
   const appPort = config.port ? config.port : 3001;
   app.listen(appPort, () =>  {
       // tslint:disable-next-line
-      console.log(`Server running at: ${appBaseURL}:${appPort}`);
+      console.log(`Server running at: http://localhost:${appPort}`);
   });
 };
 
