@@ -59,3 +59,12 @@
     min-height: 200px;
     overflow-y: auto;
 }
+
+/* WeekCalendar overrides */
+.weekCalendar {
+    min-height: 250px;
+}
+
+.weekCalendar__content {
+    max-height: 220px;
+}

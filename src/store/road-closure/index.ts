@@ -68,6 +68,7 @@ export interface IRoadClosureFormInputChangedPayload {
     reference?: string,
     subtype?: string,
     day?: string,
+    weekOfYear?: string,
     index?: number,
 }
 
@@ -783,8 +784,11 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 if (!updatedItem.properties[key]) {
                     updatedItem.properties[key] = {}
                 }
-                if (!updatedItem.properties[key][action.payload.day!]) {
-                    updatedItem.properties[key][action.payload.day!] = [];
+                if (!updatedItem.properties[key][action.payload.weekOfYear!]) {
+                    updatedItem.properties[key][action.payload.weekOfYear!] = {};
+                }
+                if (!updatedItem.properties[key][action.payload.weekOfYear!][action.payload.day!]) {
+                    updatedItem.properties[key][action.payload.weekOfYear!][action.payload.day!] = [];
                 }
                 if (!isEmpty(action.payload.startTime) && action.payload.startTime &&
                     !isEmpty(action.payload.endTime) && action.payload.endTime && 
@@ -795,7 +799,7 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                     //     endTime: action.payload.endTime,
                     //     startTime: action.payload.startTime,
                     // };
-                    updatedItem.properties[key][action.payload.day!].push({
+                    updatedItem.properties[key][action.payload.weekOfYear!][action.payload.day!].push({
                         endTime: action.payload.endTime,
                         startTime: action.payload.startTime,
                     });
@@ -806,7 +810,7 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                     action.payload.startTime !== action.payload.endTime
                 ) {
                     const startEndKey = action.payload.startTime.replace(":", "-")+"-"+action.payload.endTime.replace(":", "-");
-                    updatedItem.properties[key][action.payload.day!] = omit(updatedItem.properties[key][action.payload.day!], startEndKey);
+                    updatedItem.properties[key][action.payload.weekOfYear!][action.payload.day!] = omit(updatedItem.properties[key][action.payload.weekOfYear!][action.payload.day!], startEndKey);
                 }
             } else {
                 updatedItem.properties[key] = action.payload[key];
@@ -835,14 +839,14 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                     updatedItem.properties[inputChangedKey].push(action.payload[inputChangedKey]);
                 }
             } else if (inputChangedKey === "schedule") {
-                if (!updatedItem.properties[inputChangedKey][action.payload.day!]) {
-                    updatedItem.properties[inputChangedKey][action.payload.day!] = [];
+                if (!updatedItem.properties[inputChangedKey][action.payload.weekOfYear!][action.payload.day!]) {
+                    updatedItem.properties[inputChangedKey][action.payload.weekOfYear!][action.payload.day!] = [];
                 }
                 if (!isEmpty(action.payload.startTime) && action.payload.startTime &&
                     !isEmpty(action.payload.endTime) && action.payload.endTime && 
                     action.payload.startTime !== action.payload.endTime
                 ) {
-                    updatedItem.properties[inputChangedKey][action.payload.day!].push({
+                    updatedItem.properties[inputChangedKey][action.payload.weekOfYear!][action.payload.day!].push({
                         endTime: action.payload.endTime,
                         startTime: action.payload.startTime,
                     });
@@ -861,7 +865,7 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 updatedItem = Object.assign(Object.create(state.currentItem), state.currentItem);
     
                 if (removedInputKey === "schedule") {
-                    updatedItem.properties[removedInputKey][action.payload.day!].splice(action.payload.index!, 1);
+                    updatedItem.properties[removedInputKey][action.payload.weekOfYear!][action.payload.day!].splice(action.payload.index!, 1);
                 }
                 
                 return {

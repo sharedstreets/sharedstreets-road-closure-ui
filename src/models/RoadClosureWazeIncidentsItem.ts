@@ -4,8 +4,9 @@ import {
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
 import {
-    IRoadClosureSchedule,
+    // IRoadClosureSchedule,
     IRoadClosureScheduleBlock,
+    IRoadClosureScheduleByWeek,
     IStreetsByGeometryId,
     RoadClosureFormStateItem,
 } from './RoadClosureFormStateItem';
@@ -67,16 +68,19 @@ export class RoadClosureWazeIncidentsItem {
         this.location.polyline = this.setPolyline(matchedStreetSegment.geometry);
     }
 
-    private setSchedule(schedule: IRoadClosureSchedule) {
+    private setSchedule(schedule: IRoadClosureScheduleByWeek) {
         const output = {};
-        Object.keys(schedule).forEach((day) => {
-            output[day] = '';
-            schedule[day].forEach((scheduleBlock: IRoadClosureScheduleBlock, index) => {
-                output[day] += `${scheduleBlock.startTime}-${scheduleBlock.endTime}`;
-                if (index+1 < schedule[day].length) {
-                    output[day] += ',';
-                }
-            });
+        Object.keys(schedule).forEach((week) => {
+            output[week] = {};
+            Object.keys(schedule[week]).forEach((day) => {
+                output[week][day] = '';
+                schedule[week][day].forEach((scheduleBlock: IRoadClosureScheduleBlock, index: number) => {
+                    output[week][day] += `${scheduleBlock.startTime}-${scheduleBlock.endTime}`;
+                    if (index+1 < schedule[week][day].length) {
+                        output[week][day] += ',';
+                    }
+                });
+            })
         })
         return output;
     }

@@ -1,13 +1,16 @@
 import {
   Button,
+  ButtonGroup,
   Card,
   Checkbox,
+  Collapse,
   Divider,
   FormGroup,
   H3,
   InputGroup,
   Position,
   Spinner,
+  Switch,
 } from '@blueprintjs/core';
 import {
   DateRange,
@@ -21,12 +24,15 @@ import {
 } from 'lodash';
 import * as moment from 'moment';
 import * as React from 'react';
+import WeekCalendar from 'react-week-calendar';
 import RoadClosureOutputViewer from 'src/containers/road-closure-output-viewer';
 import { IRoadClosureMode } from 'src/models/RoadClosureFormStateItem';
 import { SharedStreetsMatchGeomFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchGeomFeatureCollection';
 import { IRoadClosureState } from 'src/store/road-closure';
 import RoadClosureFormScheduleEntry from '../road-closure-form-schedule-entry';
-import RoadClosureFormScheduleTable from '../road-closure-form-schedule-table';
+import RoadClosureFormScheduleEvent from '../road-closure-form-schedule-event';
+import RoadClosureFormScheduleHeaderCell from '../road-closure-form-schedule-header-cell';
+// import RoadClosureFormScheduleTable from '../road-closure-form-schedule-table';
 import RoadClosureFormStreetsGroups from '../road-closure-form-streets-groups';
 
 import '../../../node_modules/@blueprintjs/core/lib/css/blueprint.css';
@@ -34,6 +40,7 @@ import '../../../node_modules/@blueprintjs/datetime/lib/css/blueprint-datetime.c
 import '../../../node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css';
 import '../../../node_modules/@blueprintjs/timezone/lib/css/blueprint-timezone.css';
 import '../../../node_modules/normalize.css/normalize.css'
+import '../../../node_modules/react-week-calendar/dist/style.css';
 import './road-closure-form.css';
 
 
@@ -52,12 +59,19 @@ export interface IRoadClosureFormProps {
   currentRoadClosureGroupsDirection: any,
   currentRoadClosureGroupsGeometryIdPathMap: any,
   currentRoadClosureItem: SharedStreetsMatchGeomFeatureCollection,
+  selectedIntervals: any[],
   streetnameToReferenceId: any,
   toggleStreetSegmentDirection: () => void,
   viewRoadClosureOutput: () => void,
   zoomHighlightMatchedStreetsGroup: (e: any) => void,
 };
-class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
+
+export interface IRoadClosureFormState {
+  firstDayOfWeek: moment.Moment;
+  isShowingScheduler: boolean;
+  weekOfYear: number;
+}
+class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosureFormState> {
   constructor(props: IRoadClosureFormProps) {
     super(props);
     this.handleChangeStreetName = this.handleChangeStreetName.bind(this);
@@ -70,10 +84,20 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
     this.handleChangeTimeZone = this.handleChangeTimeZone.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleStreetMouseover = this.handleStreetMouseover.bind(this);
+    this.handleToggleShowingScheduler = this.handleToggleShowingScheduler.bind(this);
+    this.handleClickNextWeek = this.handleClickNextWeek.bind(this);
+    this.handleClickPreviousWeek = this.handleClickPreviousWeek.bind(this);
+
     this.renderDateButtonText = this.renderDateButtonText.bind(this);
     this.handleDeleteStreetSegment = this.handleDeleteStreetSegment.bind(this);
     this.formatDate = this.formatDate.bind(this);
     this.parseDate = this.parseDate.bind(this);
+    
+    this.state = {
+      firstDayOfWeek: moment(),
+      isShowingScheduler: false,
+      weekOfYear: moment().week(),
+    }
   }
 
   public handleDeleteStreetSegment(e: any) {
@@ -163,6 +187,12 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
         key: 'startTime',
         startTime: moment(e[0]).format('ddd MMM DD YYYY HH:mm:ss'),
       });
+      if (!this.state.weekOfYear || this.state.firstDayOfWeek !== moment(e[0])) {
+        this.setState({
+          firstDayOfWeek: moment(e[0]),
+          weekOfYear: moment(e[0]).week()
+        });
+      }
     }
 
     if (e[1]) {
@@ -171,6 +201,34 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
         key: 'endTime',
       })
     }
+  }
+
+  public handleToggleShowingScheduler() {
+    this.setState({
+      isShowingScheduler: !this.state.isShowingScheduler
+    })
+  }
+
+  public handleClickPreviousWeek() {
+    const firstDayMinusOneWeek = this.state.firstDayOfWeek.clone().subtract(1, "week");
+    const newFirstDay = firstDayMinusOneWeek.isBefore(moment(this.props.roadClosure.currentItem.properties.startTime)) ?
+      moment(this.props.roadClosure.currentItem.properties.startTime)
+      : firstDayMinusOneWeek;
+    
+    this.setState({
+      firstDayOfWeek: newFirstDay,
+      weekOfYear: newFirstDay.week()
+    });
+  }
+  
+  public handleClickNextWeek() {
+    const firstDayPlusOneWeek = this.state.firstDayOfWeek.clone().add(1, "week");
+    const newFirstDay = firstDayPlusOneWeek;
+    
+    this.setState({
+      firstDayOfWeek: newFirstDay,
+      weekOfYear: newFirstDay.week()
+    });
   }
 
   public handleChangeTimeZone(timezone: string) {
@@ -298,16 +356,42 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
               label="Schedule"
               labelInfo="(optional)"
               className={"SHST-Road-Closure-Form-Schedule-Input"}
-            >
-              <RoadClosureFormScheduleEntry
-                inputChanged={this.props.inputChanged}
-                schedule={this.props.currentRoadClosureItem.properties.schedule} />
+              helperText="Closure will only be active within the start and end times AND within the times specified in Schedule"
+              >
+              <Switch
+                disabled={!(currentDateRange[0] && currentDateRange[1])}
+                onChange={this.handleToggleShowingScheduler}
+                checked={this.state.isShowingScheduler}
+                label={"Set a specific schedule for this closure within the specified range"} />
+              <Collapse isOpen={this.state.isShowingScheduler}>
+                <ButtonGroup>
+                  <Button
+                    onClick={this.handleClickPreviousWeek}
+                    disabled={this.state.weekOfYear === moment(currentDateRange[0]).week()}
+                    text={"Previous week"} />
+                  <Button
+                    onClick={this.handleClickNextWeek}
+                    disabled={this.state.weekOfYear === moment(currentDateRange[1]).week()}
+                    text={"Next week"} />
+                </ButtonGroup>
+                <WeekCalendar
+                  scaleHeaderTitle={`${this.state.firstDayOfWeek.format("MMM/DD")}-${this.state.firstDayOfWeek.clone().add(1, "week").format("MMM/DD")}`}
+                  className={"SHST-Road-Closure-Form-Schedule-Calendar"}
+                  scaleUnit={60}
+                  useModal={false}
+                  firstDay={this.state.firstDayOfWeek}
+                  headerCellComponent={RoadClosureFormScheduleHeaderCell}
+                  eventComponent={RoadClosureFormScheduleEvent}
+                  selectedIntervals={this.props.selectedIntervals}
+                />
+                <RoadClosureFormScheduleEntry
+                  firstWeek={moment(currentDateRange[0]).week()}
+                  lastWeek={moment(currentDateRange[1]).week()}
+                  weekOfYear={this.state.weekOfYear}
+                  inputChanged={this.props.inputChanged}
+                  schedule={this.props.currentRoadClosureItem.properties.schedule} />
+              </Collapse>
             </FormGroup>
-            <div className={"SHST-Road-Closure-Form-Schedule-Table-Container"}>
-              <RoadClosureFormScheduleTable
-                inputRemoved={this.props.inputRemoved}
-                schedule={this.props.currentRoadClosureItem.properties.schedule} />
-            </div>
             <FormGroup
               label="Description"
               labelFor="text-area"
