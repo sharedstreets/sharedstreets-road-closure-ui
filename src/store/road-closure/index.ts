@@ -829,15 +829,47 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                         startTime: action.payload.startTime,
                     });
                 }
-            } else if (key === "scheduleRemove") {
-                if (!isEmpty(action.payload.startTime) && action.payload.startTime &&
-                    !isEmpty(action.payload.endTime) && action.payload.endTime && 
-                    action.payload.startTime !== action.payload.endTime
-                ) {
-                    const startEndKey = action.payload.startTime.replace(":", "-")+"-"+action.payload.endTime.replace(":", "-");
-                    updatedItem.properties[key][action.payload.weekOfYear!][action.payload.day!] = omit(updatedItem.properties[key][action.payload.weekOfYear!][action.payload.day!], startEndKey);
-                }
             } else {
+                if (key === "startTime" || key === "endTime") {
+                    const payloadAsMoment = moment(action.payload[key]);
+                    const stateTimeAsMoment = moment(state.currentItem.properties[key]);
+                    if (payloadAsMoment.isAfter(stateTimeAsMoment)) {
+                        // when start of range pushed back
+                        // remove schedule items that fall outside the range
+                        if (payloadAsMoment.week() > stateTimeAsMoment.week()) {
+                            // drop any removed weeks
+                            const weeksToOmit = [];
+                            for (let i = stateTimeAsMoment.week(); i<payloadAsMoment.week(); i++) {
+                                weeksToOmit.push(i);
+                            }
+                            updatedItem.properties.schedule = omit(updatedItem.properties.schedule, weeksToOmit);
+                        }
+                        for (let i = 0; i<payloadAsMoment.day(); i++) {
+                            // drop all days leading up to day of new startTime
+                            updatedItem.properties.schedule[payloadAsMoment.week()] = omit(updatedItem.properties.schedule[payloadAsMoment.week()], moment().day(i).format("dddd"));
+                        }
+                        if (Object.keys(updatedItem.properties.schedule[payloadAsMoment.week()]).length === 0) {
+                            updatedItem.properties.schedule = omit(updatedItem.properties.schedule, payloadAsMoment.week());
+                        }
+                    } else if (key === "endTime" && payloadAsMoment.isBefore(stateTimeAsMoment)) {
+                        // when end of range pushed up
+                        // remove schedule items that fall outside the range
+                        if (payloadAsMoment.week() < stateTimeAsMoment.week()) {
+                            const weeksToOmit = [];
+                            for (let i = payloadAsMoment.week(); i<stateTimeAsMoment.week(); i++) {
+                                weeksToOmit.push(i);
+                            }
+                            updatedItem.properties.schedule = omit(updatedItem.properties.schedule, weeksToOmit);
+                        }
+                        for (let i = payloadAsMoment.day(); i<7; i++) {
+                            // drop all days after day of new endTime
+                            updatedItem.properties.schedule[payloadAsMoment.week()] = omit(updatedItem.properties.schedule[payloadAsMoment.week()], moment().day(i).format("dddd"));
+                        }
+                        if (Object.keys(updatedItem.properties.schedule[payloadAsMoment.week()]).length === 0) {
+                            updatedItem.properties.schedule = omit(updatedItem.properties.schedule, payloadAsMoment.week());
+                        }
+                    }
+                }
                 updatedItem.properties[key] = action.payload[key];
             }
             
