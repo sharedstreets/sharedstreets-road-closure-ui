@@ -1,9 +1,11 @@
+import { DateRange } from '@blueprintjs/datetime';
 import {
     sortBy,
     unzip,
     zip,
 } from 'lodash';
 import * as moment from 'moment';
+import { DateRange as MRDateRange } from 'moment-range';
 import { IRoadClosureExplorerState } from 'src/store/road-closure-explorer';
 
 export const sortRoadClosureSavedItemsByLastModified = (state: IRoadClosureExplorerState, sortOrder = 'ascending') => {
@@ -37,7 +39,7 @@ export const sortRoadClosureSavedItemsByLastModified = (state: IRoadClosureExplo
     }
 };
 
-export const filterRoadClosureSavedItems = (state: any, filterLevel = 'all') => {
+export const filterRoadClosureSavedItems = (state: any, filterLevel = 'all', filterRange: DateRange = [undefined, undefined]) => {
     if (
         state.allRoadClosureItems.length === 0 &&
         state.allRoadClosureMetadata.length === 0 &&
@@ -57,6 +59,24 @@ export const filterRoadClosureSavedItems = (state: any, filterLevel = 'all') => 
     );
     
     // let sorted: any[] = sortBy(zipped, (x) => x[1].lastModified);
+    if (filterRange[0] && filterRange[1]) {
+        const filterStartTime = moment(filterRange[0]);
+        const filterEndTime = moment(filterRange[1]);
+        const filterMRDateRange = new MRDateRange(filterStartTime, filterEndTime);
+        zipped = zipped.filter((i) => {
+            const iStartTime = moment(i[0]!.properties.startTime);
+            const iEndTime = moment(i[0]!.properties.endTime);
+            if (iStartTime && iEndTime) {
+                const iRange = new MRDateRange(iStartTime, iEndTime);
+                return iRange.overlaps(filterMRDateRange);
+            } else {
+                return false;
+            }
+            // return (i[0]!.properties.endTime && moment(i[0]!.properties.endTime).isSameOrAfter(filterEndTime)) &&
+            // (i[0]!.properties.startTime && moment(i[0]!.properties.startTime).isSameOrBefore(filterStartTime))
+        });
+    }
+
     const now = moment();
     switch (filterLevel) {
         case 'current':
