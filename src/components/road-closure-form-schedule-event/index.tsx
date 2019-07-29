@@ -9,7 +9,8 @@ class RoadClosureFormScheduleEvent extends React.Component<any, any> {
     } = this.props;
     
     return <div className="event" style={{
-      backgroundColor: '#3DCC91'
+      backgroundColor: '#48AFF0',
+      fontSize: '12px',
     }}>
       <span>{`${start.format('HH:mm')} - ${end.format('HH:mm')}`}</span>
       <br /><br />
