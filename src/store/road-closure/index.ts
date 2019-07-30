@@ -830,10 +830,10 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                     });
                 }
             } else {
-                if (key === "startTime" || key === "endTime") {
+                if (key === "startTime" || key === "endTime" && !isEmpty(state.currentItem.properties.schedule)) {
                     const payloadAsMoment = moment(action.payload[key]);
                     const stateTimeAsMoment = moment(state.currentItem.properties[key]);
-                    if (payloadAsMoment.isAfter(stateTimeAsMoment)) {
+                    if (key === "startTime" && payloadAsMoment.isAfter(stateTimeAsMoment)) {
                         // when start of range pushed back
                         // remove schedule items that fall outside the range
                         if (payloadAsMoment.week() > stateTimeAsMoment.week()) {
@@ -856,12 +856,12 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                         // remove schedule items that fall outside the range
                         if (payloadAsMoment.week() < stateTimeAsMoment.week()) {
                             const weeksToOmit = [];
-                            for (let i = payloadAsMoment.week(); i<stateTimeAsMoment.week(); i++) {
+                            for (let i = payloadAsMoment.week()+1; i<=stateTimeAsMoment.week(); i++) {
                                 weeksToOmit.push(i);
                             }
                             updatedItem.properties.schedule = omit(updatedItem.properties.schedule, weeksToOmit);
                         }
-                        for (let i = payloadAsMoment.day(); i<7; i++) {
+                        for (let i = payloadAsMoment.day()+1; i<7; i++) {
                             // drop all days after day of new endTime
                             updatedItem.properties.schedule[payloadAsMoment.week()] = omit(updatedItem.properties.schedule[payloadAsMoment.week()], moment().day(i).format("dddd"));
                         }
