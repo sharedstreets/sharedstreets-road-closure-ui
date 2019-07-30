@@ -365,7 +365,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
                 valueDisplayFormat={"name"}
               />
             </FormGroup>
-            {/* <FormGroup
+            <FormGroup
               label="Schedule"
               labelInfo="(optional)"
               className={"SHST-Road-Closure-Form-Schedule-Input"}
