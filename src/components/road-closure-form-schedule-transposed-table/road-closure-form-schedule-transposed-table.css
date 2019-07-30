@@ -1,3 +1,9 @@
 .SHST-Road-Closure-Form-Scheduler-Table {
     width: 100%;
 }
+.SHST-Road-Closure-Form-Schedule-Block-Table-Cell-Header {
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+}
