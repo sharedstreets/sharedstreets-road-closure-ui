@@ -8,6 +8,7 @@ import {
     // IRoadClosureSchedule,
     IRoadClosureScheduleByWeek,
 } from 'src/models/RoadClosureFormStateItem';
+import RoadClosureFormScheduleBlockTableCell from '../road-closure-form-schedule-block-table-cell';
 import './road-closure-form-schedule-transposed-table.css';
 
 export interface IRoadClosureFormScheduleTransposedTableProps {
@@ -44,54 +45,35 @@ class RoadClosureFormScheduleTransposedTable extends React.Component<IRoadClosur
         const output: any[] = [];
 
         for (let weekNumber=this.props.firstWeek; weekNumber<=this.props.lastWeek; weekNumber++) {
-            const firstDayOfWeek = moment().week(weekNumber).day(0);
-            // if (firstDayOfWeek.isBefore(this.props.currentDateRange[0])) {
-            //     firstDayOfWeek = moment(this.props.currentDateRange[0]);
-            // }
-            const cols = [];
-            cols.push(
-                <td style={{textAlign: "center", verticalAlign: "middle"}}>{firstDayOfWeek.format("MM/DD")}</td>
-            );
+            const cols: any[] = [];
 
             ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].forEach((day) => {
                 if (!this.props.scheduleByWeek || !this.props.scheduleByWeek[weekNumber] || !this.props.scheduleByWeek[weekNumber][day]) {
                     cols.push(
-                        // TODO - make this display the possible entries
-                        <td style={{width: '100px', padding: '0px', textAlign: "center", verticalAlign: "middle"}}>{''}</td>
+                        <td style={{width: '115px', maxWidth: '115px', height: '10px', padding: '0px', ...headerStyle}}>
+                            <div className={"SHST-Road-Closure-Form-Schedule-Block-Table-Cell-Header"}>
+                                {moment().week(weekNumber).day(day).format("MMM DD")}
+                            </div>
+                        </td>
                     )
                 } else {
-                    if (this.props.expandedCalendar) {
-                        const scheduleBlocks: any[] = []
-                        this.props.scheduleByWeek[weekNumber][day].forEach((scheduleBlock, index) => {
-                            const startHour = parseInt(scheduleBlock.startTime.split(":")[0], 10);
-                            const startMinute = parseInt(scheduleBlock.startTime.split(":")[1], 10);
-                            const endHour = parseInt(scheduleBlock.endTime.split(":")[0], 10);
-                            const endMinute = parseInt(scheduleBlock.endTime.split(":")[1], 10);
-                            const startTimeAsMoment = moment().hour(startHour).minute(startMinute);
-                            const endTimeAsMoment = moment().hour(endHour).minute(endMinute);
-
-                            let startTimeFormat = startTimeAsMoment.minute() === 0 ? 'h' : 'h:mm';
-                            const endTimeFormat = endTimeAsMoment.minute() === 0 ? 'hA' : 'h:mmA';
-                            startTimeFormat += startTimeAsMoment.format('a') !== endTimeAsMoment.format('a') ? 'A' : '';
-
-                            scheduleBlocks.push(
-                                <Tag id={`${weekNumber}-${day}-${index}`} onRemove={this.handleRemoveScheduleBlock}>
-                                    {startTimeAsMoment.format(startTimeFormat)}-{endTimeAsMoment.format(endTimeFormat)}
-                                </Tag>
-                            );
-                        }, this);
-                        cols.push(
-                            <td style={{width: '100px', padding: '0px', textAlign: "center", verticalAlign: "middle"}}>
-                                {scheduleBlocks}
-                            </td>
-                        )
-                    } else {
-                        cols.push(
-                            <td style={{width: '100px', padding: '0px', textAlign: "center", verticalAlign: "middle"}}>
-                                <Tag>{this.props.scheduleByWeek[weekNumber][day].length} ⛔️</Tag>
-                            </td>
-                        );
-                    }
+                    const scheduleBlocks: any[] = []
+                    scheduleBlocks.push(
+                        <RoadClosureFormScheduleBlockTableCell
+                            scheduleBlocks={this.props.scheduleByWeek[weekNumber][day]}
+                            weekNumber={weekNumber}
+                            day={day}
+                            onRemove={this.handleRemoveScheduleBlock}
+                        />
+                    )
+                    cols.push(
+                        <td style={{width: '115px', maxWidth: '115px', height: '60px', padding: '0px'}}>
+                            <div className={"SHST-Road-Closure-Form-Schedule-Block-Table-Cell-Header"}>
+                                {moment().week(weekNumber).day(day).format("MMM DD")}
+                            </div>
+                            {scheduleBlocks}
+                        </td>
+                    )
                 }
             }, this);
             output.push(<tr>{cols}</tr>);
