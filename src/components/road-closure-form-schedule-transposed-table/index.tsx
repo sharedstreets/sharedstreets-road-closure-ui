@@ -49,6 +49,15 @@ class RoadClosureFormScheduleTransposedTable extends React.Component<IRoadClosur
 
             ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].forEach((day) => {
                 if (!this.props.scheduleByWeek || !this.props.scheduleByWeek[weekNumber] || !this.props.scheduleByWeek[weekNumber][day]) {
+                    let headerStyle = {};
+                    if (
+                        moment().week(weekNumber).day(day).hour(23).minute(59).second(59).isBefore(moment(this.props.currentDateRange[0])) ||
+                        moment().week(weekNumber).day(day).hour(0).minute(0).second(0).isAfter(moment(this.props.currentDateRange[1]))
+                    ) {
+                        headerStyle = {
+                            color: '#CED9E0'
+                        }
+                    }
                     cols.push(
                         <td style={{width: '115px', maxWidth: '115px', height: '10px', padding: '0px', ...headerStyle}}>
                             <div className={"SHST-Road-Closure-Form-Schedule-Block-Table-Cell-Header"}>
