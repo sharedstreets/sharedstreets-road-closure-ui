@@ -1,16 +1,7 @@
 import {
-    Colors, Tag,
-    // Tag,
+    Colors,
 } from '@blueprintjs/core';
 import { DateRange } from '@blueprintjs/datetime';
-import {
-    // forEach,
-    // head,
-    // isEmpty,
-    // last,
-    // uniq,
-    parseInt,
-} from 'lodash';
 import * as moment from 'moment';
 import * as React from 'react';
 import {
@@ -34,22 +25,18 @@ class RoadClosureFormScheduleTransposedTable extends React.Component<IRoadClosur
     public constructor(props: IRoadClosureFormScheduleTransposedTableProps) {
         super(props);
         this.handleRemoveScheduleBlock = this.handleRemoveScheduleBlock.bind(this);
-        // this.renderHeader = this.renderHeader.bind(this);
         this.renderRow = this.renderRow.bind(this);
     }
 
     public handleRemoveScheduleBlock(e: any, tagProps: any) {
-        // if (e.target.parentElement.parentElement.previousElementSibling.textContent) {
         const weekFromTag = tagProps.id.split("-")[0];
         const dayFromTag = tagProps.id.split("-")[1];
         const scheduleBlockIndex = tagProps.id.split("-")[2];
         this.props.inputRemoved({
             day: dayFromTag,
-            // endTime: scheduleBlockParts[1],
             index: scheduleBlockIndex,
             key: 'schedule',
             weekOfYear: weekFromTag,
-            // startTime: scheduleBlockParts[0]
         });
     }
 
@@ -112,30 +99,14 @@ class RoadClosureFormScheduleTransposedTable extends React.Component<IRoadClosur
         return output;
     }
 
-    // public renderRow(day: string) {
-    //     const output: any[] = [];
-    //     for (let weekNumber=this.props.firstWeek; weekNumber<=this.props.lastWeek; weekNumber++) {
-    //         // const firstDayOfWeek = moment().week(weekNumber).day(0);
-    //         // if (firstDayOfWeek.isBefore(this.props.currentDateRange[0])) {
-    //         //     firstDayOfWeek = moment(this.props.currentDateRange[0]);
-    //         // }
-    //     }
-    //     return output;
-    // }
-
     public render() {
         let tableStyle = {};
         if (this.props.week === this.props.currentWeek.toString()) {
             tableStyle = {backgroundColor: Colors.LIGHT_GRAY5}
         }
-        // let headerStyle = {};
-        // if () {
-        //     headerStyle = {};
-        // }
-        return <table className={"SHST-Road-Closure-Form-Scheduler-Table bp3-html-table bp3-small bp3-interactive"} style={tableStyle}>
             <thead>
                 <tr>
-                    <th>{'Week of:'}</th>
+                    {/* <th>{'Week of:'}</th> */}
                     <th style={{width: '100px', padding: '0px', textAlign: 'center', verticalAlign: 'middle'}}>Su</th>
                     <th style={{width: '100px', padding: '0px', textAlign: 'center', verticalAlign: 'middle'}}>M</th>
                     <th style={{width: '100px', padding: '0px', textAlign: 'center', verticalAlign: 'middle'}}>Tu</th>
@@ -143,7 +114,6 @@ class RoadClosureFormScheduleTransposedTable extends React.Component<IRoadClosur
                     <th style={{width: '100px', padding: '0px', textAlign: 'center', verticalAlign: 'middle'}}>Th</th>
                     <th style={{width: '100px', padding: '0px', textAlign: 'center', verticalAlign: 'middle'}}>F</th>
                     <th style={{width: '100px', padding: '0px', textAlign: 'center', verticalAlign: 'middle'}}>Sa</th>
-                    {/* {this.renderHeader()} */}
                 </tr>
             </thead>
             <tbody>
