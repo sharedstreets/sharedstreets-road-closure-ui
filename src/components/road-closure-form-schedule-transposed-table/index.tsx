@@ -86,6 +86,8 @@ class RoadClosureFormScheduleTransposedTable extends React.Component<IRoadClosur
         if (this.props.week === this.props.currentWeek.toString()) {
             tableStyle = {backgroundColor: Colors.LIGHT_GRAY5}
         }
+
+        return <table className={"SHST-Road-Closure-Form-Scheduler-Table bp3-html-table bp3-small bp3-interactive bp3-html-table-striped"} style={tableStyle}>
             <thead>
                 <tr>
                     {/* <th>{'Week of:'}</th> */}
