@@ -877,45 +877,6 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 ...state,
                 currentItem: updatedItem,
             }
-        // case "ROAD_CLOSURE/INPUT_CHANGED":
-        //     const inputChangedKey = action.payload.key;
-        //     updatedItem = Object.assign(Object.create(state.currentItem), state.currentItem);
-
-        //     if (inputChangedKey === "street") {
-        //         forEach(Object.keys(updatedItem.properties[inputChangedKey][action.payload.geometryId]), (refId: string) => {
-        //             updatedItem.properties[inputChangedKey][action.payload.geometryId][refId].streetname = action.payload.street;
-        //         });
-        //     } else if (inputChangedKey === "mode") {
-        //         if (!updatedItem.properties[inputChangedKey]) {
-        //             updatedItem.properties[inputChangedKey] = [];
-        //         }
-        //         if (updatedItem.properties[inputChangedKey] && updatedItem.properties[inputChangedKey].includes(action.payload[inputChangedKey])) {
-        //             const removeIndex = updatedItem.properties[inputChangedKey].indexOf(action.payload[inputChangedKey]);
-        //             updatedItem.properties[inputChangedKey].splice(removeIndex, 1);
-        //         } else {
-        //             updatedItem.properties[inputChangedKey].push(action.payload[inputChangedKey]);
-        //         }
-        //     } else if (inputChangedKey === "schedule") {
-        //         if (!updatedItem.properties[inputChangedKey][action.payload.weekOfYear!][action.payload.day!]) {
-        //             updatedItem.properties[inputChangedKey][action.payload.weekOfYear!][action.payload.day!] = [];
-        //         }
-        //         if (!isEmpty(action.payload.startTime) && action.payload.startTime &&
-        //             !isEmpty(action.payload.endTime) && action.payload.endTime && 
-        //             action.payload.startTime !== action.payload.endTime
-        //         ) {
-        //             updatedItem.properties[inputChangedKey][action.payload.weekOfYear!][action.payload.day!].push({
-        //                 endTime: action.payload.endTime,
-        //                 startTime: action.payload.startTime,
-        //             });
-        //         }
-        //     } else {
-        //         updatedItem.properties[inputChangedKey] = action.payload[inputChangedKey];
-        //     }
-            
-        //     return {
-        //         ...state,
-        //         currentItem: updatedItem,
-        //     }
 
             case "ROAD_CLOSURE/INPUT_REMOVED":
                 const removedInputKey = action.payload.key;
