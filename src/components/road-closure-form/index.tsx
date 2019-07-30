@@ -25,8 +25,8 @@ import RoadClosureOutputViewer from 'src/containers/road-closure-output-viewer';
 import { IRoadClosureMode } from 'src/models/RoadClosureFormStateItem';
 import { SharedStreetsMatchGeomFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchGeomFeatureCollection';
 import { IRoadClosureState } from 'src/store/road-closure';
-import RoadClosureFormScheduleEntry from '../road-closure-form-schedule-entry';
-import RoadClosureFormScheduleTable from '../road-closure-form-schedule-table';
+// import RoadClosureFormScheduleEntry from '../road-closure-form-schedule-entry';
+// import RoadClosureFormScheduleTable from '../road-closure-form-schedule-table';
 import RoadClosureFormStreetsGroups from '../road-closure-form-streets-groups';
 
 import '../../../node_modules/@blueprintjs/core/lib/css/blueprint.css';
@@ -294,7 +294,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
                 valueDisplayFormat={"name"}
               />
             </FormGroup>
-            <FormGroup
+            {/* <FormGroup
               label="Schedule"
               labelInfo="(optional)"
               className={"SHST-Road-Closure-Form-Schedule-Input"}
@@ -307,7 +307,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, any> {
               <RoadClosureFormScheduleTable
                 inputRemoved={this.props.inputRemoved}
                 schedule={this.props.currentRoadClosureItem.properties.schedule} />
-            </div>
+            </div> */}
             <FormGroup
               label="Description"
               labelFor="text-area"
