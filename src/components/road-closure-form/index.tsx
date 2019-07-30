@@ -393,7 +393,6 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
                   firstWeek={moment(currentDateRange[0]).week()}
                   lastWeek={moment(currentDateRange[1]).week()}
                   scheduleByWeek={this.props.currentRoadClosureItem.properties.schedule}
-                  expandedCalendar={true}
                   />
                 </div>
               </Collapse>

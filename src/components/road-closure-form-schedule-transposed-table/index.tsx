@@ -18,7 +18,6 @@ export interface IRoadClosureFormScheduleTransposedTableProps {
     lastWeek: number,
     scheduleByWeek: IRoadClosureScheduleByWeek,
     currentDateRange: DateRange,
-    expandedCalendar: boolean,
     inputRemoved: (e: any) => void,
 };
 
