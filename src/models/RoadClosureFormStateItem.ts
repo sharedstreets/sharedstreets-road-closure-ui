@@ -20,6 +20,10 @@ export interface IRoadClosureScheduleBlock {
     endTime: string,
 }
 
+export interface IRoadClosureScheduleByWeek {
+    [week: number]: IRoadClosureSchedule
+}
+
 export interface IRoadClosureSchedule {
     [day: string]: IRoadClosureScheduleBlock[]
 }
@@ -35,6 +39,6 @@ export class RoadClosureFormStateItem {
     public reference: string;
     public subtype: string;
     public mode: IRoadClosureMode[] = [];
-    public schedule: IRoadClosureSchedule = {};
+    public schedule: IRoadClosureScheduleByWeek = {};
     public geometryIdDirectionFilter: { [ geometryId: string] : { forward: boolean, backward: boolean } } = {};
 }

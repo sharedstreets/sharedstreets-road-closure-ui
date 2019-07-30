@@ -32,6 +32,11 @@
     flex: 2;
 }
 
+.SHST-Road-Closure-Form-Schedule-Tables {
+    max-height: 200px;
+    overflow-y: scroll;
+}
+
 .SHST-Road-Closure-Form-Schedule-Table-Container {
     min-height: 100px;
     width: 100%;
@@ -58,4 +63,13 @@
     width: 100%;
     min-height: 200px;
     overflow-y: auto;
+}
+
+/* WeekCalendar overrides */
+.weekCalendar {
+    min-height: 250px;
+}
+
+.weekCalendar__content {
+    max-height: 220px;
 }
