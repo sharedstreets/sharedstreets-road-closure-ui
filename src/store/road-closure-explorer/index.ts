@@ -139,7 +139,7 @@ const defaultState: IRoadClosureExplorerState = {
     allRoadClosureMetadata: [],
     allRoadClosuresFilterLevel: 'all',
     allRoadClosuresFilterRange: [undefined, undefined],
-    allRoadClosuresSortOrder: 'descending',
+    allRoadClosuresSortOrder: 'start',
     allRoadClosuresUploadUrls: [],
     isLoadingAllRoadClosures: false,
 };

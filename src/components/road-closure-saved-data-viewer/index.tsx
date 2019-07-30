@@ -79,6 +79,8 @@ class RoadClosureSavedDataViewer extends React.Component<IRoadClosureSavedDataVi
                     <div>
                         <div className="bp3-select">
                             <select onChange={this.handleSelectSortOrder}>
+                                <option value="start">Start time</option>
+                                <option value="end">End time</option>
                                 <option value="descending">Most recently modified</option>
                                 <option value='ascending'>Least recently modified</option>
                             </select>

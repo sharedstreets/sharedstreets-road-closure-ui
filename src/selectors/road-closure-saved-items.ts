@@ -8,7 +8,7 @@ import * as moment from 'moment';
 import { DateRange as MRDateRange } from 'moment-range';
 import { IRoadClosureExplorerState } from 'src/store/road-closure-explorer';
 
-export const sortRoadClosureSavedItemsByLastModified = (state: IRoadClosureExplorerState, sortOrder = 'ascending') => {
+export const sortRoadClosureSavedItemsByLastModified = (state: IRoadClosureExplorerState, sortOrder = 'start') => {
     if (
         state.allRoadClosureItems.length === 0 &&
         state.allRoadClosureMetadata.length === 0 &&
@@ -27,10 +27,23 @@ export const sortRoadClosureSavedItemsByLastModified = (state: IRoadClosureExplo
         state.allRoadClosuresUploadUrls,
     );
     
-    let sorted: any[] = sortBy(zipped, (x) => x[1].lastModified);
-    if (sortOrder === 'descending') {
-        sorted = sorted.reverse();
+    let sorted: any[] = zipped;;
+    switch (sortOrder) {
+        case 'ascending':
+            sorted = sortBy(zipped, (x) => x[1].lastModified);
+            break;
+        case 'descending':
+            sorted = sortBy(zipped, (x) => x[1].lastModified);
+            sorted = sorted.reverse();
+            break;
+        case 'start':
+            sorted = sortBy(zipped, (x) => x[0] && x[0].properties.startTime && moment(x[0]!.properties.startTime))
+            break;
+        case 'end':
+            sorted = sortBy(zipped, (x) => x[0] && x[0].properties.endTime && moment(x[0]!.properties.endTime))
+            break;
     }
+
     const unzipped = unzip(sorted);
     return {
         allRoadClosureItems: unzipped[0],
