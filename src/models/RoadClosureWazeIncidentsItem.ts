@@ -1,5 +1,6 @@
 import {
     forEach,
+    isEmpty,
     parseInt
 } from 'lodash';
 import * as moment from 'moment';
@@ -49,14 +50,26 @@ export class RoadClosureWazeIncidentsItem {
         matchedStreetSegment: SharedStreetsMatchGeomPath,
         form: RoadClosureFormStateItem,
         bothDirections: boolean,
-        schedule: IRoadClosureSchedule,
-        week: string
+        schedule?: IRoadClosureSchedule,
+        week?: string
     ) {
         this.creationtime = moment().format();
-        this.starttime = form.startTime ? this.setStartTime(form.startTime, form.timezone, parseInt(week, 10)) : '';
-        this.endtime = form.endTime ? this.setEndTime(form.endTime, form.timezone, parseInt(week, 10)) : '';
-
-        this.schedule = this.setSchedule(schedule);
+        
+        if (schedule && week) {
+            this.starttime = form.startTime ? this.setStartTimeByWeek(form.startTime, form.timezone, parseInt(week, 10)) : '';
+            this.endtime = form.endTime ? this.setEndTimeByWeek(form.endTime, form.timezone, parseInt(week, 10)) : '';
+            if (!isEmpty(this.setSchedule(schedule))) {
+                this.schedule = this.setSchedule(schedule);
+            }
+        } else {
+            if (form.timezone) {
+                this.starttime = moment.tz(form.startTime, form.timezone).format();
+                this.endtime = moment.tz(form.endTime, form.timezone).format();
+            } else {
+                this.starttime = moment(form.startTime).format();
+                this.endtime = moment(form.endTime).format();
+            }
+        }
         this.type = form.type;
         this.subtype = form.subtype;
         this.description = form.description;
@@ -71,7 +84,7 @@ export class RoadClosureWazeIncidentsItem {
         this.location.polyline = this.setPolyline(matchedStreetSegment.geometry);
     }
 
-    private setStartTime(startTime: string, timezone: string, week: number) {
+    private setStartTimeByWeek(startTime: string, timezone: string, week: number) {
         const startTimeAsMoment = moment(startTime);
         const firstDayOfWeek = moment().week(week).day(0)
             .hour(startTimeAsMoment.hour())
@@ -88,7 +101,7 @@ export class RoadClosureWazeIncidentsItem {
         }
     }
 
-    private setEndTime(endTime: string, timezone: string, week: number) {
+    private setEndTimeByWeek(endTime: string, timezone: string, week: number) {
         const endTimeAsMoment = moment(endTime);
         const lastDayOfWeek = moment().week(week).day(6)
             .hour(endTimeAsMoment.hour())
