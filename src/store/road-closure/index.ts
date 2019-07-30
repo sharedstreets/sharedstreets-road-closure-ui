@@ -922,10 +922,14 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 updatedItem = Object.assign(Object.create(state.currentItem), state.currentItem);
     
                 if (removedInputKey === "schedule") {
-                    if (updatedItem.properties[removedInputKey][action.payload.weekOfYear!][action.payload.day!].length === 1) {
-                        delete updatedItem.properties[removedInputKey][action.payload.weekOfYear!][action.payload.day!];
+                    if (action.payload.weekOfYear && action.payload.day) {
+                        if (updatedItem.properties[removedInputKey][action.payload.weekOfYear!][action.payload.day!].length === 1) {
+                            delete updatedItem.properties[removedInputKey][action.payload.weekOfYear!][action.payload.day!];
+                        } else {
+                            updatedItem.properties[removedInputKey][action.payload.weekOfYear!][action.payload.day!].splice(action.payload.index!, 1);
+                        }
                     } else {
-                        updatedItem.properties[removedInputKey][action.payload.weekOfYear!][action.payload.day!].splice(action.payload.index!, 1);
+                        updatedItem.properties[removedInputKey] = {};
                     }
                 }
                 

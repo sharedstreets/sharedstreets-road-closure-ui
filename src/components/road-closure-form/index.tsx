@@ -207,6 +207,11 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
   }
 
   public handleToggleShowingScheduler() {
+    if (this.state.isShowingScheduler) {
+      this.props.inputRemoved({
+        key: 'schedule'
+      });
+    }
     this.setState({
       isShowingScheduler: !this.state.isShowingScheduler
     })
