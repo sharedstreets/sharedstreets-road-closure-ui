@@ -17,7 +17,7 @@ import {
 } from './';
 
 
-const defaultState: IRoadClosureState = {
+let defaultState: IRoadClosureState = {
     allOrgs: [],
     currentItem: new SharedStreetsMatchGeomFeatureCollection(),
     currentLineId: '',
@@ -40,6 +40,34 @@ const defaultState: IRoadClosureState = {
         wazeUploadUrl: '',
     }
 };
+let currentItem = new SharedStreetsMatchGeomFeatureCollection();
+
+beforeEach(() => {
+    currentItem = new SharedStreetsMatchGeomFeatureCollection();
+    defaultState = {
+        allOrgs: [],
+        currentItem: new SharedStreetsMatchGeomFeatureCollection(),
+        currentLineId: '',
+        currentPossibleDirections: new SharedStreetsMatchPointFeatureCollection(),
+        highlightedFeatureGroup: [],
+        isEditingExistingClosure: false,
+        isFetchingInput: false,
+        isFetchingMatchedPoints: false,
+        isFetchingMatchedStreets: false,
+        isGeneratingUploadUrl: false,
+        isLoadedInput: false,
+        isLoadingInput: false,
+        isPuttingOutput: false,
+        isSavingOutput: false,
+        isShowingRoadClosureOutputViewer: false,
+        output: new RoadClosureOutputStateItem(),
+        uploadUrls: {
+            geojsonUploadUrl: '',
+            // stateUploadUrl: '',
+            wazeUploadUrl: '',
+        }
+    };
+})
 
 test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_DATA_SUCCESS', () => {
     const startingState = Object.assign({}, defaultState, {
@@ -274,28 +302,69 @@ test('ACTION: ROAD_CLOSURE/INPUT_CHANGED - text', () => {
         referenceId: 'refId',
     };
 
-    const geometryIdDirectionFilter = {
-        "a": {
-            backward: false,
-            forward: true,
-        }
-    };
-
-    const forwardStreet = new RoadClosureFormStateStreet();
-    forwardStreet.geometryId = 'a';
-    forwardStreet.referenceId = 'b';
-    forwardStreet.streetname = '';
-
-    const currentItem = new SharedStreetsMatchGeomFeatureCollection();
+    currentItem = new SharedStreetsMatchGeomFeatureCollection();
     currentItem.properties.description = 'updated description';
-    currentItem.properties.geometryIdDirectionFilter = geometryIdDirectionFilter;
-    currentItem.properties.street = {
-        "a": {
-            backward: new RoadClosureFormStateStreet(),
-            forward: forwardStreet,
-        }
+
+    const expectedState = Object.assign({}, startingState, {
+        currentItem
+    });
+
+    expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.INPUT_CHANGED(payload))).toEqual(expectedState)
+});
+
+test('ACTION: ROAD_CLOSURE/INPUT_CHANGED - schedule - 1 week, 1 day - failed addition', () => {
+    const startingState = Object.assign({}, defaultState);
+    startingState.currentItem.properties.startTime = "2019-01-01 00:00:00";
+    startingState.currentItem.properties.endTime = "2019-01-30 00:00:00";
+
+    const payload: IRoadClosureFormInputChangedPayload = {
+        day: "Wednesday",
+        endTime: "16:00",
+        geometryId: "",
+        key: "schedule",
+        referenceId: "",
+        startTime: "00:00",
+        weekOfYear: "10", 
     };
-    
+
+    currentItem = new SharedStreetsMatchGeomFeatureCollection();
+    currentItem.properties.startTime = "2019-01-01 00:00:00";
+    currentItem.properties.endTime = "2019-01-30 00:00:00";
+
+    const expectedState = Object.assign({}, startingState, {
+        currentItem
+    });
+    expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.INPUT_CHANGED(payload))).toEqual(expectedState)
+});
+
+test('ACTION: ROAD_CLOSURE/INPUT_CHANGED - schedule - 1 week, 1 day - successful addition', () => {
+    const startingState = Object.assign({}, defaultState);
+    startingState.currentItem.properties.startTime = "2019-01-01 00:00:00";
+    startingState.currentItem.properties.endTime = "2019-01-30 00:00:00";
+
+    const payload: IRoadClosureFormInputChangedPayload = {
+        day: "Wednesday",
+        endTime: "16:00",
+        geometryId: "",
+        key: "schedule",
+        referenceId: "",
+        startTime: "00:00",
+        weekOfYear: "1", 
+    };
+
+    currentItem = new SharedStreetsMatchGeomFeatureCollection();
+    currentItem.properties.startTime = "2019-01-01 00:00:00";
+    currentItem.properties.endTime = "2019-01-30 00:00:00";
+    currentItem.properties.schedule = {
+        1: {
+            "Wednesday": [
+                {
+                    endTime: "16:00",
+                    startTime: "00:00",
+                }
+            ]
+        }
+    }
 
     const expectedState = Object.assign({}, startingState, {
         currentItem
@@ -305,45 +374,98 @@ test('ACTION: ROAD_CLOSURE/INPUT_CHANGED - text', () => {
 });
 
 
-// test('ACTION: ROAD_CLOSURE/INPUT_CHANGED - date', () => {
-//     const startingState = Object.assign({}, defaultState);
+test('ACTION: ROAD_CLOSURE/INPUT_REMOVED - schedule - 1 week, 1 day - successful removal', () => {
+    const startingState = Object.assign({}, defaultState);
+    startingState.currentItem.properties.startTime = "2019-01-01 00:00:00";
+    startingState.currentItem.properties.endTime = "2019-01-30 00:00:00";
+    startingState.currentItem.properties.schedule = {
+        1: {
+            "Wednesday": [
+                {
+                    endTime: "16:00",
+                    startTime: "00:00",
+                }
+            ]
+        }
+    };
 
-//     const payload: IRoadClosureFormInputChangedPayload = {
-//         description: 'updated description',
-//         geometryId: 'geomId',
-//         key: 'description',
-//         referenceId: 'refId',
-//     };
+    const payload: IRoadClosureFormInputChangedPayload = {
+        day: "Wednesday",
+        endTime: "16:00",
+        geometryId: "",
+        key: "schedule",
+        referenceId: "",
+        startTime: "00:00",
+        weekOfYear: "1", 
+    };
 
-//     const geometryIdDirectionFilter = {
-//         "a": {
-//             backward: false,
-//             forward: true,
-//         }
-//     };
+    currentItem = new SharedStreetsMatchGeomFeatureCollection();
+    currentItem.properties.startTime = "2019-01-01 00:00:00";
+    currentItem.properties.endTime = "2019-01-30 00:00:00";
+    currentItem.properties.schedule = {
+        1: {}
+    }
 
-//     const forwardStreet = new RoadClosureFormStateStreet();
-//     forwardStreet.geometryId = 'a';
-//     forwardStreet.referenceId = 'b';
-//     forwardStreet.streetname = '';
+    const expectedState = Object.assign({}, startingState, {
+        currentItem
+    });
 
-//     const currentItem = new SharedStreetsMatchFeatureCollection();
-//     currentItem.properties.description = 'updated description';
-//     currentItem.properties.geometryIdDirectionFilter = geometryIdDirectionFilter;
-//     currentItem.properties.street = {
-//         "a": {
-//             backward: new RoadClosureFormStateStreet(),
-//             forward: forwardStreet,
-//         }
-//     };
-    
+    expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.INPUT_REMOVED(payload))).toEqual(expectedState)
+});
 
-//     const expectedState = Object.assign({}, startingState, {
-//         currentItem
-//     });
 
-//     expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.INPUT_CHANGED(payload))).toEqual(expectedState)
-// });
+test('ACTION: ROAD_CLOSURE/INPUT_CHANGED - date', () => {
+    const startingState = Object.assign({}, defaultState);
+
+    const payload: IRoadClosureFormInputChangedPayload = {
+        geometryId: "",
+        key: "startTime",
+        referenceId: "",
+        startTime: "2019-06-18 12:00:00",
+    };
+
+    currentItem = new SharedStreetsMatchGeomFeatureCollection();
+    currentItem.properties.startTime = "2019-06-18 12:00:00";
+
+    const expectedState = Object.assign({}, startingState, {
+        currentItem
+    });
+
+    expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.INPUT_CHANGED(payload))).toEqual(expectedState)
+});
+
+test('ACTION: ROAD_CLOSURE/INPUT_CHANGED - date with existing date & schedule - successful removal of out of bounds schedule', () => {
+    const startingState = Object.assign({}, defaultState);
+    startingState.currentItem.properties.startTime = "2019-01-01 00:00:00";
+    startingState.currentItem.properties.endTime = "2019-01-30 00:00:00";
+    startingState.currentItem.properties.schedule = {
+        1: {
+            "Wednesday": [
+                {
+                    endTime: "16:00",
+                    startTime: "00:00",
+                }
+            ]
+        }
+    };
+
+    const payload: IRoadClosureFormInputChangedPayload = {
+        geometryId: "",
+        key: "startTime",
+        referenceId: "",
+        startTime: "2019-01-20 12:00:00",
+    };
+
+    currentItem = new SharedStreetsMatchGeomFeatureCollection();
+    currentItem.properties.startTime = "2019-01-20 12:00:00";
+    currentItem.properties.endTime = "2019-01-30 00:00:00";
+
+    const expectedState = Object.assign({}, startingState, {
+        currentItem
+    });
+
+    expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.INPUT_CHANGED(payload))).toEqual(expectedState)
+});
 
 
 // test('ACTION: ROAD_CLOSURE/INPUT_CHANGED - form', () => {
@@ -368,7 +490,7 @@ test('ACTION: ROAD_CLOSURE/INPUT_CHANGED - text', () => {
 //     forwardStreet.referenceId = 'b';
 //     forwardStreet.streetname = '';
 
-//     const currentItem = new SharedStreetsMatchFeatureCollection();
+//     currentItem = new SharedStreetsMatchFeatureCollection();
 //     currentItem.properties.description = 'updated description';
 //     currentItem.properties.geometryIdDirectionFilter = geometryIdDirectionFilter;
 //     currentItem.properties.street = {
