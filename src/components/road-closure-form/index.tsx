@@ -1,6 +1,5 @@
 import {
   Button,
-  ButtonGroup,
   Card,
   Checkbox,
   Collapse,
@@ -24,14 +23,11 @@ import {
 } from 'lodash';
 import * as moment from 'moment';
 import * as React from 'react';
-import WeekCalendar from 'react-week-calendar';
 import RoadClosureOutputViewer from 'src/containers/road-closure-output-viewer';
 import { IRoadClosureMode } from 'src/models/RoadClosureFormStateItem';
 import { SharedStreetsMatchGeomFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchGeomFeatureCollection';
 import { IRoadClosureState } from 'src/store/road-closure';
 import RoadClosureFormScheduleEntry from '../road-closure-form-schedule-entry';
-import RoadClosureFormScheduleEvent from '../road-closure-form-schedule-event';
-import RoadClosureFormScheduleHeaderCell from '../road-closure-form-schedule-header-cell';
 import RoadClosureFormScheduleTransposedTable from '../road-closure-form-schedule-transposed-table';
 import RoadClosureFormStreetsGroups from '../road-closure-form-streets-groups';
 
@@ -379,16 +375,13 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
               <Collapse isOpen={this.state.isShowingScheduler}>
                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                   <RoadClosureFormScheduleEntry
+                    key={currentDateRange.toString()}
                     firstWeek={moment(currentDateRange[0]).week()}
                     lastWeek={moment(currentDateRange[1]).week()}
                     weekOfYear={this.state.weekOfYear}
                     inputChanged={this.props.inputChanged}
                     currentDateRange={currentDateRange}
                     schedule={this.props.currentRoadClosureItem.properties.schedule} />
-                  <Checkbox
-                    onChange={this.handleToggleCalendarExpanded}
-                    checked={this.state.isCalendarExpanded}
-                    label={"View expanded calendar"} />
                 </div>
                 <div className={"SHST-Road-Closure-Form-Schedule-Tables"}>
                 <RoadClosureFormScheduleTransposedTable
@@ -400,35 +393,8 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
                   firstWeek={moment(currentDateRange[0]).week()}
                   lastWeek={moment(currentDateRange[1]).week()}
                   scheduleByWeek={this.props.currentRoadClosureItem.properties.schedule}
-                  expandedCalendar={this.state.isCalendarExpanded}
                   />
                 </div>
-                {
-                  this.state.isCalendarExpanded &&
-                  <React.Fragment>
-                    <ButtonGroup>
-                      <Button
-                        onClick={this.handleClickPreviousWeek}
-                        disabled={this.state.weekOfYear === moment(currentDateRange[0]).week()}
-                        text={"Previous week"} />
-                      <Button
-                        onClick={this.handleClickNextWeek}
-                        disabled={this.state.weekOfYear === moment(currentDateRange[1]).week()}
-                        text={"Next week"} />
-                    </ButtonGroup>
-                    <WeekCalendar
-                      scaleHeaderTitle={`${this.state.firstDayOfWeek.format("MMM/DD")}-${this.state.firstDayOfWeek.clone().add(1, "week").format("MMM/DD")}`}
-                      className={"SHST-Road-Closure-Form-Schedule-Calendar"}
-                      scaleUnit={60}
-                      cellHeight={15}
-                      useModal={false}
-                      firstDay={this.state.firstDayOfWeek}
-                      headerCellComponent={RoadClosureFormScheduleHeaderCell}
-                      eventComponent={RoadClosureFormScheduleEvent}
-                      selectedIntervals={this.props.selectedIntervals}
-                    />
-                  </React.Fragment>
-                }
               </Collapse>
             </FormGroup>
             <FormGroup
