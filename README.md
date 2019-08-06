@@ -32,9 +32,9 @@ By default, the application will run at the following URL: http://localhost:3000
 
 ## Using the application
 
-![Animated walkthrough of selecting streets on the map](docs/img/RoadClosure-Readme-Walkthru-1.gif)
-![Animated walkthrough of filling out the form to describe the closure incident](docs/img/RoadClosure-Readme-Walkthru-2.gif)
-![Animated walkthrough of viewing final output](docs/img/RoadClosure-Readme-Walkthru-3.gif)
+![Animated walkthrough of selecting streets on the map](https://i.imgur.com/AzajbbIh.gif)
+![Animated walkthrough of filling out the form to describe the closure incident](https://i.imgur.com/KPBMJo1.gif)
+![Animated walkthrough of viewing final output](https://i.imgur.com/NxBSTOD.gif)
 
 ## Building on top of the SharedStreets API
 
