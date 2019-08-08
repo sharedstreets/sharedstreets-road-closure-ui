@@ -1,3 +1,4 @@
+import { DateRange } from '@blueprintjs/datetime';
 import {
     forEach,
     // isEmpty,
@@ -43,6 +44,7 @@ export const ROAD_CLOSURE_EXPLORER_ACTIONS = {
     LOADED_ALL_ROAD_CLOSURES: createStandardAction('ROAD_CLOSURE_EXPLORER/LOADED_ALL_ROAD_CLOSURES')<void>(),
     LOAD_ALL_ROAD_CLOSURES: createStandardAction('ROAD_CLOSURE_EXPLORER/LOAD_ALL_ROAD_CLOSURES')<void>(),
     SET_ALL_ROAD_CLOSURES_FILTER_LEVEL: createStandardAction('ROAD_CLOSURE_EXPLORER/SET_ALL_ROAD_CLOSURES_FILTER_LEVEL')<string>(),
+    SET_ALL_ROAD_CLOSURES_FILTER_RANGE: createStandardAction('ROAD_CLOSURE_EXPLORER/SET_ALL_ROAD_CLOSURES_FILTER_RANGE')<DateRange>(),
     SET_ALL_ROAD_CLOSURES_SORT_ORDER: createStandardAction('ROAD_CLOSURE_EXPLORER/SET_ALL_ROAD_CLOSURES_SORT_ORDER')<string>(),
 };
 
@@ -126,6 +128,7 @@ export interface IRoadClosureExplorerState {
     allRoadClosureItems: SharedStreetsMatchGeomFeatureCollection[],
     allRoadClosureMetadata: any[],
     allRoadClosuresFilterLevel: string,
+    allRoadClosuresFilterRange: DateRange,
     allRoadClosuresSortOrder: string,
     allRoadClosuresUploadUrls: IRoadClosureUploadUrls[],
     isLoadingAllRoadClosures: boolean,
@@ -135,7 +138,8 @@ const defaultState: IRoadClosureExplorerState = {
     allRoadClosureItems: [],
     allRoadClosureMetadata: [],
     allRoadClosuresFilterLevel: 'all',
-    allRoadClosuresSortOrder: 'descending',
+    allRoadClosuresFilterRange: [undefined, undefined],
+    allRoadClosuresSortOrder: 'start',
     allRoadClosuresUploadUrls: [],
     isLoadingAllRoadClosures: false,
 };
@@ -241,7 +245,13 @@ export const roadClosureExplorerReducer = (state: IRoadClosureExplorerState = de
                     ...state,
                     allRoadClosuresFilterLevel: action.payload
                 };
-            
+
+        case "ROAD_CLOSURE_EXPLORER/SET_ALL_ROAD_CLOSURES_FILTER_RANGE":
+            return {
+                ...state,
+                allRoadClosuresFilterRange: action.payload
+            };
+                
         case "ROAD_CLOSURE_EXPLORER/SET_ALL_ROAD_CLOSURES_SORT_ORDER":
             return {
                 ...state,
