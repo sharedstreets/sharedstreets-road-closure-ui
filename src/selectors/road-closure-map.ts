@@ -48,12 +48,6 @@ export const getDirectionIconPoints = (state: IRoadClosureState) => {
     currentItem.features.forEach((feature: any) => {
         const featureLength = length(feature, {units: "meters"});
         const halfwayAlongFeature = along(feature, featureLength/2, {units: "meters"})
-        // const featureMidpoint = midpoint(
-        //     feature.geometry.coordinates[0],
-        //     feature.geometry.coordinates[
-        //         feature.geometry.coordinates.length-1
-        //     ]
-        // );
         halfwayAlongFeature.properties = {
             bearing: bearing(
                 feature.geometry.coordinates[0],
