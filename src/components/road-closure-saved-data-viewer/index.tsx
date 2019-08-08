@@ -114,7 +114,7 @@ class RoadClosureSavedDataViewer extends React.Component<IRoadClosureSavedDataVi
                                         label: 'No date range filter',
                                     },
                                     {
-                                        dateRange: [moment().toDate(), moment().subtract(30, "day").toDate()],
+                                        dateRange: [moment().subtract(30, "day").toDate(), moment().toDate()],
                                         label: 'Past 30 days',
                                     },
                                     {
