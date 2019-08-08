@@ -94,11 +94,16 @@ class RoadClosureSavedDataViewer extends React.Component<IRoadClosureSavedDataVi
                             </select>
                         </div>
                         <Popover>
-                            <Button text={
-                                (this.props.filterRange[0] && this.props.filterRange[1]) ?
-                                    `${moment(this.props.filterRange[0]).format("MMM D")} to ${moment(this.props.filterRange[1]).format("MMM D")}`
-                                    : "Filter by date range"
-                            } />
+                            <Button
+                                intent={
+                                    (this.props.filterRange[0] && this.props.filterRange[1]) && 'primary'
+                                }
+                                text={
+                                    (this.props.filterRange[0] && this.props.filterRange[1]) ?
+                                        `${moment(this.props.filterRange[0]).format("MMM D")} to ${moment(this.props.filterRange[1]).format("MMM D")}`
+                                        : "Filter by date range"
+                                }
+                            />
                             <DateRangePicker
                                 value={this.props.filterRange}
                                 onChange={this.handleSelectFilterRange}
