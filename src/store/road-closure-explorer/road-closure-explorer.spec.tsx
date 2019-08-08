@@ -20,7 +20,8 @@ const defaultState: IRoadClosureExplorerState = {
     allRoadClosureItems: [],
     allRoadClosureMetadata: [],
     allRoadClosuresFilterLevel: 'all',
-    allRoadClosuresSortOrder: 'descending',
+    allRoadClosuresFilterRange: [undefined, undefined],
+    allRoadClosuresSortOrder: 'start',
     allRoadClosuresUploadUrls: [],
     isLoadingAllRoadClosures: false,
 };

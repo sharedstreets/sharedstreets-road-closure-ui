@@ -16,8 +16,10 @@ import {
 const mapStateToProps = (state: RootState) => ({
     ...filterRoadClosureSavedItems(
         sortRoadClosureSavedItemsByLastModified(state.roadClosureExplorer, state.roadClosureExplorer.allRoadClosuresSortOrder),
-        state.roadClosureExplorer.allRoadClosuresFilterLevel
+        state.roadClosureExplorer.allRoadClosuresFilterLevel,
+        state.roadClosureExplorer.allRoadClosuresFilterRange,
     ),
+    filterRange: state.roadClosureExplorer.allRoadClosuresFilterRange,
     isLoadingAllRoadClosures: state.roadClosureExplorer.isLoadingAllRoadClosures,
     orgName: state.context.orgName,
     totalItemCount: state.roadClosureExplorer.allRoadClosureItems.length,
@@ -31,6 +33,7 @@ export default connect<{}, {}, IRoadClosureSavedDataViewerProps>(
         previewClosure: ROAD_CLOSURE_ACTIONS.FETCH_SHAREDSTREETS_PUBLIC_DATA.success,
         resetClosurePreview: ROAD_CLOSURE_ACTIONS.RESET_ROAD_CLOSURE,
         setFilterLevel: ROAD_CLOSURE_EXPLORER_ACTIONS.SET_ALL_ROAD_CLOSURES_FILTER_LEVEL,
+        setFilterRange: ROAD_CLOSURE_EXPLORER_ACTIONS.SET_ALL_ROAD_CLOSURES_FILTER_RANGE,
         setSortOrder: ROAD_CLOSURE_EXPLORER_ACTIONS.SET_ALL_ROAD_CLOSURES_SORT_ORDER,
     },
 )(RoadClosureSavedDataViewer) as React.ComponentClass<{}>;
