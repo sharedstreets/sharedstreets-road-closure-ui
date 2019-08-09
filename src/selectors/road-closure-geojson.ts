@@ -19,6 +19,12 @@ export const currentItemToGeojson = (state: IRoadClosureState) => {
                 })
                 .map((path: SharedStreetsMatchGeomPath) => {
                     path.properties.streetname = state.currentItem.properties.street[path.properties.geometryId][path.properties.direction].streetname;
+                    path.properties.fromIntersectionClosed = state.currentItem.properties.street[path.properties.geometryId][path.properties.direction].intersectionsStatus && state.currentItem.properties.street[path.properties.geometryId][path.properties.direction].intersectionsStatus[
+                        state.currentItem.properties.street[path.properties.geometryId][path.properties.direction].fromIntersectionId
+                    ];
+                    path.properties.toIntersectionClosed = state.currentItem.properties.street[path.properties.geometryId][path.properties.direction].intersectionsStatus && state.currentItem.properties.street[path.properties.geometryId][path.properties.direction].intersectionsStatus[
+                        state.currentItem.properties.street[path.properties.geometryId][path.properties.direction].toIntersectionId
+                    ];
                     // return omit(path, ['properties.color']);
                     return path;
                 }),
