@@ -77,6 +77,7 @@ test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_DATA_SUCCESS', () => {
 
     const pathProperties: ISharedStreetsMatchGeomPathProperties = {
         direction: 'forward',
+        fromIntersectionClosed: false,
         fromIntersectionId: '',
         fromStreetnames: [''],
         geometryId: 'a',
@@ -98,6 +99,7 @@ test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_DATA_SUCCESS', () => {
         section: [1],
         side: '',
         streetname: '',
+        toIntersectionClosed: false,
         toIntersectionId: '',
         toStreetnames: ['']
     };
@@ -185,6 +187,7 @@ test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS - 1 street & 1 direc
 
     const properties: ISharedStreetsMatchGeomPathProperties = {
         direction: 'forward',
+        fromIntersectionClosed: false,
         fromIntersectionId: '',
         fromStreetnames: [''],
         geometryId: 'a',
@@ -206,6 +209,7 @@ test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREET_GEOMS_SUCCESS - 1 street & 1 direc
         section: [1],
         side: '',
         streetname: '',
+        toIntersectionClosed: false,
         toIntersectionId: '',
         toStreetnames: ['']
     };

@@ -39,6 +39,7 @@ test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_METADATA_SUCCESS - 1 item 
 
     const pathProperties: ISharedStreetsMatchGeomPathProperties = {
         direction: 'forward',
+        fromIntersectionClosed: false,
         fromIntersectionId: '',
         fromStreetnames: [''],
         geometryId: 'a',
@@ -60,6 +61,7 @@ test('ACTION: ROAD_CLOSURE/FETCH_SHAREDSTREETS_PUBLIC_METADATA_SUCCESS - 1 item 
         section: [1],
         side: '',
         streetname: '',
+        toIntersectionClosed: false,
         toIntersectionId: '',
         toStreetnames: ['']
     };
