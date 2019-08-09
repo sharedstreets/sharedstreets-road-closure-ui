@@ -75,6 +75,8 @@ export interface IRoadClosureFormInputChangedPayload {
     day?: string,
     weekOfYear?: string,
     index?: number,
+    intersectionId?: string,
+    value?: any,
 }
 
 export interface IRoadClosureStateItemToggleDirectionPayload {
@@ -568,6 +570,20 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                         forwardStreet.streetname = segment.properties.streetname;
                         forwardStreet.referenceId = segment.properties.referenceId;
                         forwardStreet.geometryId = segment.properties.geometryId;
+                        forwardStreet.fromIntersectionId = segment.properties.fromIntersectionId;
+                        forwardStreet.toIntersectionId = segment.properties.toIntersectionId;
+                        if (segment.properties.fromIntersectionClosed) {
+                            if (!forwardStreet.intersectionsStatus) {
+                                forwardStreet.intersectionsStatus = {};
+                            }
+                            forwardStreet.intersectionsStatus[forwardStreet.fromIntersectionId] = segment.properties.fromIntersectionClosed;
+                        }
+                        if (segment.properties.toIntersectionClosed) {
+                            if (!forwardStreet.intersectionsStatus) {
+                                forwardStreet.intersectionsStatus = {};
+                            }
+                            forwardStreet.intersectionsStatus[forwardStreet.toIntersectionId] = segment.properties.toIntersectionClosed;
+                        }
                         loadedStateItemStreet[segment.properties.geometryId].forward = forwardStreet;
                     }
                     if (segment.properties.direction === "backward") {
@@ -575,6 +591,20 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                         backwardStreet.streetname = segment.properties.streetname;
                         backwardStreet.referenceId = segment.properties.referenceId;
                         backwardStreet.geometryId = segment.properties.geometryId;
+                        backwardStreet.fromIntersectionId = segment.properties.fromIntersectionId;
+                        backwardStreet.toIntersectionId = segment.properties.toIntersectionId;
+                        if (segment.properties.fromIntersectionClosed) {
+                            if (!backwardStreet.intersectionsStatus) {
+                                backwardStreet.intersectionsStatus = {};
+                            }
+                            backwardStreet.intersectionsStatus[backwardStreet.fromIntersectionId] = segment.properties.fromIntersectionClosed;
+                        }
+                        if (segment.properties.toIntersectionClosed) {
+                            if (!backwardStreet.intersectionsStatus) {
+                                backwardStreet.intersectionsStatus = {};
+                            }
+                            backwardStreet.intersectionsStatus[backwardStreet.toIntersectionId] = segment.properties.toIntersectionClosed;
+                        }
                         loadedStateItemStreet[segment.properties.geometryId].backward = backwardStreet;
 
                     }
@@ -689,6 +719,8 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                         forwardStreet.streetname = segment.properties.streetname;
                         forwardStreet.referenceId = segment.properties.referenceId;
                         forwardStreet.geometryId = segment.properties.geometryId;
+                        forwardStreet.fromIntersectionId = segment.properties.fromIntersectionId;
+                        forwardStreet.toIntersectionId = segment.properties.toIntersectionId;
 
                         output[segment.properties.geometryId].forward = forwardStreet;
                     }
@@ -697,6 +729,8 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                         backwardStreet.streetname = segment.properties.streetname;
                         backwardStreet.referenceId = segment.properties.referenceId;
                         backwardStreet.geometryId = segment.properties.geometryId;
+                        backwardStreet.fromIntersectionId = segment.properties.fromIntersectionId;
+                        backwardStreet.toIntersectionId = segment.properties.toIntersectionId;
 
                         output[segment.properties.geometryId].backward = backwardStreet;
                     }
@@ -774,6 +808,21 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             if (key === "street") {
                 forEach(Object.keys(updatedItem.properties[key][action.payload.geometryId]), (refId: string) => {
                     updatedItem.properties[key][action.payload.geometryId][refId].streetname = action.payload.street;
+                });
+            } else if (key === "intersection") {
+                forEach(Object.keys(updatedItem.properties.street), (geomId: string) => {
+                    forEach(Object.keys(updatedItem.properties.street[geomId]), (direction: string) => {
+                        if (!updatedItem.properties.street[geomId][direction].intersectionsStatus) {
+                            updatedItem.properties.street[geomId][direction].intersectionsStatus = {};
+                        }
+                        if (updatedItem.properties.street[geomId][direction].fromIntersectionId === action.payload.intersectionId ||
+                            updatedItem.properties.street[geomId][direction].toIntersectionId === action.payload.intersectionId) {
+                            updatedItem.properties.street[geomId][direction].intersectionsStatus[action.payload.intersectionId] = action.payload.value;
+                        }
+                        // forEach(action.payload.intersectionIds, (intersectionId) => {
+                        //     updatedItem.properties.street[action.payload.geometryId][refId].intersectionsStatus[intersectionId] = action.payload.value;
+                        // });
+                    });
                 });
             } else if (key === "mode") {
                 if (!updatedItem.properties[key]) {
