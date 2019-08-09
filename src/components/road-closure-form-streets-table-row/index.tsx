@@ -1,5 +1,6 @@
 import {
     Button,
+    Checkbox,
     InputGroup
 } from '@blueprintjs/core';
 import {
@@ -25,13 +26,16 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
     public constructor(props: IRoadClosureFormStreetsTableRowProps) {
         super(props);
         this.handleDispatchStreetName = this.handleDispatchStreetName.bind(this);
+        this.handleChangeIntersectionStatusChanged = this.handleChangeIntersectionStatusChanged.bind(this);
         this.handleChangeStreetName = this.handleChangeStreetName.bind(this);
         this.handleDeleteStreetSegment = this.handleDeleteStreetSegment.bind(this);
         this.handleMouseEnter = this.handleMouseEnter.bind(this);
         this.handleMouseLeave = this.handleMouseLeave.bind(this);
-        this.state ={
+        this.state = {
+            fromIntersection: false,
             isHighlighted: false,
-            streetnameValue: this.props.street.streetname
+            streetnameValue: this.props.street.streetname,
+            toIntersection: false,
         }
     }
 
@@ -58,6 +62,17 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
             key: 'street',
             referenceId: this.props.street.referenceId,
             street: this.state.streetnameValue,
+        });
+    }
+
+    public handleChangeIntersectionStatusChanged(e: any): any {
+        this.props.inputChanged({
+            geometryId: this.props.street.geometryId,
+            // intersectionId: this.props.street.intersectionsStatus
+            intersectionId: this.props.currentFeature.properties[`${e.target.id}Id`],
+            key: "intersection",
+            referenceId: this.props.street.referenceId,
+            value: e.target.checked,
         });
     }
 
@@ -115,6 +130,13 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
                     />
                 </td>
                 <td>
+                    <Checkbox
+                        onChange={this.handleChangeIntersectionStatusChanged}
+                        id={'fromIntersection'}
+                        checked={this.props.street.intersectionsStatus && this.props.street.intersectionsStatus[this.props.street.fromIntersectionId]}
+                    />
+                </td>
+                <td>
                     {this.props.currentFeature.properties.fromStreetnames.filter((name) => !isEmpty(name)).join(", ")}
                     {
                         this.props.currentFeature.properties.fromStreetnames.filter((name) => !isEmpty(name)).length === 0 && 
@@ -128,6 +150,13 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
                         this.props.currentFeature.properties.toStreetnames.filter((name) => !isEmpty(name)).length === 0 && 
                         "No streetname found"
                     }
+                </td>
+                <td>
+                    <Checkbox
+                        onChange={this.handleChangeIntersectionStatusChanged}
+                        id={'toIntersection'}
+                        checked={this.props.street.intersectionsStatus && this.props.street.intersectionsStatus[this.props.street.toIntersectionId]}
+                    />
                 </td>
             </tr>
     }
