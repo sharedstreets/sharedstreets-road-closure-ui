@@ -75,9 +75,10 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
       lastPointIndex: 0,
       selectedCoordinates: {},
       viewport: {
-        latitude: 38.5,
-        longitude: -98,
-        zoom: 3
+        // TODO - make this config-driven
+        latitude: 40.8273,
+        longitude: -73.96,
+        zoom: 9.5,
       },
     }
   }
