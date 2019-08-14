@@ -908,14 +908,7 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             };
 
         case "ROAD_CLOSURE/RESET_ROAD_CLOSURE":
-            return {
-                ...state,
-                allOrgs: [],
-                currentItem: new SharedStreetsMatchGeomFeatureCollection(),
-                isEditingExistingClosure: false,
-                isLoadedInput: false,
-                isLoadingAllRoadClosures: false,
-            };
+            return defaultState;
             
         default:
             return state;

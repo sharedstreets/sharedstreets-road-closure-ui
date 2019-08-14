@@ -467,6 +467,29 @@ test('ACTION: ROAD_CLOSURE/INPUT_CHANGED - date with existing date & schedule - 
     expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.INPUT_CHANGED(payload))).toEqual(expectedState)
 });
 
+test('ACTION: ROAD_CLOSURE/RESET_ROAD_CLOSURE', () => {
+    const startingState = Object.assign({}, defaultState);
+
+    currentItem = new SharedStreetsMatchGeomFeatureCollection();
+    currentItem.properties.description = "updated description";
+    currentItem.properties.reference = "REF";
+    currentItem.properties.startTime = "20";
+    currentItem.properties.subtype = "ROAD_CLOSED_CONSTRUCTION";
+    startingState.currentItem = currentItem;
+
+    startingState.uploadUrls = {
+        geojsonUploadUrl: 'https://geojson.com',
+        wazeUploadUrl: 'https://waze.com',
+    }
+
+    startingState.allOrgs = [
+        {}, {}, {}
+    ];
+
+    const expectedState = Object.assign({}, defaultState);
+
+    expect(roadClosureReducer(startingState, ROAD_CLOSURE_ACTIONS.RESET_ROAD_CLOSURE())).toEqual(expectedState)
+});
 
 // test('ACTION: ROAD_CLOSURE/INPUT_CHANGED - form', () => {
 //     const startingState = Object.assign({}, defaultState);
