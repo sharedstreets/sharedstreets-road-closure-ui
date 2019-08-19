@@ -6,6 +6,9 @@ import {
 import {
     getContiguousFeatureGroups, getContiguousFeatureGroupsDirections, getGeometryIdPathMap,
 } from 'src/selectors/road-closure-geojson';
+import {
+    calendarIntervalSelector
+} from 'src/selectors/road-closure-schedule';
 import { RootState } from 'src/store/configureStore';
 import { ROAD_CLOSURE_ACTIONS } from 'src/store/road-closure';
 
@@ -15,6 +18,7 @@ const mapStateToProps = (state: RootState) => ({
     currentRoadClosureGroupsGeometryIdPathMap: getGeometryIdPathMap(state.roadClosure),
     currentRoadClosureItem: currentRoadClosureItemSelector(state.roadClosure),
     roadClosure: state.roadClosure,
+    selectedIntervals: calendarIntervalSelector(state.roadClosure),
 });
 
 export default connect<{}, {}, IRoadClosureFormProps>(

@@ -1,11 +1,14 @@
 import {
     forEach,
+    isEmpty,
+    parseInt
 } from 'lodash';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
 import {
     IRoadClosureSchedule,
     IRoadClosureScheduleBlock,
+    // IRoadClosureScheduleByWeek,
     IStreetsByGeometryId,
     RoadClosureFormStateItem,
 } from './RoadClosureFormStateItem';
@@ -43,16 +46,30 @@ export class RoadClosureWazeIncidentsItem {
     public endtime: string;
     public schedule: any;
 
-    public constructor(matchedStreetSegment: SharedStreetsMatchGeomPath, form: RoadClosureFormStateItem, bothDirections: boolean) {
+    public constructor(
+        matchedStreetSegment: SharedStreetsMatchGeomPath,
+        form: RoadClosureFormStateItem,
+        bothDirections: boolean,
+        schedule?: IRoadClosureSchedule,
+        week?: string
+    ) {
         this.creationtime = moment().format();
-        if (form.timezone) {
-            this.starttime = form.startTime ? moment.tz(form.startTime, form.timezone).format() : '';
-            this.endtime = form.endTime ? moment.tz(form.endTime, form.timezone).format() : '';
+        
+        if (schedule && week) {
+            this.starttime = form.startTime ? this.setStartTimeByWeek(form.startTime, form.timezone, parseInt(week, 10)) : '';
+            this.endtime = form.endTime ? this.setEndTimeByWeek(form.endTime, form.timezone, parseInt(week, 10)) : '';
+            if (!isEmpty(this.setSchedule(schedule))) {
+                this.schedule = this.setSchedule(schedule);
+            }
         } else {
-            this.starttime = form.startTime ? moment(form.startTime).format() : '';
-            this.endtime = form.endTime ? moment(form.endTime).format() : '';
+            if (form.timezone) {
+                this.starttime = moment.tz(form.startTime, form.timezone).format();
+                this.endtime = moment.tz(form.endTime, form.timezone).format();
+            } else {
+                this.starttime = moment(form.startTime).format();
+                this.endtime = moment(form.endTime).format();
+            }
         }
-        this.schedule = this.setSchedule(form.schedule);
         this.type = form.type;
         this.subtype = form.subtype;
         this.description = form.description;
@@ -67,11 +84,45 @@ export class RoadClosureWazeIncidentsItem {
         this.location.polyline = this.setPolyline(matchedStreetSegment.geometry);
     }
 
+    private setStartTimeByWeek(startTime: string, timezone: string, week: number) {
+        const startTimeAsMoment = moment(startTime);
+        const firstDayOfWeek = moment().week(week).day(0)
+            .hour(startTimeAsMoment.hour())
+            .minute(startTimeAsMoment.minute())
+            .second(startTimeAsMoment.second());
+        let startTimeText = firstDayOfWeek.format();
+        if (moment(startTime).isAfter(firstDayOfWeek)) {
+            startTimeText = startTime;
+        }
+        if (timezone) {
+            return moment.tz(startTimeText, timezone).format();
+        } else {
+            return moment(startTimeText).format()
+        }
+    }
+
+    private setEndTimeByWeek(endTime: string, timezone: string, week: number) {
+        const endTimeAsMoment = moment(endTime);
+        const lastDayOfWeek = moment().week(week).day(6)
+            .hour(endTimeAsMoment.hour())
+            .minute(endTimeAsMoment.minute())
+            .second(endTimeAsMoment.second());
+        let endTimeText = lastDayOfWeek.format();
+        if (moment(endTime).isBefore(lastDayOfWeek)) {
+            endTimeText = endTime;
+        }
+        if (timezone) {
+            return moment.tz(endTimeText, timezone).format();
+        } else {
+            return moment(endTimeText).format()
+        }
+    }
+
     private setSchedule(schedule: IRoadClosureSchedule) {
         const output = {};
         Object.keys(schedule).forEach((day) => {
             output[day] = '';
-            schedule[day].forEach((scheduleBlock: IRoadClosureScheduleBlock, index) => {
+            schedule[day].forEach((scheduleBlock: IRoadClosureScheduleBlock, index: number) => {
                 output[day] += `${scheduleBlock.startTime}-${scheduleBlock.endTime}`;
                 if (index+1 < schedule[day].length) {
                     output[day] += ',';

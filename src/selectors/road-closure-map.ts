@@ -1,6 +1,8 @@
+import along from '@turf/along';
 import bearing from '@turf/bearing';
 import { featureCollection, point } from '@turf/helpers';
-import midpoint from '@turf/midpoint';
+import length from '@turf/length';
+// import midpoint from '@turf/midpoint';
 // import { SharedStreetsMatchPath } from 'src/models/SharedStreets/SharedStreetsMatchPath';
 import { IRoadClosureState } from 'src/store/road-closure';
 import { currentItemToGeojson, getContiguousFeatureGroups } from './road-closure-geojson';
@@ -44,13 +46,9 @@ export const getDirectionIconPoints = (state: IRoadClosureState) => {
 
     const outputFeatures: any[] = [];
     currentItem.features.forEach((feature: any) => {
-        const featureMidpoint = midpoint(
-            feature.geometry.coordinates[0],
-            feature.geometry.coordinates[
-                feature.geometry.coordinates.length-1
-            ]
-        );
-        featureMidpoint.properties = {
+        const featureLength = length(feature, {units: "meters"});
+        const halfwayAlongFeature = along(feature, featureLength/2, {units: "meters"})
+        halfwayAlongFeature.properties = {
             bearing: bearing(
                 feature.geometry.coordinates[0],
                 feature.geometry.coordinates[
@@ -59,7 +57,7 @@ export const getDirectionIconPoints = (state: IRoadClosureState) => {
             )
         };
         outputFeatures.push(
-            featureMidpoint  
+            halfwayAlongFeature  
         );
     });
 

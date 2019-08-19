@@ -1,5 +1,6 @@
 import {
     forEach,
+    isEmpty
 } from 'lodash';
 import {
     IRoadClosureOutputFormatName,
@@ -36,24 +37,50 @@ export function currentRoadClosureItemToWaze(state: IRoadClosureState){
     const incidents: RoadClosureWazeIncidentsItem[] = [];
     if (currentItem) {
         forEach(currentItem.features, (segment: SharedStreetsMatchGeomPath|SharedStreetsMatchGeomPath, index) => {
-            if (segment instanceof SharedStreetsMatchGeomPath) {
-                if (currentItem.properties.geometryIdDirectionFilter[segment.properties.geometryId].forward && 
-                    currentItem.properties.geometryIdDirectionFilter[segment.properties.geometryId].backward) {
-                        // if both, use forward reference
-                        if (segment.properties.direction === "forward") {
-                            const outputItem = new RoadClosureWazeIncidentsItem(segment, currentItem.properties, true);
-                            incidents.push(outputItem);
+            if (!isEmpty(currentItem.properties.schedule)) {
+                forEach(currentItem.properties.schedule, (schedule, week) => {
+                    if (segment instanceof SharedStreetsMatchGeomPath) {
+                        if (currentItem.properties.geometryIdDirectionFilter[segment.properties.geometryId].forward && 
+                            currentItem.properties.geometryIdDirectionFilter[segment.properties.geometryId].backward) {
+                                // if both, use forward reference
+                                if (segment.properties.direction === "forward") {
+                                    const outputItem = new RoadClosureWazeIncidentsItem(segment, currentItem.properties, true, schedule, week);
+                                    incidents.push(outputItem);
+                                }
+                        } else if (currentItem.properties.geometryIdDirectionFilter[segment.properties.geometryId].forward && 
+                            !currentItem.properties.geometryIdDirectionFilter[segment.properties.geometryId].backward) {
+                                if (segment.properties.direction === "forward") {
+                                    const outputItem = new RoadClosureWazeIncidentsItem(segment, currentItem.properties, false, schedule, week);
+                                    incidents.push(outputItem);
+                                }
+                        } else {
+                            if (segment.properties.direction === "backward") {
+                                const outputItem = new RoadClosureWazeIncidentsItem(segment, currentItem.properties, false, schedule, week);
+                                incidents.push(outputItem);
+                            }
                         }
-                } else if (currentItem.properties.geometryIdDirectionFilter[segment.properties.geometryId].forward && 
-                    !currentItem.properties.geometryIdDirectionFilter[segment.properties.geometryId].backward) {
-                        if (segment.properties.direction === "forward") {
+                    }
+                })
+            } else {
+                if (segment instanceof SharedStreetsMatchGeomPath) {
+                    if (currentItem.properties.geometryIdDirectionFilter[segment.properties.geometryId].forward && 
+                        currentItem.properties.geometryIdDirectionFilter[segment.properties.geometryId].backward) {
+                            // if both, use forward reference
+                            if (segment.properties.direction === "forward") {
+                                const outputItem = new RoadClosureWazeIncidentsItem(segment, currentItem.properties, true);
+                                incidents.push(outputItem);
+                            }
+                    } else if (currentItem.properties.geometryIdDirectionFilter[segment.properties.geometryId].forward && 
+                        !currentItem.properties.geometryIdDirectionFilter[segment.properties.geometryId].backward) {
+                            if (segment.properties.direction === "forward") {
+                                const outputItem = new RoadClosureWazeIncidentsItem(segment, currentItem.properties, false);
+                                incidents.push(outputItem);
+                            }
+                    } else {
+                        if (segment.properties.direction === "backward") {
                             const outputItem = new RoadClosureWazeIncidentsItem(segment, currentItem.properties, false);
                             incidents.push(outputItem);
                         }
-                } else {
-                    if (segment.properties.direction === "backward") {
-                        const outputItem = new RoadClosureWazeIncidentsItem(segment, currentItem.properties, false);
-                        incidents.push(outputItem);
                     }
                 }
             }

@@ -1,8 +1,13 @@
+import 'abortcontroller-polyfill/dist/polyfill-patch-fetch';
+
 import {
     forEach,
     isEmpty,
     omit,
+    parseInt,
+    sortedLastIndexBy,
 } from 'lodash';    
+import * as moment from 'moment';
 import { Dispatch } from 'redux';
 import {
     ActionType,
@@ -69,6 +74,7 @@ export interface IRoadClosureFormInputChangedPayload {
     reference?: string,
     subtype?: string,
     day?: string,
+    weekOfYear?: string,
     index?: number,
 }
 
@@ -797,75 +803,93 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                     updatedItem.properties[key].push(action.payload[key]);
                 }
             } else if (key === "schedule") {
-                if (!updatedItem.properties[key]) {
+                const startPayloadAsMoment = moment()
+                    .week(parseInt(action.payload.weekOfYear!, 10))
+                    .day(action.payload.day!)
+                    .hour(parseInt(action.payload.startTime!.split(":")[0], 10))
+                    .minute(parseInt(action.payload.startTime!.split(":")[1], 10));
+                const isStartPayloadInRange = moment(updatedItem.properties.startTime).isBefore(startPayloadAsMoment);
+                const endPayloadAsMoment = moment()
+                    .week(parseInt(action.payload.weekOfYear!, 10))
+                    .day(action.payload.day!)
+                    .hour(parseInt(action.payload.endTime!.split(":")[0], 10))
+                    .minute(parseInt(action.payload.endTime!.split(":")[1], 10));
+                const isEndPayloadInRange = moment(updatedItem.properties.endTime).isAfter(endPayloadAsMoment);
+                const isPayloadInRange = isStartPayloadInRange && isEndPayloadInRange;
+                
+                if (isPayloadInRange && !updatedItem.properties[key]) {
                     updatedItem.properties[key] = {}
                 }
-                if (!updatedItem.properties[key][action.payload.day!]) {
-                    updatedItem.properties[key][action.payload.day!] = [];
+                if (isPayloadInRange && !updatedItem.properties[key][action.payload.weekOfYear!]) {
+                    updatedItem.properties[key][action.payload.weekOfYear!] = {};
+                }
+                if (isPayloadInRange && !updatedItem.properties[key][action.payload.weekOfYear!][action.payload.day!]) {
+                    updatedItem.properties[key][action.payload.weekOfYear!][action.payload.day!] = [];
                 }
                 if (!isEmpty(action.payload.startTime) && action.payload.startTime &&
                     !isEmpty(action.payload.endTime) && action.payload.endTime && 
-                    action.payload.startTime !== action.payload.endTime
+                    action.payload.startTime !== action.payload.endTime &&
+                    isPayloadInRange
                 ) {
                     // const startEndKey = action.payload.startTime.replace(":", "-")+"-"+action.payload.endTime.replace(":", "-");
                     // updatedItem.properties[key][action.payload.day!][startEndKey] = {
                     //     endTime: action.payload.endTime,
                     //     startTime: action.payload.startTime,
                     // };
-                    updatedItem.properties[key][action.payload.day!].push({
-                        endTime: action.payload.endTime,
-                        startTime: action.payload.startTime,
-                    });
-                }
-            } else if (key === "scheduleRemove") {
-                if (!isEmpty(action.payload.startTime) && action.payload.startTime &&
-                    !isEmpty(action.payload.endTime) && action.payload.endTime && 
-                    action.payload.startTime !== action.payload.endTime
-                ) {
-                    const startEndKey = action.payload.startTime.replace(":", "-")+"-"+action.payload.endTime.replace(":", "-");
-                    updatedItem.properties[key][action.payload.day!] = omit(updatedItem.properties[key][action.payload.day!], startEndKey);
-                }
-            } else {
-                updatedItem.properties[key] = action.payload[key];
-            }
-            
-            return {
-                ...state,
-                currentItem: updatedItem,
-            }
-        case "ROAD_CLOSURE/INPUT_CHANGED":
-            const inputChangedKey = action.payload.key;
-            updatedItem = Object.assign(Object.create(state.currentItem), state.currentItem);
 
-            if (inputChangedKey === "street") {
-                forEach(Object.keys(updatedItem.properties[inputChangedKey][action.payload.geometryId]), (refId: string) => {
-                    updatedItem.properties[inputChangedKey][action.payload.geometryId][refId].streetname = action.payload.street;
-                });
-            } else if (inputChangedKey === "mode") {
-                if (!updatedItem.properties[inputChangedKey]) {
-                    updatedItem.properties[inputChangedKey] = [];
-                }
-                if (updatedItem.properties[inputChangedKey] && updatedItem.properties[inputChangedKey].includes(action.payload[inputChangedKey])) {
-                    const removeIndex = updatedItem.properties[inputChangedKey].indexOf(action.payload[inputChangedKey]);
-                    updatedItem.properties[inputChangedKey].splice(removeIndex, 1);
-                } else {
-                    updatedItem.properties[inputChangedKey].push(action.payload[inputChangedKey]);
-                }
-            } else if (inputChangedKey === "schedule") {
-                if (!updatedItem.properties[inputChangedKey][action.payload.day!]) {
-                    updatedItem.properties[inputChangedKey][action.payload.day!] = [];
-                }
-                if (!isEmpty(action.payload.startTime) && action.payload.startTime &&
-                    !isEmpty(action.payload.endTime) && action.payload.endTime && 
-                    action.payload.startTime !== action.payload.endTime
-                ) {
-                    updatedItem.properties[inputChangedKey][action.payload.day!].push({
+                    // get index to insert to maintain sort order (by start time and then by end time to tiebreak)
+                    const insertIndex = sortedLastIndexBy(updatedItem.properties[key][action.payload.weekOfYear!][action.payload.day!], {
+                        endTime: action.payload.endTime,
+                        startTime: action.payload.startTime,
+                    }, 'startTime');
+
+                    updatedItem.properties[key][action.payload.weekOfYear!][action.payload.day!].splice(insertIndex, 0, {
                         endTime: action.payload.endTime,
                         startTime: action.payload.startTime,
                     });
                 }
             } else {
-                updatedItem.properties[inputChangedKey] = action.payload[inputChangedKey];
+                if (key === "startTime" || key === "endTime" && !isEmpty(state.currentItem.properties.schedule)) {
+                    const payloadAsMoment = moment(action.payload[key]);
+                    const stateTimeAsMoment = moment(state.currentItem.properties[key]);
+                    if (key === "startTime" && payloadAsMoment.isAfter(stateTimeAsMoment)) {
+                        // when start of range pushed back
+                        // remove schedule items that fall outside the range
+                        if (payloadAsMoment.week() > stateTimeAsMoment.week()) {
+                            // drop any removed weeks
+                            const weeksToOmit = [];
+                            for (let i = stateTimeAsMoment.week(); i<payloadAsMoment.week(); i++) {
+                                weeksToOmit.push(i);
+                            }
+                            updatedItem.properties.schedule = omit(updatedItem.properties.schedule, weeksToOmit);
+                        }
+                        for (let i = 0; i<payloadAsMoment.day(); i++) {
+                            // drop all days leading up to day of new startTime
+                            updatedItem.properties.schedule[payloadAsMoment.week()] = omit(updatedItem.properties.schedule[payloadAsMoment.week()], moment().day(i).format("dddd"));
+                        }
+                        if (updatedItem.properties.schedule[payloadAsMoment.week()] && Object.keys(updatedItem.properties.schedule[payloadAsMoment.week()]).length === 0) {
+                            updatedItem.properties.schedule = omit(updatedItem.properties.schedule, payloadAsMoment.week());
+                        }
+                    } else if (key === "endTime" && payloadAsMoment.isBefore(stateTimeAsMoment)) {
+                        // when end of range pushed up
+                        // remove schedule items that fall outside the range
+                        if (payloadAsMoment.week() < stateTimeAsMoment.week()) {
+                            const weeksToOmit = [];
+                            for (let i = payloadAsMoment.week()+1; i<=stateTimeAsMoment.week(); i++) {
+                                weeksToOmit.push(i);
+                            }
+                            updatedItem.properties.schedule = omit(updatedItem.properties.schedule, weeksToOmit);
+                        }
+                        for (let i = payloadAsMoment.day()+1; i<7; i++) {
+                            // drop all days after day of new endTime
+                            updatedItem.properties.schedule[payloadAsMoment.week()] = omit(updatedItem.properties.schedule[payloadAsMoment.week()], moment().day(i).format("dddd"));
+                        }
+                        if (Object.keys(updatedItem.properties.schedule[payloadAsMoment.week()]).length === 0) {
+                            updatedItem.properties.schedule = omit(updatedItem.properties.schedule, payloadAsMoment.week());
+                        }
+                    }
+                }
+                updatedItem.properties[key] = action.payload[key];
             }
             
             return {
@@ -878,7 +902,15 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 updatedItem = Object.assign(Object.create(state.currentItem), state.currentItem);
     
                 if (removedInputKey === "schedule") {
-                    updatedItem.properties[removedInputKey][action.payload.day!].splice(action.payload.index!, 1);
+                    if (action.payload.weekOfYear && action.payload.day) {
+                        if (updatedItem.properties[removedInputKey][action.payload.weekOfYear!][action.payload.day!].length === 1) {
+                            delete updatedItem.properties[removedInputKey][action.payload.weekOfYear!][action.payload.day!];
+                        } else {
+                            updatedItem.properties[removedInputKey][action.payload.weekOfYear!][action.payload.day!].splice(action.payload.index!, 1);
+                        }
+                    } else {
+                        updatedItem.properties[removedInputKey] = {};
+                    }
                 }
                 
                 return {
@@ -893,14 +925,7 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
             };
 
         case "ROAD_CLOSURE/RESET_ROAD_CLOSURE":
-            return {
-                ...state,
-                allOrgs: [],
-                currentItem: new SharedStreetsMatchGeomFeatureCollection(),
-                isEditingExistingClosure: false,
-                isLoadedInput: false,
-                isLoadingAllRoadClosures: false,
-            };
+            return defaultState;
             
         default:
             return state;
