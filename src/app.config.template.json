@@ -1,4 +1,6 @@
 {
     "base_server_url": "",
+    "extent": [],
+    "org_name": "",
     "server_port": 3001
 }
