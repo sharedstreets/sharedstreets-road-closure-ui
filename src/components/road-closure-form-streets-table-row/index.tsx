@@ -10,6 +10,7 @@ import * as React from 'react';
 import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
 import { SharedStreetsMatchGeomPath } from 'src/models/SharedStreets/SharedStreetsMatchGeomPath';
 // import { SharedStreetsMatchPoint } from 'src/models/SharedStreets/SharedStreetsMatchPoint';
+import { getIntersectionValidityForPath } from 'src/selectors/road-closure-intersection';
 import './road-closure-form-streets-table-row.css'
 
 export interface IRoadClosureFormStreetsTableRowProps {
@@ -94,7 +95,9 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
         //     geometryId,
         //     matchedStreetIndex,
         // }  = this.props.street[refIds[0]];
+        const intersectionValidity = getIntersectionValidityForPath(this.props.currentFeature);
         return <tr
+                    title={JSON.stringify(this.props.currentFeature)}
                     className={
                         this.state.isHighlighted ?
                         'SHST-Road-Closure-Form-Streets-Table-Row-Highlighted'
@@ -131,6 +134,7 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
                 </td>
                 <td>
                     <Checkbox
+                        disabled={!intersectionValidity.fromIntersection}
                         onChange={this.handleChangeIntersectionStatusChanged}
                         id={'fromIntersection'}
                         checked={this.props.street.intersectionsStatus && this.props.street.intersectionsStatus[this.props.street.fromIntersectionId]}
@@ -153,6 +157,7 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
                 </td>
                 <td>
                     <Checkbox
+                        disabled={!intersectionValidity.toIntersection}
                         onChange={this.handleChangeIntersectionStatusChanged}
                         id={'toIntersection'}
                         checked={this.props.street.intersectionsStatus && this.props.street.intersectionsStatus[this.props.street.toIntersectionId]}

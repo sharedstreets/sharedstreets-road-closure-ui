@@ -8,6 +8,7 @@ import { uniqBy } from 'lodash';
 import { SharedStreetsMatchGeomPath } from 'src/models/SharedStreets/SharedStreetsMatchGeomPath';
 import { IRoadClosureState } from 'src/store/road-closure';
 import { currentItemToGeojson, getContiguousFeatureGroups } from './road-closure-geojson';
+import { getIntersectionValidityForPath } from './road-closure-intersection';
 
 export const getRoadBlockIconPoints = (state: IRoadClosureState) => {
     const groupedPaths: any = getContiguousFeatureGroups(state);
@@ -43,23 +44,28 @@ export const getIntersectionPoints = (state: IRoadClosureState) => {
 
     let outputFeatures: any[] = [];
     currentItem.features.forEach((feature: SharedStreetsMatchGeomPath) => {
+        const intersectionValidity = getIntersectionValidityForPath(feature);
         const formStreetForFeature = Object.values(state.currentItem.properties.street[feature.properties.geometryId]).filter((street) => street.referenceId === feature.properties.referenceId);
         const isFromIntersectionClosed = formStreetForFeature[0].intersectionsStatus && formStreetForFeature[0].intersectionsStatus[feature.properties.fromIntersectionId];
         const isToIntersectionClosed = formStreetForFeature[0].intersectionsStatus && formStreetForFeature[0].intersectionsStatus[feature.properties.toIntersectionId];
-        outputFeatures.push(
-            point(feature.geometry.coordinates[0], {
-                closed: isFromIntersectionClosed,
-                id: feature.properties.fromIntersectionId,
-            }),
-        );
-        outputFeatures.push(
-            point(feature.geometry.coordinates[
-                feature.geometry.coordinates.length-1
-            ], {
-                closed: isToIntersectionClosed,
-                id: feature.properties.toIntersectionId,
-            })
-        );
+        if (intersectionValidity.fromIntersection) {
+            outputFeatures.push(
+                point(feature.geometry.coordinates[0], {
+                    closed: isFromIntersectionClosed,
+                    id: feature.properties.fromIntersectionId,
+                }),
+            );
+        }
+        if (intersectionValidity.toIntersection) {
+            outputFeatures.push(
+                point(feature.geometry.coordinates[
+                    feature.geometry.coordinates.length-1
+                ], {
+                    closed: isToIntersectionClosed,
+                    id: feature.properties.toIntersectionId,
+                })
+            );
+        }
     });
 
     outputFeatures = uniqBy(outputFeatures, (o) => o.properties.id);
