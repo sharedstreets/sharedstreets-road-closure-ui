@@ -79,7 +79,7 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
     }
 
     public render() {
-        let downloadButtonProps = {
+        let downloadButtonProps: any = {
             className: "bp3-button bp3-large bp3-intent-success",
             download: this.props.downloadFileName,
             href: this.props.downloadDataURI,
