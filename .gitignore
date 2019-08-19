@@ -16,7 +16,8 @@
 road-closures/
 
 # production
-# /build
+/build
+/data
 bin/
 
 # misc
