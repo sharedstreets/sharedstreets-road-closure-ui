@@ -39,8 +39,9 @@ export interface IRoadClosureFormStreetsGroupItemProps {
 
 export interface IRoadClosureFormStreetsGroupItemState {
     isHighlighted: boolean;
+    // isIntersectionsIncluded: boolean;
     isCollapsed: boolean;
-    directionOptions: Array<{ forward: boolean, backward: boolean}>
+    directionOptions: Array<{ forward: boolean, backward: boolean}>,
 }
 
 class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormStreetsGroupItemProps, IRoadClosureFormStreetsGroupItemState> {
@@ -54,6 +55,7 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
             ],
             isCollapsed: true,
             isHighlighted: false,
+            // isIntersectionsIncluded: false,
         };
         this.handleToggleCollapsed = this.handleToggleCollapsed.bind(this);
         this.handleToggleDirection = this.handleToggleDirection.bind(this);
@@ -61,6 +63,7 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
         this.handleMouseover = this.handleMouseover.bind(this);
         this.handleMouseout = this.handleMouseout.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        this.handleToggleIntersections = this.handleToggleIntersections.bind(this);
     }
 
     public canToggleDirection() {
@@ -131,6 +134,39 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
         return;
     }
 
+    public handleToggleIntersections() {
+        forEach(this.props.matchedStreetsGroup, (feature: SharedStreetsMatchGeomPath) => {
+            const street = this.props.streets[feature.properties.geometryId];
+            // let segment = {};
+            // if (street.forward.referenceId === feature.properties.referenceId) {
+            //     segment = street.forward;
+            // }
+            // if (street.backward.referenceId === feature.properties.referenceId) {
+            //     segment = street.backward;
+            // }
+            this.props.inputChanged({
+                geometryId: street.geometryId,
+                // intersectionId: street.intersectionsStatus
+                intersectionId: feature.properties[`fromIntersectionId`],
+                key: "intersection",
+                referenceId: street.referenceId,
+                value: true,
+            });
+            this.props.inputChanged({
+                geometryId: street.geometryId,
+                // intersectionId: street.intersectionsStatus
+                intersectionId: feature.properties[`toIntersectionId`],
+                key: "intersection",
+                referenceId: street.referenceId,
+                value: true,
+            });
+        });
+
+        // this.setState({
+        //     isIntersectionsIncluded: !this.state.isIntersectionsIncluded
+        // });
+    };
+
     public render() {
         let keyDirection = "forward";
         if (!this.props.matchedStreetsGroupDirections.forward) {
@@ -187,14 +223,26 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
                             title={'Delete this group'}
                             icon={"delete"}
                             intent={"danger"}
+                            text={'Delete'}
                             onClick={this.handleDeleteGroup}
                         />
                         <Button
                             title={'Zoom into this group'}
                             icon={"zoom-in"}
                             intent={"primary"}
+                            text={'Zoom'}
                             onClick={this.handleClick}
                         />
+                        <Button
+                            title={'Include intersections'}
+                            icon={"intersection"}
+                            intent={"primary"}
+                            text={'Include intersections'}
+                            onClick={this.handleToggleIntersections}
+                        />
+                    </ButtonGroup>
+                    <ButtonGroup
+                        fill={true}>
                         <Button 
                             fill={true}
                             text={!this.state.isCollapsed && !!this.props.matchedStreetsGroup ? 'Hide segments' : 'Show segments'}
