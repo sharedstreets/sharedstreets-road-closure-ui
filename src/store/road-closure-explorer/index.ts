@@ -74,8 +74,6 @@ export const loadAllRoadClosures = () => (dispatch: Dispatch<any>, getState: any
 
         getAllRoadClosures(url).then((data) => {
             if (isAppRunningLocally()) {
-                // tslint:disable-next-line
-                console.log(data);
                 return JSON.parse(data);
             } else {
                 const responseDoc = new DOMParser().parseFromString(data, 'application/xml');
