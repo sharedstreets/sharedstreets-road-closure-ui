@@ -27,7 +27,7 @@ const apiService = (endpoint: string, method: string, queryParams: {} = { authKe
     if (isEmpty(requestUrl)) {
         requestUrl = getRequestURLBuilder(endpoint, queryParams);
     }
-    let fetchOptions = {
+    let fetchOptions: any = {
         body: JSON.stringify(payload),
         headers: new Headers(headers),
         method,
