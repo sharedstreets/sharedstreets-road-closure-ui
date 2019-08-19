@@ -8,7 +8,7 @@ import {
     isAppRunningLocally,
 } from '../config';
 // const API_URL = ;
-const API_URL = isAppRunningLocally() ? (AppPort ? `${AppBaseServerURL}:${AppPort}/` : `${AppBaseServerURL}`)
+const API_URL = isAppRunningLocally() ? (AppPort ? `${AppBaseServerURL}:${AppPort}/` : `${AppBaseServerURL}/`)
     : "https://api.sharedstreets.io/v0.1.0/";
 
 const paramStringBuilder = (obj: {}) => {
