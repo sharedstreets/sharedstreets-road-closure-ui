@@ -6,7 +6,7 @@ import * as express from 'express';
 import { promises as fsPromises } from 'fs';
 import * as  klaw from 'klaw';
 // import * as util from 'util';
-import { omit } from 'lodash';
+import { omit, parseInt } from 'lodash';
 import * as nodePath from 'path';
 import * as through2 from 'through2';
 // import { SharedStreetsReference } from 'sharedstreets-types';
@@ -175,7 +175,7 @@ app.get("/load-file/:orgName/:id/:extension", async (req, res) => {
 });
     
 app.get("/match/point/:lon,:lat", async (req, res) => {
-    const searchPoint = turfHelpers.point([req.params.lon, req.params.lat]);
+    const searchPoint = turfHelpers.point([parseInt(req.params.lon, 10), parseInt(req.params.lat, 10)]);
     const maxCandidates = req.query.maxCandidates;
     try {
       const matches = await matcher.matchPoint(searchPoint, null, maxCandidates);
