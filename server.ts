@@ -14,7 +14,7 @@ import * as through2 from 'through2';
 // tslint:disable
 // config is relative to bin/
 const favicon = require('express-favicon');
-const config = require('../server.config.json');
+const config = require('../src/app.config.json');
 const sharedstreets = require('sharedstreets');
 // tslint:enable
 
