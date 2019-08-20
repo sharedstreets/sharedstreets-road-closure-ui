@@ -16,6 +16,7 @@ import {
 import * as React from 'react';
 import { SharedStreetsMatchGeomPath } from 'src/models/SharedStreets/SharedStreetsMatchGeomPath';
 import { SharedStreetsMatchGeomPoint } from 'src/models/SharedStreets/SharedStreetsMatchGeomPoint';
+import { getIntersectionValidityForPath } from 'src/selectors/road-closure-intersection';
 import RoadClosureFormStreetsTable from '../road-closure-form-streets-table';
 import './road-closure-form-streets-groups-item.css';
 
@@ -39,7 +40,7 @@ export interface IRoadClosureFormStreetsGroupItemProps {
 
 export interface IRoadClosureFormStreetsGroupItemState {
     isHighlighted: boolean;
-    // isIntersectionsIncluded: boolean;
+    isIntersectionsIncluded: boolean;
     isCollapsed: boolean;
     directionOptions: Array<{ forward: boolean, backward: boolean}>,
 }
@@ -55,7 +56,7 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
             ],
             isCollapsed: true,
             isHighlighted: false,
-            // isIntersectionsIncluded: false,
+            isIntersectionsIncluded: false,
         };
         this.handleToggleCollapsed = this.handleToggleCollapsed.bind(this);
         this.handleToggleDirection = this.handleToggleDirection.bind(this);
@@ -137,34 +138,33 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
     public handleToggleIntersections() {
         forEach(this.props.matchedStreetsGroup, (feature: SharedStreetsMatchGeomPath) => {
             const street = this.props.streets[feature.properties.geometryId];
-            // let segment = {};
-            // if (street.forward.referenceId === feature.properties.referenceId) {
-            //     segment = street.forward;
-            // }
-            // if (street.backward.referenceId === feature.properties.referenceId) {
-            //     segment = street.backward;
-            // }
-            this.props.inputChanged({
-                geometryId: street.geometryId,
-                // intersectionId: street.intersectionsStatus
-                intersectionId: feature.properties[`fromIntersectionId`],
-                key: "intersection",
-                referenceId: street.referenceId,
-                value: true,
-            });
-            this.props.inputChanged({
-                geometryId: street.geometryId,
-                // intersectionId: street.intersectionsStatus
-                intersectionId: feature.properties[`toIntersectionId`],
-                key: "intersection",
-                referenceId: street.referenceId,
-                value: true,
-            });
+
+            const intersectionValidity = getIntersectionValidityForPath(feature);
+            if (intersectionValidity.fromIntersection) {
+                this.props.inputChanged({
+                    geometryId: street.geometryId,
+                    // intersectionId: street.intersectionsStatus
+                    intersectionId: feature.properties[`fromIntersectionId`],
+                    key: "intersection",
+                    referenceId: street.referenceId,
+                    value: !this.state.isIntersectionsIncluded,
+                });
+            }
+            if (intersectionValidity.toIntersection) {
+                this.props.inputChanged({
+                    geometryId: street.geometryId,
+                    // intersectionId: street.intersectionsStatus
+                    intersectionId: feature.properties[`toIntersectionId`],
+                    key: "intersection",
+                    referenceId: street.referenceId,
+                    value: !this.state.isIntersectionsIncluded,
+                });
+            }
         });
 
-        // this.setState({
-        //     isIntersectionsIncluded: !this.state.isIntersectionsIncluded
-        // });
+        this.setState({
+            isIntersectionsIncluded: !this.state.isIntersectionsIncluded
+        });
     };
 
     public render() {
@@ -234,10 +234,9 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
                             onClick={this.handleClick}
                         />
                         <Button
-                            title={'Include intersections'}
+                            title={this.state.isIntersectionsIncluded ? 'Exclude all intersections' : 'Include all intersections'}
                             icon={"intersection"}
-                            intent={"primary"}
-                            text={'Include intersections'}
+                            text={this.state.isIntersectionsIncluded ? 'Exclude all intersections' : 'Include all intersections'}
                             onClick={this.handleToggleIntersections}
                         />
                     </ButtonGroup>
