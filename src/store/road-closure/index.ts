@@ -913,10 +913,12 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                             updatedItem.properties.schedule = omit(updatedItem.properties.schedule, weeksToOmit);
                         }
                         for (let i = 0; i<payloadAsMoment.day(); i++) {
-                            // drop all days leading up to day of new startTime
-                            updatedItem.properties.schedule[payloadAsMoment.week()] = omit(updatedItem.properties.schedule[payloadAsMoment.week()], moment().day(i).format("dddd"));
+                            if (updatedItem.properties.schedule) {
+                                // drop all days leading up to day of new startTime
+                                updatedItem.properties.schedule[payloadAsMoment.week()] = omit(updatedItem.properties.schedule[payloadAsMoment.week()], moment().day(i).format("dddd"));
+                            }
                         }
-                        if (updatedItem.properties.schedule[payloadAsMoment.week()] && Object.keys(updatedItem.properties.schedule[payloadAsMoment.week()]).length === 0) {
+                        if (updatedItem.properties.schedule && updatedItem.properties.schedule[payloadAsMoment.week()] && Object.keys(updatedItem.properties.schedule[payloadAsMoment.week()]).length === 0) {
                             updatedItem.properties.schedule = omit(updatedItem.properties.schedule, payloadAsMoment.week());
                         }
                     } else if (key === "endTime" && payloadAsMoment.isBefore(stateTimeAsMoment)) {
