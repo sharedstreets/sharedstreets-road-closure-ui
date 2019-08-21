@@ -180,7 +180,7 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
                             </Menu>
                         </Popover>
                         <Button
-                            text={"View on map"}
+                            text={"Zoom to closure"}
                             icon={"eye-open"}
                             small={true}
                             onClick={this.handlePreviewClosure}
