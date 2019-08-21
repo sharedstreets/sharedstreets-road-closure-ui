@@ -97,7 +97,6 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
         // }  = this.props.street[refIds[0]];
         const intersectionValidity = getIntersectionValidityForPath(this.props.currentFeature);
         return <tr
-                    title={JSON.stringify(this.props.currentFeature)}
                     className={
                         this.state.isHighlighted ?
                         'SHST-Road-Closure-Form-Streets-Table-Row-Highlighted'
