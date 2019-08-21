@@ -45,6 +45,8 @@ export class RoadClosureWazeIncidentsItem {
     public starttime: string;
     public endtime: string;
     public schedule: any;
+    public fromIntersectionClosed: boolean;
+    public toIntersectionClosed: boolean;
 
     public constructor(
         matchedStreetSegment: SharedStreetsMatchGeomPath,
@@ -74,6 +76,8 @@ export class RoadClosureWazeIncidentsItem {
         this.subtype = form.subtype;
         this.description = form.description;
         this.mode = form.mode;
+        this.fromIntersectionClosed = !!matchedStreetSegment.properties.fromIntersectionClosed;
+        this.toIntersectionClosed = !!matchedStreetSegment.properties.toIntersectionClosed;
 
         this.location.direction = bothDirections ? "BOTH_DIRECTIONS" : "ONE_DIRECTION";
         this.location.incidentId = uuid();
