@@ -36,7 +36,7 @@ Next, you need to build the application by running this command:
 yarn build:local
 ```
 This will create a build of the web app that relies on the included `server.ts`.
-Note that this command sets the environment variable `REACT_APP_LOCAL_SERVER` to `true`.
+Note that this command (and `start:local`) sets the environment variable `REACT_APP_LOCAL_SERVER` to `true`.
 
 And then finally, you can run the application:
 ```
