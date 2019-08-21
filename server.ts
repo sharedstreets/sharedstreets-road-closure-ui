@@ -19,17 +19,17 @@ require('dotenv').config();
 // tslint:enable
 
 if (process.env.REACT_APP_directory === undefined) {
-  let error = "`directory` not set in `app.config.json`\n";
-  error += "Set `directory` to the full file path where you want read and write road closure data.\n"
+  let error = "`REACT_APP_directory` not set in `.env`/environment.\n";
+  error += "Set `REACT_APP_directory` to the full file path where you want read and write road closure data.\n"
   throw new Error(error);
   process.exit(0);
 }
 
 let extentFromEnv: [number, number, number, number] = [0, 0, 0, 0];
 if (!process.env.REACT_APP_extent && JSON.parse( process.env.REACT_APP_extent! ).length === 4 ) {
-  let error = "`extent` not set in `app.config.json`\n";
-  error += "Set `extent` to the bounding box in which you are closing roads.\n"
-  error += "extent=[minX, minY, maxX, maxY].\n"
+  let error = "`REACT_APP_extent` not set in `.env`/environment\n";
+  error += "Set `REACT_APP_extent` to the bounding box in which you are closing roads.\n"
+  error += "REACT_APP_extent=[minX, minY, maxX, maxY].\n"
   error += "you can use http://bboxfinder.com/ to generate an extent.\n"
   throw new Error(error);
   process.exit(0);
