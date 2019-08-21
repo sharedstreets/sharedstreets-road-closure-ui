@@ -125,6 +125,17 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
     );
 
     this.mapContainer.on('load', () => {
+      if (AppExtent && AppExtent.length === 4) {
+        this.mapContainer.addSource('extentBbox', {
+          data: bboxPolygon(AppExtent),
+          type: "geojson"
+        });
+        this.mapContainer.addLayer({
+          "id": "extentLayer",
+          "source": "extentBbox",
+          "type": "line",
+        })
+      }
       if (!this.mapContainer.getLayer('matchedFeatures')) {
         this.mapContainer.addSource('matchedFeatures', {
           // data: this.props.roadClosure.currentItem,
