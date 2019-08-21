@@ -114,6 +114,7 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
       this.mapContainer.getCanvas().style.cursor = this.state.isDrawing ? 'crosshair' : '';
     })
     this.mapContainer.on('click', this.handleMapClick);
+    this.mapContainer.on('mousemove', this.handleShowPossibleDirections)
     this.mapContainer.addControl(
       new mapboxgl.NavigationControl()
     );
@@ -409,12 +410,18 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
     });
   }
 
-  public handleMapClick = (event: any) => {
+  public handleShowPossibleDirections = (event: any) => {
     if (this.state.isDrawing) {
       this.props.findMatchedPoint(
         point([event.lngLat.lng, event.lngLat.lat]),
         this.state.currentLineId,
       );
+    }
+  }
+
+  public handleMapClick = (event: any) => {
+    if (this.state.isDrawing) {
+
 
       const newSelectedCoordinates = Object.assign({}, this.state.selectedCoordinates);
       if (newSelectedCoordinates[this.state.currentLineId].length === 0) {
