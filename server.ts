@@ -19,14 +19,14 @@ const sharedstreets = require('sharedstreets');
 // tslint:enable
 
 if (!config.directory) {
-  let error = "`directory` not set in `server.config.json`\n";
+  let error = "`directory` not set in `app.config.json`\n";
   error += "Set `directory` to the full file path where you want read and write road closure data.\n"
   throw new Error(error);
   process.exit(0);
 }
 
 if (!config.extent) {
-  let error = "`extent` not set in `server.config.json`\n";
+  let error = "`extent` not set in `app.config.json`\n";
   error += "Set `extent` to the bounding box in which you are closing roads.\n"
   error += "extent=[minX, minY, maxX, maxY].\n"
   error += "you can use http://bboxfinder.com/ to generate an extent.\n"
