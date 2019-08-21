@@ -63,7 +63,7 @@ class RoadClosureFormScheduleEntry extends React.Component<IRoadClosureFormSched
             endTimeBeforeStartTime: false,
             isOpen: false,
             scheduleBlock: {
-                endTime: "00:00",
+                endTime: "23:59",
                 startTime: "00:00",
             },
             selectedDays: [],
