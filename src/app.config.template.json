@@ -1,7 +1,0 @@
-{
-    "base_server_url": "<base URL of the included server. if this is empty, default value is http://localhost>",
-    "directory": "<full path to road closure files directory, ex: /Users/indraneel/road-closures/>",
-    "extent": [],
-    "org_name": "<your organization's name. this will be appended to the 'directory' path, ex: /Users/indraneel/road-closures/organization-name>",
-    "port": 3001
-}

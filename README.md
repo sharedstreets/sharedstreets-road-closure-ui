@@ -20,18 +20,16 @@ Then, install the required dependencies:
 cd sharedstreets-road-closure-ui/
 yarn install 
 ```
-You'll have to create a file named `app.config.json` in the application's `src` directory.
-You can simply make a copy of the included file `app.config.template.json` and populate the values appropriately:
+You'll have to create a file named `.env` in the application's top-most/root directory.
+You can simply make a copy of the included file `.env.example` and populate the values appropriately:
 ```
-{
-    "base_server_url": "<base URL of the included server. if this is empty, default value is http://localhost>",
-    "directory": "<full path to road closure files directory, ex: /Users/indraneel/road-closures/>",
-    "extent": [min X coordinate, min Y coordinate, max X coordinate, max Y coordinate],
-    "org_name": "<your organization's name. this will be appended to the 'directory' path, ex: /Users/indraneel/road-closures/organization-name>",
-    "port": 3001
-}
+REACT_APP_base_server_url=<base URL of the included server. if this is empty, default value is http://localhost>
+REACT_APP_directory=full path to road closure files directory, ex: /Users/indraneel/road-closures/
+REACT_APP_extent=[min X coordinate, min Y coordinate, max X coordinate, max Y coordinate]
+REACT_APP_org_name=your organization's name. this will be appended to the 'directory' path, ex: /Users/indraneel/road-closures/organization-name>
+REACT_APP_server_port=3001
 ```
-You can use a website like [bboxfinder](http://bboxfinder.com) to find your extent value. Note that the **extent** specified is the only region within with you'll be able to mark streets as closed.
+You can use a website like [bboxfinder](http://bboxfinder.com) to find your extent value. Note that the **REACT_APP_extent** specified is the only region within with you'll be able to mark streets as closed. Also make sure **REACT_APP_extent** is four values surrounded by square brackets (like this: [-70, 40, -70, 40]).
 
 Next, you need to build the application by running this command:
 ```

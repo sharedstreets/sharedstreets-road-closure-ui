@@ -14,24 +14,27 @@ import * as through2 from 'through2';
 // tslint:disable
 // config is relative to bin/
 const favicon = require('express-favicon');
-const config = require('../src/app.config.json');
 const sharedstreets = require('sharedstreets');
+require('dotenv').config();
 // tslint:enable
 
-if (!config.directory) {
+if (process.env.REACT_APP_directory === undefined) {
   let error = "`directory` not set in `app.config.json`\n";
   error += "Set `directory` to the full file path where you want read and write road closure data.\n"
   throw new Error(error);
   process.exit(0);
 }
 
-if (!config.extent) {
+let extentFromEnv: [number, number, number, number] = [0, 0, 0, 0];
+if (!process.env.REACT_APP_extent && JSON.parse( process.env.REACT_APP_extent! ).length === 4 ) {
   let error = "`extent` not set in `app.config.json`\n";
   error += "Set `extent` to the bounding box in which you are closing roads.\n"
   error += "extent=[minX, minY, maxX, maxY].\n"
   error += "you can use http://bboxfinder.com/ to generate an extent.\n"
   throw new Error(error);
   process.exit(0);
+} else {
+  extentFromEnv = JSON.parse(process.env.REACT_APP_extent!)
 }
 
 enum MatchDirection {
@@ -49,7 +52,7 @@ async function getMatcher() {
   params.source = "osm/planet-181224";
   // params.tileHierarchy = flags['tile-hierarchy']
   params.tileHierarchy = 6;
-  const extent = envelope(bboxPolygon(config.extent));
+  const extent = envelope(bboxPolygon(extentFromEnv));
   const graphs = new sharedstreets.Graph(extent, params, 'car_all');
   await graphs.buildGraph();
   // console.log("graph built");  
@@ -94,10 +97,10 @@ app.put("/save-file", async (req, res) => {
     return res.status(404);
   }
 
-  if (!config.directory) {
+  if (!process.env.REACT_APP_directory) {
     return res.status(404);
   }
-  const orgDirPath = nodePath.join(config.directory, req.query.orgName);
+  const orgDirPath = nodePath.join(process.env.REACT_APP_directory, req.query.orgName);
   try {
     await fsPromises.stat(orgDirPath)
   } catch (e) {
@@ -138,7 +141,7 @@ app.get("/load-files/:orgName", async (req, res) => {
   });
 
   const items: any[] = [];
-  klaw(config.directory)
+  klaw(process.env.REACT_APP_directory!)
     .pipe(filterForGeoJSON)
     .on('data', item => items.push(item))
     .on('end', () => {
@@ -160,10 +163,10 @@ app.get("/load-file/:orgName/:id/:extension", async (req, res) => {
     return res.status(404);
   }
 
-  if (!config.directory) {
+  if (!process.env.REACT_APP_directory) {
     return res.status(404);
   }
-  const fullPath = nodePath.join(config.directory, req.params.orgName, req.params.id, `${req.params.id}.${req.params.extension}`);
+  const fullPath = nodePath.join(process.env.REACT_APP_directory, req.params.orgName, req.params.id, `${req.params.id}.${req.params.extension}`);
   try {
     const file = await fsPromises.readFile(fullPath, { encoding: 'utf8'});
     if (file) {
@@ -307,7 +310,7 @@ app.get('*', (req, res) => {
 
 const server = async () => {
   matcher = await getMatcher();
-  const appPort = config.port ? config.port : 3001;
+  const appPort = process.env.REACT_APP_port ? process.env.REACT_APP_port : 3001;
   app.listen(appPort, () =>  {
       // tslint:disable-next-line
       console.log(`Server running at: http://localhost:${appPort}`);
