@@ -100,7 +100,7 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
       style: 'mapbox://styles/mapbox/light-v9',
       zoom
     };
-    if (AppExtent) {
+    if (AppExtent && AppExtent.length === 4) {
       mapboxInitConfig.bounds = AppExtent;
       mapboxInitConfig.center = center(bboxPolygon(AppExtent)).geometry.coordinates;
       mapboxInitConfig.zoom = 10;
