@@ -47,6 +47,7 @@ export interface IRoadClosureMapProps {
   currentRoadClosureItemOutput: any,
   directionIconPoints: any,
   highlightedFeatureGroup: SharedStreetsMatchGeomPath[],
+  intersectionPoints: any,
   isDrawingEnabled: boolean,
   roadBlockIconPoints: any,
   roadClosure: IRoadClosureState,
@@ -196,6 +197,31 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
           "type": "symbol",
         });
 
+        this.mapContainer.addSource('intersectionPoints', {
+          data: this.props.intersectionPoints,
+          type: "geojson",
+        });
+        this.mapContainer.addLayer({
+          "id": "intersections",
+          'layout': {
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true,
+            'icon-image': [
+              "case",
+              ["==", ["get", "closed"], true],
+              ["literal", "circle-11"],
+              ["literal", "circle-stroked-11"],
+            ],
+            'icon-rotation-alignment': 'map',
+            'icon-size': 1.5,
+          },
+          // "paint": {
+          //   "icon-color": "red",
+          // },
+          "source": "intersectionPoints",
+          "type": "symbol",
+        });
+
         // this.mapContainer.loadImage('/roadblock.png', (error: any, image: any) => {
         //   if (error) {
         //     throw error;
@@ -249,6 +275,10 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
         
     if (this.mapContainer.getLayer('possibleDirections')) {
       this.mapContainer.getSource('possibleDirectionsPoints').setData(this.props.currentPossibleDirections);
+    }
+
+    if (this.mapContainer.getLayer('intersections')) {
+      this.mapContainer.getSource('intersectionPoints').setData(this.props.intersectionPoints);
     }
 
     if (prevProps.roadClosure.currentLineId !== currentLineId) {

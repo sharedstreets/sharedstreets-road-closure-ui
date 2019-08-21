@@ -1,5 +1,6 @@
 import {
     Button,
+    Checkbox,
     InputGroup
 } from '@blueprintjs/core';
 import {
@@ -9,6 +10,7 @@ import * as React from 'react';
 import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
 import { SharedStreetsMatchGeomPath } from 'src/models/SharedStreets/SharedStreetsMatchGeomPath';
 // import { SharedStreetsMatchPoint } from 'src/models/SharedStreets/SharedStreetsMatchPoint';
+import { getIntersectionValidityForPath } from 'src/selectors/road-closure-intersection';
 import './road-closure-form-streets-table-row.css'
 
 export interface IRoadClosureFormStreetsTableRowProps {
@@ -25,13 +27,16 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
     public constructor(props: IRoadClosureFormStreetsTableRowProps) {
         super(props);
         this.handleDispatchStreetName = this.handleDispatchStreetName.bind(this);
+        this.handleChangeIntersectionStatusChanged = this.handleChangeIntersectionStatusChanged.bind(this);
         this.handleChangeStreetName = this.handleChangeStreetName.bind(this);
         this.handleDeleteStreetSegment = this.handleDeleteStreetSegment.bind(this);
         this.handleMouseEnter = this.handleMouseEnter.bind(this);
         this.handleMouseLeave = this.handleMouseLeave.bind(this);
-        this.state ={
+        this.state = {
+            fromIntersection: false,
             isHighlighted: false,
-            streetnameValue: this.props.street.streetname
+            streetnameValue: this.props.street.streetname,
+            toIntersection: false,
         }
     }
 
@@ -61,6 +66,17 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
         });
     }
 
+    public handleChangeIntersectionStatusChanged(e: any): any {
+        this.props.inputChanged({
+            geometryId: this.props.street.geometryId,
+            // intersectionId: this.props.street.intersectionsStatus
+            intersectionId: this.props.currentFeature.properties[`${e.target.id}Id`],
+            key: "intersection",
+            referenceId: this.props.street.referenceId,
+            value: e.target.checked,
+        });
+    }
+
     public handleChangeStreetName(e: any): any {
         this.setState({
             streetnameValue: e.target.value
@@ -79,6 +95,7 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
         //     geometryId,
         //     matchedStreetIndex,
         // }  = this.props.street[refIds[0]];
+        const intersectionValidity = getIntersectionValidityForPath(this.props.currentFeature);
         return <tr
                     className={
                         this.state.isHighlighted ?
@@ -115,6 +132,14 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
                     />
                 </td>
                 <td>
+                    <Checkbox
+                        disabled={!intersectionValidity.fromIntersection}
+                        onChange={this.handleChangeIntersectionStatusChanged}
+                        id={'fromIntersection'}
+                        checked={this.props.street.intersectionsStatus && this.props.street.intersectionsStatus[this.props.street.fromIntersectionId]}
+                    />
+                </td>
+                <td>
                     {this.props.currentFeature.properties.fromStreetnames.filter((name) => !isEmpty(name)).join(", ")}
                     {
                         this.props.currentFeature.properties.fromStreetnames.filter((name) => !isEmpty(name)).length === 0 && 
@@ -128,6 +153,14 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
                         this.props.currentFeature.properties.toStreetnames.filter((name) => !isEmpty(name)).length === 0 && 
                         "No streetname found"
                     }
+                </td>
+                <td>
+                    <Checkbox
+                        disabled={!intersectionValidity.toIntersection}
+                        onChange={this.handleChangeIntersectionStatusChanged}
+                        id={'toIntersection'}
+                        checked={this.props.street.intersectionsStatus && this.props.street.intersectionsStatus[this.props.street.toIntersectionId]}
+                    />
                 </td>
             </tr>
     }

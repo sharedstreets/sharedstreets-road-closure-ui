@@ -9,6 +9,8 @@ export interface ISharedStreetsMatchGeomPathProperties {
     geometryId: string;
     roadClass: string;
     streetname: string;
+    fromIntersectionClosed: boolean;
+    toIntersectionClosed: boolean;
     fromIntersectionId: string;
     toIntersectionId: string;
     fromStreetnames: string[];

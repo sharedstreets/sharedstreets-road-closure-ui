@@ -28,8 +28,10 @@ class RoadClosureFormStreetsTable extends React.Component<IRoadClosureFormStreet
                 <tr>
                 <th>Actions</th>
                 <th>Street name</th>
+                <th>From intersection closed</th>
                 <th>From</th>
                 <th>To</th>
+                <th>To intersection closed</th>
                 </tr>
             </thead>
             <tbody>
