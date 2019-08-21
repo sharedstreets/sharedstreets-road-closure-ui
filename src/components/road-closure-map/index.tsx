@@ -1,6 +1,7 @@
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
 import bbox from '@turf/bbox';
+import bboxPolygon from '@turf/bbox-polygon';
 import { 
   featureCollection,
   lineString,
@@ -20,12 +21,14 @@ import { SharedStreetsMatchGeomPath } from 'src/models/SharedStreets/SharedStree
 import { SharedStreetsMatchPointFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchPointFeatureCollection';
 import { IRoadClosureState } from 'src/store/road-closure';
 import { v4 as uuid } from 'uuid';
+import { AppExtent } from '../../config';
 import SharedStreetsMapDrawControl from '../sharedstreets-map-draw-control';
 import './road-closure-map.css';
 
 // tslint:disable
 const MapboxGeocoder = require('@mapbox/mapbox-gl-geocoder');
 const MapboxTimespace = require('@mapbox/timespace');
+const center = require('@turf/center').default;
 // tslint:enable
 
 const mapboxToken = "pk.eyJ1IjoidHJhbnNwb3J0cGFydG5lcnNoaXAiLCJhIjoiY2ptOTN5N3Q3MHN5aDNxbGs2MzhsN3dneiJ9.K4j9mXsvfGCYtM8YouwCKg";
@@ -91,12 +94,18 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
       }
     } = this.state;
 
-    this.mapContainer = new mapboxgl.Map({
+    const mapboxInitConfig: any = {
       center: [longitude, latitude],
       container: 'SHST-Road-Closure-Map',
       style: 'mapbox://styles/mapbox/light-v9',
       zoom
-    });
+    };
+    if (AppExtent) {
+      mapboxInitConfig.bounds = AppExtent;
+      mapboxInitConfig.center = center(bboxPolygon(AppExtent)).geometry.coordinates;
+      mapboxInitConfig.zoom = 10;
+    }
+    this.mapContainer = new mapboxgl.Map(mapboxInitConfig);
 
     this.mapContainer.on('move', this.handleMapMove);
     this.mapContainer.on('mousemove', () => {
