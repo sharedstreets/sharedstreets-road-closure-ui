@@ -8,6 +8,7 @@ import {
     sortedLastIndexBy,
 } from 'lodash';    
 import * as moment from 'moment';
+import pLimit from 'p-limit';
 import { Dispatch } from 'redux';
 import {
     ActionType,
@@ -379,12 +380,42 @@ export const addFile = (file: File) => (dispatch: Dispatch<any>, getState: any) 
                 if (typeof result === "string") {
                     const obj = JSON.parse(result);
                     if (isValidGeoJSONFile(obj)) {
-                        dispatch(ROAD_CLOSURE_ACTIONS.FILE_ADDED());
-                        dispatch(ROAD_CLOSURE_ACTIONS.FETCH_SHAREDSTREETS_PUBLIC_DATA.success(obj));
-                        dispatch(CONTEXT_ACTIONS.SHOW_MESSAGE({
-                            intent: "success",
-                            text: "Success! Loaded your GeoJSON file.",
-                        }));
+                        // TODO - iterate over features, match the ones without references
+                        if (obj.properties) {
+                            dispatch(ROAD_CLOSURE_ACTIONS.FILE_ADDED());
+                            dispatch(ROAD_CLOSURE_ACTIONS.FETCH_SHAREDSTREETS_PUBLIC_DATA.success(obj));
+                            dispatch(CONTEXT_ACTIONS.SHOW_MESSAGE({
+                                intent: "success",
+                                text: "Success! Loaded your GeoJSON file.",
+                            }));
+                        } else {
+                            let count = 0;
+                            const limit = pLimit(25);
+                            const promises: any[] = [];
+                            obj.features.forEach((feature: any) => {
+                                if (count > 99) {
+                                    return;
+                                }
+                                if (feature.geometry.type === "LineString") {
+                                    const featureUUID = uuid();
+                                    promises.push(limit(() => dispatch(findMatchedStreet(feature, featureUUID))));
+                                    count++;
+                                }
+                            });
+                            dispatch(CONTEXT_ACTIONS.SHOW_MESSAGE({
+                                intent: "warning",
+                                text: `Importing and matching a GeoJSON file!\
+                                Matching ${promises.length} features.\
+                                Don't close the window until the matching is complete!`,
+                            }));
+                            (async () => {
+                                await Promise.all(promises);
+                                dispatch(CONTEXT_ACTIONS.SHOW_MESSAGE({
+                                    intent: "success",
+                                    text: `Finished matching ${promises.length} features`,
+                                }));
+                            })();
+                        }
                     } else {
                         dispatch(CONTEXT_ACTIONS.SHOW_MESSAGE({
                             intent: "danger",
