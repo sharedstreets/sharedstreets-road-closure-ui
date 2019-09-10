@@ -100,6 +100,14 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
     }
   }
 
+  public componentDidMount() {
+    if (!isEmpty(this.props.currentRoadClosureItem.properties.schedule)) {
+      this.setState({
+        isShowingScheduler: true
+      })
+    }
+  }
+
   public handleDeleteStreetSegment(e: any) {
     this.props.deleteStreetSegment(e.target.parentElement.parentElement.id);
     return;
@@ -372,7 +380,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
               helperText={this.state.isShowingScheduler ? "Closure will only be active within the start and end times AND within the times specified in Schedule" : ''}
               >
               <Switch
-                disabled={!(currentDateRange[0] && currentDateRange[1])}
+                disabled={!(currentDateRange[0] && currentDateRange[1]) || this.props.readOnly}
                 onChange={this.handleToggleShowingScheduler}
                 checked={this.state.isShowingScheduler}
                 label={"Set a specific schedule for this closure within the specified range"} />
