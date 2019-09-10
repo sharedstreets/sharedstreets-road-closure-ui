@@ -23,7 +23,7 @@ const mapStateToProps = (state: RootState, ownProps: IRoadClosureMapContainerPro
     directionIconPoints: getDirectionIconPoints(state.roadClosure),
     highlightedFeatureGroup: state.roadClosure.highlightedFeatureGroup,
     intersectionPoints: getIntersectionPoints(state.roadClosure),
-    isDrawingEnabled: ownProps.isDrawingEnabled,
+    isDrawingEnabled: ownProps.isDrawingEnabled && !state.context.readOnly,
     roadBlockIconPoints: getRoadBlockIconPoints(state.roadClosure),
     roadClosure: state.roadClosure,
 });

@@ -17,7 +17,8 @@ export interface IRoadClosureFormStreetsTableRowProps {
     // matchedStreetsGroup: Array<SharedStreetsMatchPath|SharedStreetsMatchPoint>,
     currentFeature: SharedStreetsMatchGeomPath,
     key: string,
-    street: RoadClosureFormStateStreet
+    street: RoadClosureFormStateStreet,
+    readOnly: boolean,
     deleteStreetSegment: (payload: any) => void,
     inputChanged: (e: any) => void,
     highlightMatchedStreet: (e: any) => void,
@@ -107,6 +108,7 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
                     key={geometryId}>
                 <td>
                     <Button
+                        disabled={this.props.readOnly}
                         id={geometryId}
                         onClick={this.handleDeleteStreetSegment}
                         icon={"delete"}
@@ -114,6 +116,7 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
                 </td>
                 <td>
                     <InputGroup
+                        disabled={this.props.readOnly}
                         key={"input-"+geometryId}
                         id={geometryId}
                         // value={streetname}
@@ -122,7 +125,7 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
                         onChange={this.handleChangeStreetName}
                         rightElement={
                             <Button 
-                                disabled={this.state.streetnameValue === this.props.street.streetname}
+                                disabled={this.state.streetnameValue === this.props.street.streetname || this.props.readOnly}
                                 onClick={this.handleDispatchStreetName}
                                 minimal={true}
                                 icon={"tick"}
@@ -133,7 +136,7 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
                 </td>
                 <td>
                     <Checkbox
-                        disabled={!intersectionValidity.fromIntersection}
+                        disabled={!intersectionValidity.fromIntersection || this.props.readOnly}
                         onChange={this.handleChangeIntersectionStatusChanged}
                         id={'fromIntersection'}
                         checked={this.props.street.intersectionsStatus && this.props.street.intersectionsStatus[this.props.street.fromIntersectionId]}
@@ -156,7 +159,7 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
                 </td>
                 <td>
                     <Checkbox
-                        disabled={!intersectionValidity.toIntersection}
+                        disabled={!intersectionValidity.toIntersection || this.props.readOnly}
                         onChange={this.handleChangeIntersectionStatusChanged}
                         id={'toIntersection'}
                         checked={this.props.street.intersectionsStatus && this.props.street.intersectionsStatus[this.props.street.toIntersectionId]}

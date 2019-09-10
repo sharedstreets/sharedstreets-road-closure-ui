@@ -14,6 +14,7 @@ export interface IRoadClosureFormStreetsGroupsProps {
     geometryIdDirectionFilter: { [ geometryId: string] : { forward: boolean, backward: boolean } },
     streets: any,
     isFetchingMatchedStreets: boolean,
+    readOnly: boolean,
     deleteStreetSegment: (payload: any) => void,
     highlightMatchedStreet: () => void,
     highlightMatchedStreetsGroup: () => void,
@@ -51,6 +52,7 @@ class RoadClosureFormStreetsGroups extends React.Component<IRoadClosureFormStree
                         highlightMatchedStreet={this.props.highlightMatchedStreet}
                         highlightMatchedStreetsGroup={this.props.highlightMatchedStreetsGroup}
                         zoomHighlightMatchedStreetsGroup={this.props.zoomHighlightMatchedStreetsGroup}
+                        readOnly={this.props.readOnly}
                     />
                 })
             }

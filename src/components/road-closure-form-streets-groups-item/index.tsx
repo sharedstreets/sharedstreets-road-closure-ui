@@ -30,6 +30,7 @@ export interface IRoadClosureFormStreetsGroupItemProps {
     index: number,
     streets: any,
     geometryIdDirectionFilter: { [ geometryId: string] : { forward: boolean, backward: boolean } },
+    readOnly: boolean,
     deleteStreetSegment: (payload: any) => void,
     inputChanged: (e: any) => void,
     toggleStreetSegmentDirection: (e: any) => void,
@@ -220,6 +221,7 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
                         fill={true}
                     >
                         <Button
+                            disabled={this.props.readOnly}
                             title={'Delete this group'}
                             icon={"delete"}
                             intent={"danger"}
@@ -234,6 +236,7 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
                             onClick={this.handleClick}
                         />
                         <Button
+                            disabled={this.props.readOnly}
                             title={this.state.isIntersectionsIncluded ? 'Exclude all intersections' : 'Include all intersections'}
                             icon={"intersection"}
                             text={this.state.isIntersectionsIncluded ? 'Exclude all intersections' : 'Include all intersections'}
@@ -261,6 +264,7 @@ class RoadClosureFormStreetsGroupItem extends React.Component<IRoadClosureFormSt
                             matchedStreetsGroupsGeometryIdPathMap={this.props.matchedStreetsGroupsGeometryIdPathMap}
                             geometryIdDirectionFilter={this.props.geometryIdDirectionFilter}
                             highlightMatchedStreet={this.props.highlightMatchedStreet}
+                            readOnly={this.props.readOnly}
                         />
                     </Collapse>
         </Card>
