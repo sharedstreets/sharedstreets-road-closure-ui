@@ -100,8 +100,9 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
     }
   }
 
-  public componentDidMount() {
-    if (!isEmpty(this.props.currentRoadClosureItem.properties.schedule)) {
+  public componentDidUpdate(prevProps: IRoadClosureFormProps) {
+    if (prevProps.currentRoadClosureItem.properties.schedule !== this.props.currentRoadClosureItem.properties.schedule &&
+      !isEmpty(this.props.currentRoadClosureItem.properties.schedule)) {
       this.setState({
         isShowingScheduler: true
       })
