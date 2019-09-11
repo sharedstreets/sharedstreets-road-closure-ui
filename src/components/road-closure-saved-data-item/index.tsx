@@ -23,6 +23,7 @@ export interface IRoadClosureSavedDataItemProps {
     previewClosure: (e: any) => void,
     resetClosurePreview: () => void,
     highlightFeaturesGroup: (e: any) => void,
+    showMessage: (e: any) => void,
 };
 
 class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItemProps, any> {
@@ -58,6 +59,10 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
     }
 
     public handleClickCopyDirectURL = (e: any) => {
+        this.props.showMessage({
+            intent: "success",
+            text: `Copied link to open this closure in the editor!`,
+        });
         this.directUrlInput.select();
         document.execCommand('copy');
     }
@@ -71,6 +76,10 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
     } 
         
     public handleClickCopyGeoJSONURL = (e: any) => {
+        this.props.showMessage({
+            intent: "success",
+            text: `Copied link to GeoJSON file!`,
+        });
         this.geojsonUrlInput.select();
         document.execCommand('copy');
     }
@@ -80,6 +89,10 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
     }
         
     public handleClickCopyWazeURL = (e: any) => {
+        this.props.showMessage({
+            intent: "success",
+            text: `Copied link to Waze (CIFS) file!`,
+        });
         this.wazeUrlInput.select();
         document.execCommand('copy');
     }

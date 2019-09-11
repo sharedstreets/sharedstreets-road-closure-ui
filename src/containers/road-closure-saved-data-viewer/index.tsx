@@ -5,6 +5,7 @@ import {
     sortRoadClosureSavedItemsByLastModified
 } from 'src/selectors/road-closure-saved-items';
 import { RootState } from 'src/store/configureStore';
+import { CONTEXT_ACTIONS } from 'src/store/context';
 import { 
     ROAD_CLOSURE_ACTIONS
 } from '../../store/road-closure';
@@ -35,5 +36,6 @@ export default connect<{}, {}, IRoadClosureSavedDataViewerProps>(
         setFilterLevel: ROAD_CLOSURE_EXPLORER_ACTIONS.SET_ALL_ROAD_CLOSURES_FILTER_LEVEL,
         setFilterRange: ROAD_CLOSURE_EXPLORER_ACTIONS.SET_ALL_ROAD_CLOSURES_FILTER_RANGE,
         setSortOrder: ROAD_CLOSURE_EXPLORER_ACTIONS.SET_ALL_ROAD_CLOSURES_SORT_ORDER,
+        showMessage: CONTEXT_ACTIONS.SHOW_MESSAGE
     },
 )(RoadClosureSavedDataViewer) as React.ComponentClass<{}>;
