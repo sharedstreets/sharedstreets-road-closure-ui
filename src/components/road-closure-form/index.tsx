@@ -388,6 +388,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
               <Collapse isOpen={this.state.isShowingScheduler}>
                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                   <RoadClosureFormScheduleEntry
+                    readOnly={this.props.readOnly}
                     key={currentDateRange.toString()}
                     firstWeek={moment(currentDateRange[0]).week()}
                     lastWeek={moment(currentDateRange[1]).week()}
