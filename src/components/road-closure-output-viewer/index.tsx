@@ -112,10 +112,10 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
                             large={true}
                             text={"Back"}
                             onClick={this.handleClickCancel}/> */}
-                        { !process.env.REACT_APP_EDIT_ONLY &&
+                        { !process.env.REACT_APP_EDIT_ONLY && !this.props.readOnly && 
                         <Button
                             title={"You have to create a road closure before you can save & publish it"}
-                            disabled={this.props.isOutputItemEmpty || this.props.readOnly}
+                            disabled={this.props.isOutputItemEmpty}
                             large={true}
                             intent={"primary"}
                             text={this.props.isEditingExistingClosure ? "Save closure & Publish" : "Save closure & Publish"}
@@ -123,7 +123,7 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
                             onClick={this.handleClickSave}/> 
                         }
                         {
-                            this.props.isEditingExistingClosure &&
+                            this.props.isEditingExistingClosure && !this.props.readOnly && 
                             <Button 
                                 onClick={this.handleOpenDialog}
                                 text={"View published closure links"}/>
