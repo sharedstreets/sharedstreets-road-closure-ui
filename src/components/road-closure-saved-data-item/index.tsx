@@ -242,7 +242,7 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
                 this.props.uploadUrls && this.props.uploadUrls.geojsonUploadUrl && 
                 <input
                     ref={this.handleSetShareURLInputRef}
-                    value={window.location.origin+`/${this.props.orgName}/edit?readOnly=true&url=`+this.props.uploadUrls.geojsonUploadUrl}
+                    value={window.location.origin+`/${this.props.orgName}/edit?url=${this.props.uploadUrls.geojsonUploadUrl}&readOnly=true`}
                     type={"text"}
                     style={{
                         // 'display': 'none',
