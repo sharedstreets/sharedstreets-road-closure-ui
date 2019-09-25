@@ -336,7 +336,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
               />
             }
             <FormGroup
-              label="Start and end time"
+              label="Start time, end time, and time zone"
               labelInfo="(required)"
               className={"SHST-Road-Closure-Form-Group-Date-Time"}
             >
@@ -353,7 +353,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
                 contiguousCalendarMonths={false}
                 selectAllOnFocus={true}
                 startInputProps={{
-                  className: "SHST-Road-Closure-Form-Date-Range-Input"
+                  className: "SHST-Road-Closure-Form-Date-Range-Input",
                 }}
                 endInputProps={{
                   className: "SHST-Road-Closure-Form-Date-Range-Input"

@@ -20,12 +20,17 @@
     width: 100%;
 }
 
+.SHST-Road-Closure-Form-Date-Range-Input-Group .bp3-control-group {
+    flex-direction: column;
+}
+
 .SHST-Road-Closure-Form-Date-Range-Input {
     flex: 1 1;
 }
 
 .SHST-Road-Closure-Form-Group-Date-Time > div {
     display: flex;
+    flex-direction: column;
 }
 
 .SHST-Road-Closure-Form-Date-Range-Input-Group {
