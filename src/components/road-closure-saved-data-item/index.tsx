@@ -23,16 +23,19 @@ export interface IRoadClosureSavedDataItemProps {
     previewClosure: (e: any) => void,
     resetClosurePreview: () => void,
     highlightFeaturesGroup: (e: any) => void,
+    showMessage: (e: any) => void,
 };
 
 class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItemProps, any> {
     private directUrlInput: any;
+    private shareUrlInput: any;
     private geojsonUrlInput: any;
     private wazeUrlInput: any;
 
     public constructor(props: IRoadClosureSavedDataItemProps) {
         super(props);
         this.handleClickCopyDirectURL = this.handleClickCopyDirectURL.bind(this);
+        this.handleClickCopyShareURL = this.handleClickCopyShareURL.bind(this);
         this.handlePreviewClosure = this.handlePreviewClosure.bind(this);
         this.handleMouseout = this.handleMouseout.bind(this);
         this.handleMouseover = this.handleMouseover.bind(this);
@@ -46,7 +49,20 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
         };
     }
     
+    public handleClickCopyShareURL = (e: any) => {
+        this.props.showMessage({
+            intent: "success",
+            text: `Copied shareable, read-only link!`,
+        });
+        this.shareUrlInput.select();
+        document.execCommand('copy');
+    }
+
     public handleClickCopyDirectURL = (e: any) => {
+        this.props.showMessage({
+            intent: "success",
+            text: `Copied link to open this closure in the editor!`,
+        });
         this.directUrlInput.select();
         document.execCommand('copy');
     }
@@ -54,8 +70,16 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
     public handleSetDirectURLInputRef = (ref: HTMLInputElement | null) => {
         this.directUrlInput = ref;
     }
+
+    public handleSetShareURLInputRef = (ref: HTMLInputElement | null) => {
+        this.shareUrlInput = ref;
+    } 
         
     public handleClickCopyGeoJSONURL = (e: any) => {
+        this.props.showMessage({
+            intent: "success",
+            text: `Copied link to GeoJSON file!`,
+        });
         this.geojsonUrlInput.select();
         document.execCommand('copy');
     }
@@ -65,6 +89,10 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
     }
         
     public handleClickCopyWazeURL = (e: any) => {
+        this.props.showMessage({
+            intent: "success",
+            text: `Copied link to Waze (CIFS) file!`,
+        });
         this.wazeUrlInput.select();
         document.execCommand('copy');
     }
@@ -110,6 +138,15 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
                 className={cardClassName}>
                 <div>
                     <div className={'SHST-Road-Closure-Saved-Data-Item-Buttons'}>
+                        {
+                            this.props.uploadUrls && this.props.uploadUrls.geojsonUploadUrl &&
+                            <Button
+                                rightIcon={"share"}
+                                text={"Copy view-only link"}
+                                small={true}
+                                onClick={this.handleClickCopyShareURL}
+                            />
+                        }
                         <Popover>
                             <Button
                                 rightIcon={"caret-down"}
@@ -180,7 +217,7 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
                             </Menu>
                         </Popover>
                         <Button
-                            text={"View on map"}
+                            text={"Zoom to closure"}
                             icon={"eye-open"}
                             small={true}
                             onClick={this.handlePreviewClosure}
@@ -201,7 +238,19 @@ class RoadClosureSavedDataItem extends React.Component<IRoadClosureSavedDataItem
                     </div>
                 </div>
             </Card>
-
+            {
+                this.props.uploadUrls && this.props.uploadUrls.geojsonUploadUrl && 
+                <input
+                    ref={this.handleSetShareURLInputRef}
+                    value={window.location.origin+`/${this.props.orgName}/edit?url=${this.props.uploadUrls.geojsonUploadUrl}&readOnly=true`}
+                    type={"text"}
+                    style={{
+                        // 'display': 'none',
+                        'left': '-1000px',
+                        'position': 'absolute',
+                        'top': '-1000px',
+                }} />
+            }
             {
                 this.props.uploadUrls && this.props.uploadUrls.geojsonUploadUrl && 
                 <input

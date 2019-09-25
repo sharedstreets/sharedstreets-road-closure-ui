@@ -13,16 +13,18 @@ export class SharedStreetsMatchGeomFeatureCollection implements FeatureCollectio
     
 
     public addFeaturesFromGeojson(newFeatures: Feature[]) {
-        const newFeaturesArray: Array<SharedStreetsMatchGeomPath | SharedStreetsMatchGeomPoint> = newFeatures.map((feature: Feature) => {
-            if (feature.geometry.type === "Point") {
-                const point = new SharedStreetsMatchGeomPoint(feature);
-                return point;
-            }
-            else {
-                const path = new SharedStreetsMatchGeomPath(feature);
-                return path;
-            }
-        });
-        this.features = this.features.concat(newFeaturesArray);
+        if (newFeatures && newFeatures.length > 0) {
+            const newFeaturesArray: Array<SharedStreetsMatchGeomPath | SharedStreetsMatchGeomPoint> = newFeatures.map((feature: Feature) => {
+                if (feature.geometry.type === "Point") {
+                    const point = new SharedStreetsMatchGeomPoint(feature);
+                    return point;
+                }
+                else {
+                    const path = new SharedStreetsMatchGeomPath(feature);
+                    return path;
+                }
+            });
+            this.features = this.features.concat(newFeaturesArray);
+        }
     }
 }

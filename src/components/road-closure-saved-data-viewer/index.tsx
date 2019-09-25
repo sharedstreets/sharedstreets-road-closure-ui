@@ -31,6 +31,7 @@ export interface IRoadClosureSavedDataViewerProps {
     setFilterLevel: (e: string, r?: DateRange) => void,
     setFilterRange: (e: DateRange) => void,
     setSortOrder: (e: string) => void,
+    showMessage: (e: any) => void,
 };
 
 export interface IRoadClosureSavedDataViewerState {
@@ -180,6 +181,7 @@ class RoadClosureSavedDataViewer extends React.Component<IRoadClosureSavedDataVi
                     {this.props.allRoadClosureItems && this.props.allRoadClosureItems.length > 0 && 
                         Object.keys(this.props.allRoadClosureItems).map((roadClosureId: any) => {
                             return <RoadClosureSavedDataItem
+                                        showMessage={this.props.showMessage}
                                         key={roadClosureId}
                                         highlightFeaturesGroup={this.props.highlightFeaturesGroup}
                                         previewClosure={this.props.previewClosure}

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 //     getContiguousFeatureGroups, // getContiguousFeatureGroupsDirections, getGeometryIdPathMap,
 // } from 'src/selectors/road-closure-geojson';
 import { currentRoadClosureItemOutput } from 'src/selectors/road-closure';
-import { getDirectionIconPoints, getRoadBlockIconPoints } from 'src/selectors/road-closure-map';
+import { getDirectionIconPoints, getIntersectionPoints, getRoadBlockIconPoints } from 'src/selectors/road-closure-map';
 import { RootState } from 'src/store/configureStore';
 import RoadClosureMap, { IRoadClosureMapProps } from '../../components/road-closure-map';
 import {
@@ -22,7 +22,8 @@ const mapStateToProps = (state: RootState, ownProps: IRoadClosureMapContainerPro
     currentRoadClosureItemOutput: currentRoadClosureItemOutput(state.roadClosure),
     directionIconPoints: getDirectionIconPoints(state.roadClosure),
     highlightedFeatureGroup: state.roadClosure.highlightedFeatureGroup,
-    isDrawingEnabled: ownProps.isDrawingEnabled,
+    intersectionPoints: getIntersectionPoints(state.roadClosure),
+    isDrawingEnabled: ownProps.isDrawingEnabled && !state.context.readOnly,
     roadBlockIconPoints: getRoadBlockIconPoints(state.roadClosure),
     roadClosure: state.roadClosure,
 });

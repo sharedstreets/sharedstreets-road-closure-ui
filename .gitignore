@@ -1,6 +1,7 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # config
+*.config.json
 /config
 /src/config/
 /src/services/aws.ts
@@ -11,11 +12,17 @@
 # testing
 /coverage
 
+# data
+road-closures/
+
 # production
-/build
+build/
+/data
+bin/
 
 # misc
 .DS_Store
+.env
 .env.local
 .env.development.local
 .env.test.local
@@ -27,3 +34,5 @@ yarn-debug.log*
 yarn-error.log*
 
 *.zip
+bin/server.js
+bin/index.js

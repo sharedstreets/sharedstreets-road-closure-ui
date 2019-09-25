@@ -1,5 +1,6 @@
 import {
     Button,
+    Checkbox,
     InputGroup
 } from '@blueprintjs/core';
 import {
@@ -9,13 +10,15 @@ import * as React from 'react';
 import { RoadClosureFormStateStreet } from 'src/models/RoadClosureFormStateStreet';
 import { SharedStreetsMatchGeomPath } from 'src/models/SharedStreets/SharedStreetsMatchGeomPath';
 // import { SharedStreetsMatchPoint } from 'src/models/SharedStreets/SharedStreetsMatchPoint';
+import { getIntersectionValidityForPath } from 'src/selectors/road-closure-intersection';
 import './road-closure-form-streets-table-row.css'
 
 export interface IRoadClosureFormStreetsTableRowProps {
     // matchedStreetsGroup: Array<SharedStreetsMatchPath|SharedStreetsMatchPoint>,
     currentFeature: SharedStreetsMatchGeomPath,
     key: string,
-    street: RoadClosureFormStateStreet
+    street: RoadClosureFormStateStreet,
+    readOnly: boolean,
     deleteStreetSegment: (payload: any) => void,
     inputChanged: (e: any) => void,
     highlightMatchedStreet: (e: any) => void,
@@ -25,13 +28,16 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
     public constructor(props: IRoadClosureFormStreetsTableRowProps) {
         super(props);
         this.handleDispatchStreetName = this.handleDispatchStreetName.bind(this);
+        this.handleChangeIntersectionStatusChanged = this.handleChangeIntersectionStatusChanged.bind(this);
         this.handleChangeStreetName = this.handleChangeStreetName.bind(this);
         this.handleDeleteStreetSegment = this.handleDeleteStreetSegment.bind(this);
         this.handleMouseEnter = this.handleMouseEnter.bind(this);
         this.handleMouseLeave = this.handleMouseLeave.bind(this);
-        this.state ={
+        this.state = {
+            fromIntersection: false,
             isHighlighted: false,
-            streetnameValue: this.props.street.streetname
+            streetnameValue: this.props.street.streetname,
+            toIntersection: false,
         }
     }
 
@@ -61,6 +67,17 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
         });
     }
 
+    public handleChangeIntersectionStatusChanged(e: any): any {
+        this.props.inputChanged({
+            geometryId: this.props.street.geometryId,
+            // intersectionId: this.props.street.intersectionsStatus
+            intersectionId: this.props.currentFeature.properties[`${e.target.id}Id`],
+            key: "intersection",
+            referenceId: this.props.street.referenceId,
+            value: e.target.checked,
+        });
+    }
+
     public handleChangeStreetName(e: any): any {
         this.setState({
             streetnameValue: e.target.value
@@ -79,6 +96,7 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
         //     geometryId,
         //     matchedStreetIndex,
         // }  = this.props.street[refIds[0]];
+        const intersectionValidity = getIntersectionValidityForPath(this.props.currentFeature);
         return <tr
                     className={
                         this.state.isHighlighted ?
@@ -90,6 +108,7 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
                     key={geometryId}>
                 <td>
                     <Button
+                        disabled={this.props.readOnly}
                         id={geometryId}
                         onClick={this.handleDeleteStreetSegment}
                         icon={"delete"}
@@ -97,6 +116,7 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
                 </td>
                 <td>
                     <InputGroup
+                        disabled={this.props.readOnly}
                         key={"input-"+geometryId}
                         id={geometryId}
                         // value={streetname}
@@ -105,13 +125,21 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
                         onChange={this.handleChangeStreetName}
                         rightElement={
                             <Button 
-                                disabled={this.state.streetnameValue === this.props.street.streetname}
+                                disabled={this.state.streetnameValue === this.props.street.streetname || this.props.readOnly}
                                 onClick={this.handleDispatchStreetName}
                                 minimal={true}
                                 icon={"tick"}
                                 intent={"success"}
                             />
                         }
+                    />
+                </td>
+                <td>
+                    <Checkbox
+                        disabled={!intersectionValidity.fromIntersection || this.props.readOnly}
+                        onChange={this.handleChangeIntersectionStatusChanged}
+                        id={'fromIntersection'}
+                        checked={this.props.street.intersectionsStatus && this.props.street.intersectionsStatus[this.props.street.fromIntersectionId]}
                     />
                 </td>
                 <td>
@@ -128,6 +156,14 @@ class RoadClosureFormStreetsTableRow extends React.Component<IRoadClosureFormStr
                         this.props.currentFeature.properties.toStreetnames.filter((name) => !isEmpty(name)).length === 0 && 
                         "No streetname found"
                     }
+                </td>
+                <td>
+                    <Checkbox
+                        disabled={!intersectionValidity.toIntersection || this.props.readOnly}
+                        onChange={this.handleChangeIntersectionStatusChanged}
+                        id={'toIntersection'}
+                        checked={this.props.street.intersectionsStatus && this.props.street.intersectionsStatus[this.props.street.toIntersectionId]}
+                    />
                 </td>
             </tr>
     }

@@ -8,14 +8,22 @@ import {
 
 // import { app } from '../package.json';
 import App from './App';
+import {
+	AppOrgName
+} from './config';
 import RoadClosureExplorer from './screens/road-closure-explorer';
-import RoadClosureSelector from './screens/road-closure-selector';
+// import RoadClosureSelector from './screens/road-closure-selector';
 
 export const handleRedirectExplore = (props: any) => {
 	if (props.match.params.org) {
 		return <Redirect to={`/${props.match.params.org}/explore`} />
-	} else {
-		return <RoadClosureSelector />
+	} else if (AppOrgName) {
+		return <Redirect to={`/${AppOrgName}/explore`} />
+	}
+	else {
+		return <div>
+			Enter an organziation name as the value for the key <pre>org_name</pre> in the file: <pre>src/app.config.json</pre>
+		</div>
 	}
 }
 

@@ -4,7 +4,8 @@ import {
   Tag,
 } from '@blueprintjs/core';
 import {
-  parseInt
+  noop,
+  parseInt,
 } from 'lodash';
 import * as moment from 'moment'; 
 import * as React from 'react'; 
@@ -14,7 +15,8 @@ import './road-closure-form-schedule-block-table-cell.css'
 export interface IRoadClosureFormScheduleBlockTableCellProps {
   weekNumber: number,
   day: string,
-  scheduleBlocks: IRoadClosureScheduleBlock[]
+  scheduleBlocks: IRoadClosureScheduleBlock[],
+  readOnly: boolean,
   onRemove: (e: any, tagProps: any) => void,
 }
 
@@ -48,7 +50,11 @@ class RoadClosureFormScheduleBlockTableCell extends React.Component<IRoadClosure
     const endTimeFormat = endTimeAsMoment.minute() === 0 ? 'hA' : 'h:mmA';
     startTimeFormat += startTimeAsMoment.format('a') !== endTimeAsMoment.format('a') ? 'A' : '';
               
-    return <Tag fill={true} key={index} id={`${this.props.weekNumber}-${this.props.day}-${index}`} onRemove={this.props.onRemove}>
+    return <Tag
+              fill={true}
+              key={index}
+              id={`${this.props.weekNumber}-${this.props.day}-${index}`}
+              onRemove={this.props.readOnly ? noop : this.props.onRemove}>
         {startTimeAsMoment.format(startTimeFormat)}-{endTimeAsMoment.format(endTimeFormat)}
     </Tag>;
   }

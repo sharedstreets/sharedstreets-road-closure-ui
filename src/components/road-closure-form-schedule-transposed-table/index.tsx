@@ -18,6 +18,7 @@ export interface IRoadClosureFormScheduleTransposedTableProps {
     lastWeek: number,
     scheduleByWeek: IRoadClosureScheduleByWeek,
     currentDateRange: DateRange,
+    readOnly: boolean,
     inputRemoved: (e: any) => void,
 };
 
@@ -68,6 +69,7 @@ class RoadClosureFormScheduleTransposedTable extends React.Component<IRoadClosur
                     const scheduleBlocks: any[] = []
                     scheduleBlocks.push(
                         <RoadClosureFormScheduleBlockTableCell
+                            readOnly={this.props.readOnly}
                             scheduleBlocks={this.props.scheduleByWeek[weekNumber][day]}
                             weekNumber={weekNumber}
                             day={day}

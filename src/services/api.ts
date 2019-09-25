@@ -2,7 +2,14 @@ import {
     isEmpty,
     omit
 } from 'lodash';
-const API_URL = "https://api.sharedstreets.io/v0.1.0/";
+import {
+    AppBaseServerURL,
+    AppPort,
+    isAppRunningLocally,
+} from '../config';
+// const API_URL = ;
+const API_URL = isAppRunningLocally() ? (AppPort ? `${AppBaseServerURL}:${AppPort}/` : `${AppBaseServerURL}/`)
+    : "https://api.sharedstreets.io/v0.1.0/";
 
 const paramStringBuilder = (obj: {}) => {
     let output = '';
@@ -27,7 +34,7 @@ const apiService = (endpoint: string, method: string, queryParams: {} = { authKe
     if (isEmpty(requestUrl)) {
         requestUrl = getRequestURLBuilder(endpoint, queryParams);
     }
-    let fetchOptions = {
+    let fetchOptions: any = {
         body: JSON.stringify(payload),
         headers: new Headers(headers),
         method,

@@ -34,7 +34,8 @@ export interface IAppProps {
   hideMessage: (d: boolean) => void,
   loadRoadClosure: (url: string) => void,
   resetRoadClosure: () => void,
-  setOrgName: (name: string) => void
+  setOrgName: (name: string) => void,
+  setReadOnly: () => void,
 };
 
 const AppToaster = Toaster.create({
@@ -51,6 +52,9 @@ class App extends React.Component<IAppProps, any> {
       const queryParams = qs.parse(this.props.location.search, {
         ignoreQueryPrefix: true
       });
+      if (queryParams.readOnly && queryParams.readOnly === "true") {
+        this.props.setReadOnly();
+      }
       if (queryParams.url) {
         this.props.loadRoadClosure(queryParams.url);
       } else {
@@ -107,5 +111,6 @@ export default connect<{}, {}, IAppProps>(
     loadRoadClosure,
     resetRoadClosure: ROAD_CLOSURE_ACTIONS.RESET_ROAD_CLOSURE,
     setOrgName: CONTEXT_ACTIONS.SET_ORG_NAME,
+    setReadOnly: CONTEXT_ACTIONS.SET_READ_ONLY,
   }
 )(App) as React.ComponentClass<{}>;

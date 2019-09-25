@@ -21,6 +21,7 @@ export interface IRoadClosureHeaderMenuProps {
     geojsonUploadUrl: string,
     edit?: boolean,
     explore?: boolean,
+    readOnly: boolean,
     addFile: (e: File) => void,
     clearRoadClosure: () => void,
     loadRoadClosure: (url: string) => void,
@@ -115,7 +116,7 @@ class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps,
     public render() {
         return (
             <React.Fragment>
-                {this.props.edit && this.props.isEditingExistingClosure &&
+                { !this.props.readOnly &&this.props.edit && this.props.isEditingExistingClosure &&
                     <Tag
                         large={true}
                         intent={"danger"}
@@ -123,9 +124,17 @@ class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps,
                             You are editing a published closure
                     </Tag>
                 }
+                { this.props.readOnly && this.props.edit && 
+                    <Tag
+                        large={true}
+                        intent={"warning"}
+                        title={"Read only"}>
+                            You are in viewing this in read-only mode
+                    </Tag>
+                }
                 { this.props.explore && <Link className={"bp3-button bp3-intent-success"} to="edit">Create new closure</Link> }
-                { this.props.edit && !process.env.REACT_APP_EDIT_ONLY && <Link className={"bp3-button bp3-intent-primary"} to="explore">View all road closures</Link> }
-                { this.props.edit &&
+                { !this.props.readOnly && this.props.edit && !process.env.REACT_APP_EDIT_ONLY && <Link className={"bp3-button bp3-intent-primary"} to="explore">View all road closures</Link> }
+                { !this.props.readOnly && this.props.edit &&
                     <label className="bp3-file-input">
                         <input
                             ref={this.fileInputRef}

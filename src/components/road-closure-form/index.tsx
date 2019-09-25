@@ -50,6 +50,7 @@ export interface IRoadClosureFormProps {
   previousSelection: () => void,
   inputChanged: (payload: any) => void,
   inputRemoved: (payload: any) => void,
+  readOnly: boolean,
   roadClosure: IRoadClosureState,
   currentRoadClosureGroups: any,
   currentRoadClosureGroupsDirection: any,
@@ -96,6 +97,15 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
       isCalendarExpanded: false,
       isShowingScheduler: false,
       weekOfYear: moment().week(),
+    }
+  }
+
+  public componentDidUpdate(prevProps: IRoadClosureFormProps) {
+    if (prevProps.currentRoadClosureItem.properties.schedule !== this.props.currentRoadClosureItem.properties.schedule &&
+      !isEmpty(this.props.currentRoadClosureItem.properties.schedule)) {
+      this.setState({
+        isShowingScheduler: true
+      })
     }
   }
 
@@ -322,14 +332,16 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
                 streets={this.props.currentRoadClosureItem.properties.street}
                 isFetchingMatchedStreets={this.props.roadClosure.isFetchingMatchedStreets}
                 zoomHighlightMatchedStreetsGroup={this.props.zoomHighlightMatchedStreetsGroup}
+                readOnly={this.props.readOnly}
               />
             }
             <FormGroup
-              label="Start and end time"
+              label="Start time, end time, and time zone"
               labelInfo="(required)"
               className={"SHST-Road-Closure-Form-Group-Date-Time"}
             >
               <DateRangeInput
+                disabled={this.props.readOnly}
                 value={currentDateRange}
                 className={"SHST-Road-Closure-Form-Date-Range-Input-Group"}
                 allowSingleDayRange={true}
@@ -341,13 +353,14 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
                 contiguousCalendarMonths={false}
                 selectAllOnFocus={true}
                 startInputProps={{
-                  className: "SHST-Road-Closure-Form-Date-Range-Input"
+                  className: "SHST-Road-Closure-Form-Date-Range-Input",
                 }}
                 endInputProps={{
                   className: "SHST-Road-Closure-Form-Date-Range-Input"
                 }}
               />
               <TimezonePicker
+                disabled={this.props.readOnly}
                 inputProps={{
                   className: "SHST-Timezone-Picker-Input",
                 }}
@@ -368,13 +381,14 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
               helperText={this.state.isShowingScheduler ? "Closure will only be active within the start and end times AND within the times specified in Schedule" : ''}
               >
               <Switch
-                disabled={!(currentDateRange[0] && currentDateRange[1])}
+                disabled={!(currentDateRange[0] && currentDateRange[1]) || this.props.readOnly}
                 onChange={this.handleToggleShowingScheduler}
                 checked={this.state.isShowingScheduler}
                 label={"Set a specific schedule for this closure within the specified range"} />
               <Collapse isOpen={this.state.isShowingScheduler}>
                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                   <RoadClosureFormScheduleEntry
+                    readOnly={this.props.readOnly}
                     key={currentDateRange.toString()}
                     firstWeek={moment(currentDateRange[0]).week()}
                     lastWeek={moment(currentDateRange[1]).week()}
@@ -385,6 +399,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
                 </div>
                 <div className={"SHST-Road-Closure-Form-Schedule-Tables"}>
                 <RoadClosureFormScheduleTransposedTable
+                  readOnly={this.props.readOnly}
                   key={0}
                   week={'0'}
                   currentWeek={this.state.weekOfYear}
@@ -403,6 +418,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
               labelInfo="(required)"
             >
               <InputGroup
+                  disabled={this.props.readOnly}
                   placeholder={"Enter a description of the closure here..."}
                   onChange={this.handleChangeDescription}
                   value={currentDescription}
@@ -414,6 +430,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
               labelInfo="(required)"
             >
               <InputGroup
+                  disabled={this.props.readOnly}                
                   placeholder={"Enter the name of your organization here..."}
                   onChange={this.handleChangeReference}
                   value={this.props.currentRoadClosureItem.properties.reference}
@@ -424,6 +441,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
               labelInfo={"(optional)"}>
               <div className="bp3-select">
                 <select
+                  disabled={this.props.readOnly}
                   value={this.props.currentRoadClosureItem.properties.subtype}
                   onChange={this.handleChangeSubtype}>
                   <option defaultChecked={true} value={''}>Choose a subtype...</option>
@@ -439,10 +457,12 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
               label="Mode"
               labelInfo="(optional)">
               <Button
+                disabled={this.props.readOnly}
                 text={"Select All"}
                 onClick={this.selectAllModes}
               />
               <Checkbox
+                disabled={this.props.readOnly}
                 checked={
                   this.props.currentRoadClosureItem.properties.mode
                   && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_PEDESTRIAN)
@@ -452,6 +472,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
                 value={IRoadClosureMode.ROAD_CLOSED_PEDESTRIAN}
               />
               <Checkbox
+                disabled={this.props.readOnly}
                 checked={
                   this.props.currentRoadClosureItem.properties.mode
                   && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_BICYCLE)
@@ -461,6 +482,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
                 value={IRoadClosureMode.ROAD_CLOSED_BICYCLE}
               />
               <Checkbox
+                disabled={this.props.readOnly}
                 defaultChecked={true}
                 checked={
                   this.props.currentRoadClosureItem.properties.mode
@@ -471,6 +493,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
                 value={IRoadClosureMode.ROAD_CLOSED_BUS}
               />
               <Checkbox
+                disabled={this.props.readOnly}
                 checked={
                   this.props.currentRoadClosureItem.properties.mode
                   && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_CAR)
@@ -480,6 +503,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
                 value={IRoadClosureMode.ROAD_CLOSED_CAR}
               />
               <Checkbox
+                disabled={this.props.readOnly}
                 checked={
                   this.props.currentRoadClosureItem.properties.mode
                   && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_TAXI_RIDESHARE)

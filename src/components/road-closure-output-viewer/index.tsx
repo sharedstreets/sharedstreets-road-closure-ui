@@ -34,6 +34,7 @@ export interface IRoadClosureOutputViewerProps {
     isSavingOutput: boolean,
     isOutputItemEmpty: boolean,
     outputItemFormattedJSONString: string,
+    readOnly: boolean,
     uploadUrls: IRoadClosureUploadUrls,
   };
 
@@ -79,7 +80,7 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
     }
 
     public render() {
-        let downloadButtonProps = {
+        let downloadButtonProps: any = {
             className: "bp3-button bp3-large bp3-intent-success",
             download: this.props.downloadFileName,
             href: this.props.downloadDataURI,
@@ -111,7 +112,7 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
                             large={true}
                             text={"Back"}
                             onClick={this.handleClickCancel}/> */}
-                        { !process.env.REACT_APP_EDIT_ONLY &&
+                        { !process.env.REACT_APP_EDIT_ONLY && !this.props.readOnly && 
                         <Button
                             title={"You have to create a road closure before you can save & publish it"}
                             disabled={this.props.isOutputItemEmpty}
@@ -122,7 +123,7 @@ class RoadClosureOutputViewer extends React.Component<IRoadClosureOutputViewerPr
                             onClick={this.handleClickSave}/> 
                         }
                         {
-                            this.props.isEditingExistingClosure &&
+                            this.props.isEditingExistingClosure && !this.props.readOnly && 
                             <Button 
                                 onClick={this.handleOpenDialog}
                                 text={"View published closure links"}/>

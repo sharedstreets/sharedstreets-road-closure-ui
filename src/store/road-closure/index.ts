@@ -15,6 +15,7 @@ import {
     createStandardAction,
 } from 'typesafe-actions';
 import { v4 as uuid } from 'uuid';
+import { AppBaseServerURL, AppPort, isAppRunningLocally } from '../../config';
 import { RoadClosureFormStateStreet } from '../../models/RoadClosureFormStateStreet';
 import {
     IRoadClosureOutputFormatName,
@@ -75,6 +76,8 @@ export interface IRoadClosureFormInputChangedPayload {
     day?: string,
     weekOfYear?: string,
     index?: number,
+    intersectionId?: string,
+    value?: any,
 }
 
 export interface IRoadClosureStateItemToggleDirectionPayload {
@@ -255,6 +258,14 @@ export const loadAllOrgs = () => (dispatch: Dispatch<any>, getState: any) => {
     });
 };
 
+export const loadRoadClosureFromFile = () => (dispatch: Dispatch<any>, getState: any) => {
+    // full filename should probably be: <dir>/<hash>/<readable-name>.<ext>
+    // but to keep things consistent with existing code, the <hash> value should be enough to load the data 
+    
+    // call local server /load endpoint
+    // const method = 'get';
+};
+
 export const loadRoadClosure = (url: string) => (dispatch: Dispatch<any>, getState: any) => {
     const state = getState() as RootState;
     const orgName = state.context.orgName;
@@ -299,10 +310,14 @@ export const saveRoadClosure = () => (dispatch: Dispatch<any>, getState: any) =>
     dispatch(ROAD_CLOSURE_ACTIONS.GENERATE_SHAREDSTREETS_PUBLIC_DATA_UPLOAD_URL.request());
        
     const generateGeojsonUploadUrl = async () => {
-        const response = await fetch(`https://api.sharedstreets.io/v0.1.0/data/upload?contentType=application/json&filePath=road-closures/${orgName}/${filename}/geojson`);
-        const json = await response.json();
-        const url = await json.url;
-        return url;
+        if (isAppRunningLocally()) {
+            return `${AppBaseServerURL}:${AppPort}/save-file?orgName=${orgName}&filename=${filename}&extension=geojson`;
+        } else {
+            const response = await fetch(`https://api.sharedstreets.io/v0.1.0/data/upload?contentType=application/json&filePath=road-closures/${orgName}/${filename}/geojson`);
+            const json = await response.json();
+            const url = await json.url;
+            return url;
+        }
     };
     generateGeojsonUploadUrl().then((signedGeojsonUploadUrl) => {
         dispatch(fetchAction({
@@ -322,10 +337,14 @@ export const saveRoadClosure = () => (dispatch: Dispatch<any>, getState: any) =>
     });
            
     const generateWazeUploadUrl = async () => {
-        const response = await fetch(`https://api.sharedstreets.io/v0.1.0/data/upload?contentType=application/json&filePath=road-closures/${orgName}/${filename}/waze`);
-        const json = await response.json();
-        const url = await json.url;
-        return url;
+        if (isAppRunningLocally()) {
+            return `${AppBaseServerURL}:${AppPort}/save-file?orgName=${orgName}&filename=${filename}&extension=waze.json`;
+        } else {
+            const response = await fetch(`https://api.sharedstreets.io/v0.1.0/data/upload?contentType=application/json&filePath=road-closures/${orgName}/${filename}/waze`);
+            const json = await response.json();
+            const url = await json.url;
+            return url;
+        }
     };
     generateWazeUploadUrl().then((signedWazeUploadUrl) => {
         dispatch(fetchAction({
@@ -568,6 +587,20 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                         forwardStreet.streetname = segment.properties.streetname;
                         forwardStreet.referenceId = segment.properties.referenceId;
                         forwardStreet.geometryId = segment.properties.geometryId;
+                        forwardStreet.fromIntersectionId = segment.properties.fromIntersectionId;
+                        forwardStreet.toIntersectionId = segment.properties.toIntersectionId;
+                        if (segment.properties.fromIntersectionClosed) {
+                            if (!forwardStreet.intersectionsStatus) {
+                                forwardStreet.intersectionsStatus = {};
+                            }
+                            forwardStreet.intersectionsStatus[forwardStreet.fromIntersectionId] = segment.properties.fromIntersectionClosed;
+                        }
+                        if (segment.properties.toIntersectionClosed) {
+                            if (!forwardStreet.intersectionsStatus) {
+                                forwardStreet.intersectionsStatus = {};
+                            }
+                            forwardStreet.intersectionsStatus[forwardStreet.toIntersectionId] = segment.properties.toIntersectionClosed;
+                        }
                         loadedStateItemStreet[segment.properties.geometryId].forward = forwardStreet;
                     }
                     if (segment.properties.direction === "backward") {
@@ -575,6 +608,20 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                         backwardStreet.streetname = segment.properties.streetname;
                         backwardStreet.referenceId = segment.properties.referenceId;
                         backwardStreet.geometryId = segment.properties.geometryId;
+                        backwardStreet.fromIntersectionId = segment.properties.fromIntersectionId;
+                        backwardStreet.toIntersectionId = segment.properties.toIntersectionId;
+                        if (segment.properties.fromIntersectionClosed) {
+                            if (!backwardStreet.intersectionsStatus) {
+                                backwardStreet.intersectionsStatus = {};
+                            }
+                            backwardStreet.intersectionsStatus[backwardStreet.fromIntersectionId] = segment.properties.fromIntersectionClosed;
+                        }
+                        if (segment.properties.toIntersectionClosed) {
+                            if (!backwardStreet.intersectionsStatus) {
+                                backwardStreet.intersectionsStatus = {};
+                            }
+                            backwardStreet.intersectionsStatus[backwardStreet.toIntersectionId] = segment.properties.toIntersectionClosed;
+                        }
                         loadedStateItemStreet[segment.properties.geometryId].backward = backwardStreet;
 
                     }
@@ -689,6 +736,8 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                         forwardStreet.streetname = segment.properties.streetname;
                         forwardStreet.referenceId = segment.properties.referenceId;
                         forwardStreet.geometryId = segment.properties.geometryId;
+                        forwardStreet.fromIntersectionId = segment.properties.fromIntersectionId;
+                        forwardStreet.toIntersectionId = segment.properties.toIntersectionId;
 
                         output[segment.properties.geometryId].forward = forwardStreet;
                     }
@@ -697,6 +746,8 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                         backwardStreet.streetname = segment.properties.streetname;
                         backwardStreet.referenceId = segment.properties.referenceId;
                         backwardStreet.geometryId = segment.properties.geometryId;
+                        backwardStreet.fromIntersectionId = segment.properties.fromIntersectionId;
+                        backwardStreet.toIntersectionId = segment.properties.toIntersectionId;
 
                         output[segment.properties.geometryId].backward = backwardStreet;
                     }
@@ -775,6 +826,21 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                 forEach(Object.keys(updatedItem.properties[key][action.payload.geometryId]), (refId: string) => {
                     updatedItem.properties[key][action.payload.geometryId][refId].streetname = action.payload.street;
                 });
+            } else if (key === "intersection") {
+                forEach(Object.keys(updatedItem.properties.street), (geomId: string) => {
+                    forEach(Object.keys(updatedItem.properties.street[geomId]), (direction: string) => {
+                        if (!updatedItem.properties.street[geomId][direction].intersectionsStatus) {
+                            updatedItem.properties.street[geomId][direction].intersectionsStatus = {};
+                        }
+                        if (updatedItem.properties.street[geomId][direction].fromIntersectionId === action.payload.intersectionId ||
+                            updatedItem.properties.street[geomId][direction].toIntersectionId === action.payload.intersectionId) {
+                            updatedItem.properties.street[geomId][direction].intersectionsStatus[action.payload.intersectionId] = action.payload.value;
+                        }
+                        // forEach(action.payload.intersectionIds, (intersectionId) => {
+                        //     updatedItem.properties.street[action.payload.geometryId][refId].intersectionsStatus[intersectionId] = action.payload.value;
+                        // });
+                    });
+                });
             } else if (key === "mode") {
                 if (!updatedItem.properties[key]) {
                     updatedItem.properties[key] = [];
@@ -847,10 +913,12 @@ export const roadClosureReducer = (state: IRoadClosureState = defaultState, acti
                             updatedItem.properties.schedule = omit(updatedItem.properties.schedule, weeksToOmit);
                         }
                         for (let i = 0; i<payloadAsMoment.day(); i++) {
-                            // drop all days leading up to day of new startTime
-                            updatedItem.properties.schedule[payloadAsMoment.week()] = omit(updatedItem.properties.schedule[payloadAsMoment.week()], moment().day(i).format("dddd"));
+                            if (updatedItem.properties.schedule) {
+                                // drop all days leading up to day of new startTime
+                                updatedItem.properties.schedule[payloadAsMoment.week()] = omit(updatedItem.properties.schedule[payloadAsMoment.week()], moment().day(i).format("dddd"));
+                            }
                         }
-                        if (updatedItem.properties.schedule[payloadAsMoment.week()] && Object.keys(updatedItem.properties.schedule[payloadAsMoment.week()]).length === 0) {
+                        if (updatedItem.properties.schedule && updatedItem.properties.schedule[payloadAsMoment.week()] && Object.keys(updatedItem.properties.schedule[payloadAsMoment.week()]).length === 0) {
                             updatedItem.properties.schedule = omit(updatedItem.properties.schedule, payloadAsMoment.week());
                         }
                     } else if (key === "endTime" && payloadAsMoment.isBefore(stateTimeAsMoment)) {

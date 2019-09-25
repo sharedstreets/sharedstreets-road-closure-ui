@@ -1,6 +1,7 @@
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
 import bbox from '@turf/bbox';
+import bboxPolygon from '@turf/bbox-polygon';
 import { 
   featureCollection,
   lineString,
@@ -20,12 +21,14 @@ import { SharedStreetsMatchGeomPath } from 'src/models/SharedStreets/SharedStree
 import { SharedStreetsMatchPointFeatureCollection } from 'src/models/SharedStreets/SharedStreetsMatchPointFeatureCollection';
 import { IRoadClosureState } from 'src/store/road-closure';
 import { v4 as uuid } from 'uuid';
+import { AppExtent } from '../../config';
 import SharedStreetsMapDrawControl from '../sharedstreets-map-draw-control';
 import './road-closure-map.css';
 
 // tslint:disable
 const MapboxGeocoder = require('@mapbox/mapbox-gl-geocoder');
 const MapboxTimespace = require('@mapbox/timespace');
+const center = require('@turf/center').default;
 // tslint:enable
 
 const mapboxToken = "pk.eyJ1IjoidHJhbnNwb3J0cGFydG5lcnNoaXAiLCJhIjoiY2ptOTN5N3Q3MHN5aDNxbGs2MzhsN3dneiJ9.K4j9mXsvfGCYtM8YouwCKg";
@@ -44,6 +47,7 @@ export interface IRoadClosureMapProps {
   currentRoadClosureItemOutput: any,
   directionIconPoints: any,
   highlightedFeatureGroup: SharedStreetsMatchGeomPath[],
+  intersectionPoints: any,
   isDrawingEnabled: boolean,
   roadBlockIconPoints: any,
   roadClosure: IRoadClosureState,
@@ -92,12 +96,18 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
       }
     } = this.state;
 
-    this.mapContainer = new mapboxgl.Map({
+    const mapboxInitConfig: any = {
       center: [longitude, latitude],
       container: 'SHST-Road-Closure-Map',
       style: 'mapbox://styles/mapbox/light-v9',
       zoom
-    });
+    };
+    if (AppExtent && AppExtent.length === 4) {
+      mapboxInitConfig.bounds = AppExtent;
+      mapboxInitConfig.center = center(bboxPolygon(AppExtent)).geometry.coordinates;
+      mapboxInitConfig.zoom = 10;
+    }
+    this.mapContainer = new mapboxgl.Map(mapboxInitConfig);
 
     this.mapContainer.on('move', this.handleMapMove);
     this.mapContainer.on('mousemove', () => {
@@ -105,6 +115,7 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
       this.mapContainer.getCanvas().style.cursor = this.state.isDrawing ? 'crosshair' : '';
     })
     this.mapContainer.on('click', this.handleMapClick);
+    this.mapContainer.on('mousemove', this.handleShowPossibleDirections)
     this.mapContainer.addControl(
       new mapboxgl.NavigationControl()
     );
@@ -116,6 +127,17 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
     );
 
     this.mapContainer.on('load', () => {
+      if (AppExtent && AppExtent.length === 4) {
+        this.mapContainer.addSource('extentBbox', {
+          data: bboxPolygon(AppExtent),
+          type: "geojson"
+        });
+        this.mapContainer.addLayer({
+          "id": "extentLayer",
+          "source": "extentBbox",
+          "type": "line",
+        })
+      }
       if (!this.mapContainer.getLayer('matchedFeatures')) {
         this.mapContainer.addSource('matchedFeatures', {
           // data: this.props.roadClosure.currentItem,
@@ -188,6 +210,31 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
           "type": "symbol",
         });
 
+        this.mapContainer.addSource('intersectionPoints', {
+          data: this.props.intersectionPoints,
+          type: "geojson",
+        });
+        this.mapContainer.addLayer({
+          "id": "intersections",
+          'layout': {
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true,
+            'icon-image': [
+              "case",
+              ["==", ["get", "closed"], true],
+              ["literal", "circle-11"],
+              ["literal", "circle-stroked-11"],
+            ],
+            'icon-rotation-alignment': 'map',
+            'icon-size': 1.5,
+          },
+          // "paint": {
+          //   "icon-color": "red",
+          // },
+          "source": "intersectionPoints",
+          "type": "symbol",
+        });
+
         // this.mapContainer.loadImage('/roadblock.png', (error: any, image: any) => {
         //   if (error) {
         //     throw error;
@@ -241,6 +288,10 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
         
     if (this.mapContainer.getLayer('possibleDirections')) {
       this.mapContainer.getSource('possibleDirectionsPoints').setData(this.props.currentPossibleDirections);
+    }
+
+    if (this.mapContainer.getLayer('intersections')) {
+      this.mapContainer.getSource('intersectionPoints').setData(this.props.intersectionPoints);
     }
 
     if (prevProps.roadClosure.currentLineId !== currentLineId) {
@@ -360,12 +411,18 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
     });
   }
 
-  public handleMapClick = (event: any) => {
+  public handleShowPossibleDirections = (event: any) => {
     if (this.state.isDrawing) {
       this.props.findMatchedPoint(
         point([event.lngLat.lng, event.lngLat.lat]),
         this.state.currentLineId,
       );
+    }
+  }
+
+  public handleMapClick = (event: any) => {
+    if (this.state.isDrawing) {
+
 
       const newSelectedCoordinates = Object.assign({}, this.state.selectedCoordinates);
       if (newSelectedCoordinates[this.state.currentLineId].length === 0) {

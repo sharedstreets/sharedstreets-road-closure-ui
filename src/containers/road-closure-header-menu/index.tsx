@@ -20,6 +20,7 @@ const mapStateToProps = (state: RootState, ownProps: IRoadClosureHeaderMenuConta
     isFetchingInput: state.roadClosure.isFetchingInput,
     isGeneratingUploadUrl: state.roadClosure.isGeneratingUploadUrl,
     orgName: state.context.orgName,
+    readOnly: state.context.readOnly
 });
 
 export default connect<{}, {}, IRoadClosureHeaderMenuProps>(

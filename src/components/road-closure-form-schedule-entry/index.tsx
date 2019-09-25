@@ -37,6 +37,7 @@ export interface IRoadClosureFormScheduleEntryProps {
     schedule: IRoadClosureScheduleByWeek
     weekOfYear: number,
     currentDateRange: DateRange,
+    readOnly: boolean,
     inputChanged: (e: any) => void,
 };
 
@@ -63,7 +64,7 @@ class RoadClosureFormScheduleEntry extends React.Component<IRoadClosureFormSched
             endTimeBeforeStartTime: false,
             isOpen: false,
             scheduleBlock: {
-                endTime: "00:00",
+                endTime: "23:59",
                 startTime: "00:00",
             },
             selectedDays: [],
@@ -238,7 +239,11 @@ class RoadClosureFormScheduleEntry extends React.Component<IRoadClosureFormSched
         const endTimeAsDate = moment().hour(endHour).minute(endMinute).toDate();
 
         return <React.Fragment>
-            <Button intent={'primary'} text={"Add a weekly closure schedule"} onClick={this.handleOpen} />
+            <Button
+                disabled={this.props.readOnly}
+                intent={'primary'}
+                text={"Add a weekly closure schedule"}
+                onClick={this.handleOpen} />
             <Dialog
                 title={"Add a weekly closure schedule"}
                 icon={"calendar"}
