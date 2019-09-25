@@ -152,7 +152,10 @@ class RoadClosureHeaderMenu extends React.Component<IRoadClosureHeaderMenuProps,
                 }
                 {
                     !process.env.REACT_APP_EDIT_ONLY && 
-                    <Text>{"Organization: " + this.props.orgName}</Text>
+                    <React.Fragment>
+                        <Text>{"Organization: " + this.props.orgName}</Text>
+                        <img src="/panynj-aoc-logo.png" className="SHST-Org-Logo"/>
+                    </React.Fragment>
                 }
             </React.Fragment>
         );
