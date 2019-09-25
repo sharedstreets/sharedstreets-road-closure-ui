@@ -399,6 +399,7 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
                 </div>
                 <div className={"SHST-Road-Closure-Form-Schedule-Tables"}>
                 <RoadClosureFormScheduleTransposedTable
+                  readOnly={this.props.readOnly}
                   key={0}
                   week={'0'}
                   currentWeek={this.state.weekOfYear}
