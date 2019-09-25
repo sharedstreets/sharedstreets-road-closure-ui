@@ -20,6 +20,7 @@ const mapStateToProps = (state: RootState) => ({
     outputFormat: state.roadClosure.output.outputFormat,
     outputItem: currentRoadClosureItemOutput(state.roadClosure),
     outputItemFormattedJSONString: getFormattedJSONStringFromOutputItem(state.roadClosure),
+    readOnly: state.context.readOnly,
     uploadUrls: state.roadClosure.uploadUrls,
 });
 

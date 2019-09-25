@@ -17,6 +17,7 @@ const mapStateToProps = (state: RootState) => ({
     currentRoadClosureGroupsDirection: getContiguousFeatureGroupsDirections(state.roadClosure),
     currentRoadClosureGroupsGeometryIdPathMap: getGeometryIdPathMap(state.roadClosure),
     currentRoadClosureItem: currentRoadClosureItemSelector(state.roadClosure),
+    readOnly: state.context.readOnly,
     roadClosure: state.roadClosure,
     selectedIntervals: calendarIntervalSelector(state.roadClosure),
 });

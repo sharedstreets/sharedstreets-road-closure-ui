@@ -23,6 +23,7 @@ export interface IContextMessage {
 export const CONTEXT_ACTIONS = {
     HIDE_MESSAGE: createStandardAction('CONTEXT/HIDE_MESSAGE')<boolean>(),
     SET_ORG_NAME: createStandardAction('CONTEXT/SET_ORG_NAME')<string>(),
+    SET_READ_ONLY: createStandardAction('CONTEXT/SET_READ_ONLY')<IContextMessage>(),
     SHOW_MESSAGE: createStandardAction('CONTEXT/SHOW_MESSAGE')<IContextMessage>(),
 };
 
@@ -31,6 +32,7 @@ export const CONTEXT_ACTIONS = {
 export interface IContextState {
     message: IContextMessage,
     orgName: string,
+    readOnly: boolean,
 };
 
 const defaultState: IContextState = {
@@ -39,6 +41,7 @@ const defaultState: IContextState = {
         text: '',
     },
     orgName: '',
+    readOnly: false,
 };
 
 export const contextReducer = (state: IContextState = defaultState, action: ContextAction) => {
@@ -64,6 +67,11 @@ export const contextReducer = (state: IContextState = defaultState, action: Cont
                 orgName: action.payload
             }
 
+        case 'CONTEXT/SET_READ_ONLY':
+            return {
+                ...state,
+                readOnly: true,
+            }
         default:
             return state;
     }

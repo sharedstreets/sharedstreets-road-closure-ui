@@ -9,6 +9,10 @@
     width: 100%;
     height: calc(100% - 44px);
 }
+
+.SHST-Top-Toaster {
+    margin-top: 44px;
+}
 /* 
 @media screen and (max-width: 1024px) {
     .SHST-Container {
