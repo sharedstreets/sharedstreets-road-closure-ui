@@ -1,3 +1,6 @@
+import {
+  Callout
+} from '@blueprintjs/core';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
 import bbox from '@turf/bbox';
@@ -500,6 +503,19 @@ class RoadClosureMap extends React.Component<IRoadClosureMapProps, IRoadClosureM
           margin: '0 auto',
           width: '100%',
         }} />
+        <div className={'SHST-Road-Closure-Map-Center-Coordinates'}>
+          <Callout title={"Center Point of Map"}>
+          Latitude:
+          {
+            JSON.stringify(this.state.viewport.latitude)
+          }
+          <br />
+          Longitude:
+          {
+            JSON.stringify(this.state.viewport.longitude)
+          }
+          </Callout>
+        </div>
         {
           this.props.isDrawingEnabled && 
           <SharedStreetsMapDrawControl

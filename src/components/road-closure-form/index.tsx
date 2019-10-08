@@ -6,6 +6,8 @@ import {
   Divider,
   FormGroup,
   H3,
+  H5,
+  H6,
   InputGroup,
   Position,
   Spinner,
@@ -316,6 +318,114 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
           className="SHST-Road-Closure-Form"
         >
             {
+              this.props.readOnly &&
+              <React.Fragment>
+                <H5>
+                  {currentDescription}
+                </H5>
+                <H6>
+                  {currentDateRange[0] && `From: ${moment(currentDateRange[0]).format("dddd, MMMM Do YYYY, h:mm:ss a")}`}
+                </H6>
+                <H6>
+                  {currentDateRange[0] && `To: ${moment(currentDateRange[1]).format("dddd, MMMM Do YYYY, h:mm:ss a")}`}
+                </H6>
+                <FormGroup
+                  label="Schedule"
+                  className={"SHST-Road-Closure-Form-Schedule-Input"}
+                  helperText={this.state.isShowingScheduler ? "Closure will only be active within the start and end times AND within the times specified in Schedule" : ''}
+                  >
+                    <div className={"SHST-Road-Closure-Form-Schedule-Tables"}>
+                    <RoadClosureFormScheduleTransposedTable
+                      readOnly={this.props.readOnly}
+                      key={0}
+                      week={'0'}
+                      currentWeek={this.state.weekOfYear}
+                      currentDateRange={currentDateRange}
+                      inputRemoved={this.props.inputRemoved}
+                      firstWeek={moment(currentDateRange[0]).week()}
+                      lastWeek={moment(currentDateRange[1]).week()}
+                      scheduleByWeek={this.props.currentRoadClosureItem.properties.schedule}
+                      />
+                    </div>
+                </FormGroup>
+                <FormGroup
+                  label="Sub Type">
+                  <div className="bp3-select">
+                    <select
+                      disabled={this.props.readOnly}
+                      value={this.props.currentRoadClosureItem.properties.subtype}
+                      onChange={this.handleChangeSubtype}>
+                      <option defaultChecked={true} value={''}>Choose a subtype...</option>
+                      <option value="ROAD_CLOSED_HAZARD">Hazard</option>
+                      <option value="ROAD_CLOSED_CONSTRUCTION">Construction</option>
+                      <option value="ROAD_CLOSED_EVENT">Event</option>
+                    </select>
+                  </div>
+                </FormGroup>
+                <FormGroup
+                  // selectedValue={this.props.currentRoadClosureItem.properties.mode}
+                  // onChange={this.handleChangeMode}
+                  label="Mode">
+                  <Button
+                    disabled={this.props.readOnly}
+                    text={"Select All"}
+                    onClick={this.selectAllModes}
+                  />
+                  <Checkbox
+                    disabled={this.props.readOnly}
+                    checked={
+                      this.props.currentRoadClosureItem.properties.mode
+                      && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_PEDESTRIAN)
+                    }
+                    onChange={this.handleChangeMode}
+                    label={"Pedestrian"}
+                    value={IRoadClosureMode.ROAD_CLOSED_PEDESTRIAN}
+                  />
+                  <Checkbox
+                    disabled={this.props.readOnly}
+                    checked={
+                      this.props.currentRoadClosureItem.properties.mode
+                      && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_BICYCLE)
+                    }
+                    onChange={this.handleChangeMode}
+                    label={"Bicycle"}
+                    value={IRoadClosureMode.ROAD_CLOSED_BICYCLE}
+                  />
+                  <Checkbox
+                    disabled={this.props.readOnly}
+                    defaultChecked={true}
+                    checked={
+                      this.props.currentRoadClosureItem.properties.mode
+                      && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_BUS)
+                    }
+                    onChange={this.handleChangeMode}
+                    label={"Bus"}
+                    value={IRoadClosureMode.ROAD_CLOSED_BUS}
+                  />
+                  <Checkbox
+                    disabled={this.props.readOnly}
+                    checked={
+                      this.props.currentRoadClosureItem.properties.mode
+                      && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_CAR)
+                    }
+                    onChange={this.handleChangeMode}
+                    label={"Car"}
+                    value={IRoadClosureMode.ROAD_CLOSED_CAR}
+                  />
+                  <Checkbox
+                    disabled={this.props.readOnly}
+                    checked={
+                      this.props.currentRoadClosureItem.properties.mode
+                      && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_TAXI_RIDESHARE)
+                    }
+                    onChange={this.handleChangeMode}
+                    label={"Taxi/Rideshare"}
+                    value={IRoadClosureMode.ROAD_CLOSED_TAXI_RIDESHARE}
+                  />
+                </FormGroup>
+              </React.Fragment>
+            }
+            {
               isEmpty(this.props.currentRoadClosureItem.properties.street) ?
               this.renderEmptyMatchedStreetsTable() :
               <RoadClosureFormStreetsGroups
@@ -335,200 +445,194 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
                 readOnly={this.props.readOnly}
               />
             }
-            <FormGroup
-              label="Start time, end time, and time zone"
-              labelInfo="(required)"
-              className={"SHST-Road-Closure-Form-Group-Date-Time"}
-            >
-              <DateRangeInput
-                disabled={this.props.readOnly}
-                value={currentDateRange}
-                className={"SHST-Road-Closure-Form-Date-Range-Input-Group"}
-                allowSingleDayRange={true}
-                shortcuts={false}
-                formatDate={this.formatDate}
-                parseDate={this.parseDate}
-                onChange={this.handleChangeTime}
-                timePrecision={"second"}
-                contiguousCalendarMonths={false}
-                selectAllOnFocus={true}
-                startInputProps={{
-                  className: "SHST-Road-Closure-Form-Date-Range-Input",
-                }}
-                endInputProps={{
-                  className: "SHST-Road-Closure-Form-Date-Range-Input"
-                }}
-              />
-              <TimezonePicker
-                disabled={this.props.readOnly}
-                inputProps={{
-                  className: "SHST-Timezone-Picker-Input",
-                }}
-                popoverProps={{
-                  // minimal: true,
-                  className: "SHST-Timezone-Picker-Popover",
-                  position: Position.BOTTOM_RIGHT
-                }}
-                onChange={this.handleChangeTimeZone}
-                value={this.props.currentRoadClosureItem.properties.timezone}
-                valueDisplayFormat={"name"}
-              />
-            </FormGroup>
-            <FormGroup
-              label="Schedule"
-              labelInfo="(optional)"
-              className={"SHST-Road-Closure-Form-Schedule-Input"}
-              helperText={this.state.isShowingScheduler ? "Closure will only be active within the start and end times AND within the times specified in Schedule" : ''}
-              >
-              <Switch
-                disabled={!(currentDateRange[0] && currentDateRange[1]) || this.props.readOnly}
-                onChange={this.handleToggleShowingScheduler}
-                checked={this.state.isShowingScheduler}
-                label={"Set a specific schedule for this closure within the specified range"} />
-              <Collapse isOpen={this.state.isShowingScheduler}>
-                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-                  <RoadClosureFormScheduleEntry
-                    readOnly={this.props.readOnly}
-                    key={currentDateRange.toString()}
-                    firstWeek={moment(currentDateRange[0]).week()}
-                    lastWeek={moment(currentDateRange[1]).week()}
-                    weekOfYear={this.state.weekOfYear}
-                    inputChanged={this.props.inputChanged}
-                    currentDateRange={currentDateRange}
-                    schedule={this.props.currentRoadClosureItem.properties.schedule} />
-                </div>
-                <div className={"SHST-Road-Closure-Form-Schedule-Tables"}>
-                <RoadClosureFormScheduleTransposedTable
-                  readOnly={this.props.readOnly}
-                  key={0}
-                  week={'0'}
-                  currentWeek={this.state.weekOfYear}
-                  currentDateRange={currentDateRange}
-                  inputRemoved={this.props.inputRemoved}
-                  firstWeek={moment(currentDateRange[0]).week()}
-                  lastWeek={moment(currentDateRange[1]).week()}
-                  scheduleByWeek={this.props.currentRoadClosureItem.properties.schedule}
+            {
+              !this.props.readOnly &&
+              <React.Fragment>
+                <FormGroup
+                  label="Start time, end time, and time zone"
+                  labelInfo="(required)"
+                  className={"SHST-Road-Closure-Form-Group-Date-Time"}
+                >
+                  <DateRangeInput
+                    disabled={this.props.readOnly}
+                    value={currentDateRange}
+                    className={"SHST-Road-Closure-Form-Date-Range-Input-Group"}
+                    allowSingleDayRange={true}
+                    shortcuts={false}
+                    formatDate={this.formatDate}
+                    parseDate={this.parseDate}
+                    onChange={this.handleChangeTime}
+                    timePrecision={"second"}
+                    contiguousCalendarMonths={false}
+                    selectAllOnFocus={true}
+                    startInputProps={{
+                      className: "SHST-Road-Closure-Form-Date-Range-Input",
+                    }}
+                    endInputProps={{
+                      className: "SHST-Road-Closure-Form-Date-Range-Input"
+                    }}
                   />
-                </div>
-              </Collapse>
-            </FormGroup>
-            <FormGroup
-              label="Description"
-              labelFor="text-area"
-              labelInfo="(required)"
-            >
-              <InputGroup
-                  disabled={this.props.readOnly}
-                  placeholder={"Enter a description of the closure here..."}
-                  onChange={this.handleChangeDescription}
-                  value={currentDescription}
-              />
-            </FormGroup>
-            <FormGroup
-              label="Reference"
-              labelFor="text-area"
-              labelInfo="(required)"
-            >
-              <InputGroup
-                  disabled={this.props.readOnly}                
-                  placeholder={"Enter the name of your organization here..."}
-                  onChange={this.handleChangeReference}
-                  value={this.props.currentRoadClosureItem.properties.reference}
-              />
-            </FormGroup>
-            <FormGroup
-              label="Sub Type"
-              labelInfo={"(optional)"}>
-              <div className="bp3-select">
-                <select
-                  disabled={this.props.readOnly}
-                  value={this.props.currentRoadClosureItem.properties.subtype}
-                  onChange={this.handleChangeSubtype}>
-                  <option defaultChecked={true} value={''}>Choose a subtype...</option>
-                  <option value="ROAD_CLOSED_HAZARD">Hazard</option>
-                  <option value="ROAD_CLOSED_CONSTRUCTION">Construction</option>
-                  <option value="ROAD_CLOSED_EVENT">Event</option>
-                </select>
-              </div>
-            </FormGroup>
-            <FormGroup
-              // selectedValue={this.props.currentRoadClosureItem.properties.mode}
-              // onChange={this.handleChangeMode}
-              label="Mode"
-              labelInfo="(optional)">
-              <Button
-                disabled={this.props.readOnly}
-                text={"Select All"}
-                onClick={this.selectAllModes}
-              />
-              <Checkbox
-                disabled={this.props.readOnly}
-                checked={
-                  this.props.currentRoadClosureItem.properties.mode
-                  && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_PEDESTRIAN)
-                }
-                onChange={this.handleChangeMode}
-                label={"Pedestrian"}
-                value={IRoadClosureMode.ROAD_CLOSED_PEDESTRIAN}
-              />
-              <Checkbox
-                disabled={this.props.readOnly}
-                checked={
-                  this.props.currentRoadClosureItem.properties.mode
-                  && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_BICYCLE)
-                }
-                onChange={this.handleChangeMode}
-                label={"Bicycle"}
-                value={IRoadClosureMode.ROAD_CLOSED_BICYCLE}
-              />
-              <Checkbox
-                disabled={this.props.readOnly}
-                defaultChecked={true}
-                checked={
-                  this.props.currentRoadClosureItem.properties.mode
-                  && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_BUS)
-                }
-                onChange={this.handleChangeMode}
-                label={"Bus"}
-                value={IRoadClosureMode.ROAD_CLOSED_BUS}
-              />
-              <Checkbox
-                disabled={this.props.readOnly}
-                checked={
-                  this.props.currentRoadClosureItem.properties.mode
-                  && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_CAR)
-                }
-                onChange={this.handleChangeMode}
-                label={"Car"}
-                value={IRoadClosureMode.ROAD_CLOSED_CAR}
-              />
-              <Checkbox
-                disabled={this.props.readOnly}
-                checked={
-                  this.props.currentRoadClosureItem.properties.mode
-                  && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_TAXI_RIDESHARE)
-                }
-                onChange={this.handleChangeMode}
-                label={"Taxi/Rideshare"}
-                value={IRoadClosureMode.ROAD_CLOSED_TAXI_RIDESHARE}
-              />
+                  <TimezonePicker
+                    disabled={this.props.readOnly}
+                    inputProps={{
+                      className: "SHST-Timezone-Picker-Input",
+                    }}
+                    popoverProps={{
+                      // minimal: true,
+                      className: "SHST-Timezone-Picker-Popover",
+                      position: Position.BOTTOM_RIGHT
+                    }}
+                    onChange={this.handleChangeTimeZone}
+                    value={this.props.currentRoadClosureItem.properties.timezone}
+                    valueDisplayFormat={"name"}
+                  />
+                </FormGroup>
+                <FormGroup
+                  label="Schedule"
+                  labelInfo="(optional)"
+                  className={"SHST-Road-Closure-Form-Schedule-Input"}
+                  helperText={this.state.isShowingScheduler ? "Closure will only be active within the start and end times AND within the times specified in Schedule" : ''}
+                  >
+                  <Switch
+                    disabled={!(currentDateRange[0] && currentDateRange[1]) || this.props.readOnly}
+                    onChange={this.handleToggleShowingScheduler}
+                    checked={this.state.isShowingScheduler}
+                    label={"Set a specific schedule for this closure within the specified range"} />
+                  <Collapse isOpen={this.state.isShowingScheduler}>
+                    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+                      <RoadClosureFormScheduleEntry
+                        readOnly={this.props.readOnly}
+                        key={currentDateRange.toString()}
+                        firstWeek={moment(currentDateRange[0]).week()}
+                        lastWeek={moment(currentDateRange[1]).week()}
+                        weekOfYear={this.state.weekOfYear}
+                        inputChanged={this.props.inputChanged}
+                        currentDateRange={currentDateRange}
+                        schedule={this.props.currentRoadClosureItem.properties.schedule} />
+                    </div>
+                    <div className={"SHST-Road-Closure-Form-Schedule-Tables"}>
+                    <RoadClosureFormScheduleTransposedTable
+                      readOnly={this.props.readOnly}
+                      key={0}
+                      week={'0'}
+                      currentWeek={this.state.weekOfYear}
+                      currentDateRange={currentDateRange}
+                      inputRemoved={this.props.inputRemoved}
+                      firstWeek={moment(currentDateRange[0]).week()}
+                      lastWeek={moment(currentDateRange[1]).week()}
+                      scheduleByWeek={this.props.currentRoadClosureItem.properties.schedule}
+                      />
+                    </div>
+                  </Collapse>
+                </FormGroup>
+                <FormGroup
+                  label="Description"
+                  labelFor="text-area"
+                  labelInfo="(required)"
+                >
+                  <InputGroup
+                      disabled={this.props.readOnly}
+                      placeholder={"Enter a description of the closure here..."}
+                      onChange={this.handleChangeDescription}
+                      value={currentDescription}
+                  />
+                </FormGroup>
+                <FormGroup
+                  label="Reference"
+                  labelFor="text-area"
+                  labelInfo="(required)"
+                >
+                  <InputGroup
+                      disabled={this.props.readOnly}                
+                      placeholder={"Enter the name of your organization here..."}
+                      onChange={this.handleChangeReference}
+                      value={this.props.currentRoadClosureItem.properties.reference}
+                  />
+                </FormGroup>
+                <FormGroup
+                  label="Sub Type"
+                  labelInfo={"(optional)"}>
+                  <div className="bp3-select">
+                    <select
+                      disabled={this.props.readOnly}
+                      value={this.props.currentRoadClosureItem.properties.subtype}
+                      onChange={this.handleChangeSubtype}>
+                      <option defaultChecked={true} value={''}>Choose a subtype...</option>
+                      <option value="ROAD_CLOSED_HAZARD">Hazard</option>
+                      <option value="ROAD_CLOSED_CONSTRUCTION">Construction</option>
+                      <option value="ROAD_CLOSED_EVENT">Event</option>
+                    </select>
+                  </div>
+                </FormGroup>
+                <FormGroup
+                  // selectedValue={this.props.currentRoadClosureItem.properties.mode}
+                  // onChange={this.handleChangeMode}
+                  label="Mode"
+                  labelInfo="(optional)">
+                  <Button
+                    disabled={this.props.readOnly}
+                    text={"Select All"}
+                    onClick={this.selectAllModes}
+                  />
+                  <Checkbox
+                    disabled={this.props.readOnly}
+                    checked={
+                      this.props.currentRoadClosureItem.properties.mode
+                      && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_PEDESTRIAN)
+                    }
+                    onChange={this.handleChangeMode}
+                    label={"Pedestrian"}
+                    value={IRoadClosureMode.ROAD_CLOSED_PEDESTRIAN}
+                  />
+                  <Checkbox
+                    disabled={this.props.readOnly}
+                    checked={
+                      this.props.currentRoadClosureItem.properties.mode
+                      && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_BICYCLE)
+                    }
+                    onChange={this.handleChangeMode}
+                    label={"Bicycle"}
+                    value={IRoadClosureMode.ROAD_CLOSED_BICYCLE}
+                  />
+                  <Checkbox
+                    disabled={this.props.readOnly}
+                    defaultChecked={true}
+                    checked={
+                      this.props.currentRoadClosureItem.properties.mode
+                      && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_BUS)
+                    }
+                    onChange={this.handleChangeMode}
+                    label={"Bus"}
+                    value={IRoadClosureMode.ROAD_CLOSED_BUS}
+                  />
+                  <Checkbox
+                    disabled={this.props.readOnly}
+                    checked={
+                      this.props.currentRoadClosureItem.properties.mode
+                      && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_CAR)
+                    }
+                    onChange={this.handleChangeMode}
+                    label={"Car"}
+                    value={IRoadClosureMode.ROAD_CLOSED_CAR}
+                  />
+                  <Checkbox
+                    disabled={this.props.readOnly}
+                    checked={
+                      this.props.currentRoadClosureItem.properties.mode
+                      && this.props.currentRoadClosureItem.properties.mode.includes(IRoadClosureMode.ROAD_CLOSED_TAXI_RIDESHARE)
+                    }
+                    onChange={this.handleChangeMode}
+                    label={"Taxi/Rideshare"}
+                    value={IRoadClosureMode.ROAD_CLOSED_TAXI_RIDESHARE}
+                  />
 
-            </FormGroup>
+                </FormGroup>
+              </React.Fragment>
+            }
+
             <Divider />
             <H3>Output</H3>
             <RoadClosureOutputViewer />
-            {/* <RoadClosureBottomActionBar>
-                <ButtonGroup
-                  fill={true}
-                >
-                  <Button
-                    large={true}
-                    text={"View Output"}
-                    intent={"success"}
-                    onClick={this.props.viewRoadClosureOutput}
-                  />
-                </ButtonGroup>
-              </RoadClosureBottomActionBar> */}
         </div>
     );
   }

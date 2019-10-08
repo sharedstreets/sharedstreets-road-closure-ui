@@ -11,6 +11,11 @@
     cursor: pointer;
 }
 
+.SHST-Road-Closure-Map-Center-Coordinates {
+    position: absolute;
+    bottom: 50px;
+}
+
 .SHST-Map-Point-Marker {
     width: 10px;
     height: 10px;
