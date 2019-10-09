@@ -318,6 +318,20 @@ class RoadClosureForm extends React.Component<IRoadClosureFormProps, IRoadClosur
           className="SHST-Road-Closure-Form"
         >
             {
+                !process.env.REACT_APP_EDIT_ONLY && 
+                this.props.readOnly &&
+                <div>
+                    <div className="SHST-Read-Only-Header">
+                      <img src="/panynj-aoc-logo.png" className="SHST-Read-Only-Header-Org-Logo"/>
+                      <div style={{marginLeft: 15}}>
+                        <H5>Port Authority of New York & New Jersey</H5>
+                        <H5>Agency Operations Center</H5>
+                        <div>Mapping Closure Memo</div>
+                      </div>
+                    </div>
+                </div>
+            }
+            {
               this.props.readOnly &&
               <React.Fragment>
                 <H5>

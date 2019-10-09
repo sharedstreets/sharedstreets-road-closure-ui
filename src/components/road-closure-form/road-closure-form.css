@@ -12,6 +12,16 @@
     display: block;
 }
 
+.SHST-Read-Only-Header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.SHST-Read-Only-Header-Org-Logo {
+    height: 75px;
+}
+
 .SHST-Streets-Card {
     margin-bottom: 30px;
 }
