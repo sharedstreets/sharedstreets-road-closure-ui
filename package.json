@@ -80,7 +80,7 @@
     "ts-node": "^8.3.0",
     "typesafe-actions": "3.4.0",
     "uuid": "^3.3.2",
-    "yarn": "^1.10.1"
+    "yarn": "^1.22.0"
   },
   "resolutions": {
     "react-day-picker": "7.3.0"
