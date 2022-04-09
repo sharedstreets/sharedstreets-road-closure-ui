@@ -55,7 +55,7 @@
     "lodash": "^4.17.11",
     "mapbox-gl": "^0.50.0",
     "minimist": "^1.2.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "moment-range": "^4.0.2",
     "moment-timezone": "^0.5.23",
     "nodemon": "^1.19.1",
